@@ -24,6 +24,16 @@ namespace FaceRecognation._1._0
 		public MainWindow()
 		{
 			InitializeComponent();
+			new XTests().Run();
+		}
+	}
+
+	public class XTests
+	{
+		FaceManager _fm = FaceManager.FaceManagerInstance;
+		public void Run()
+		{
+
 		}
 	}
 }
