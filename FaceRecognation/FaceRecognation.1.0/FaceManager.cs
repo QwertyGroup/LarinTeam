@@ -5,6 +5,7 @@ using Microsoft.ProjectOxford.Face.Contract;
 using Microsoft.ProjectOxford.Face;
 using System.IO;
 using System.Diagnostics;
+using System.Collections.Generic;
 
 namespace FaceRecognation._1._0
 {
@@ -12,12 +13,23 @@ namespace FaceRecognation._1._0
 	{
 		private readonly IFaceServiceClient _faceServiceClient;
 
-		public FaceManager()
+		private FaceManager()
 		{
 			_faceServiceClient = new FaceServiceClient(GetMSKey());
 		}
 
-		public async Task<FaceRectangle[]> GetFaceRect(string filePath)
+		private static FaceManager _fmInstance;
+		public static FaceManager FaceManagerInstance
+		{
+			get
+			{
+				if (_fmInstance == null)
+					_fmInstance = new FaceManager();
+				return _fmInstance;
+			}
+		}
+
+		private async Task<FaceRectangle[]> GetFaceRect(string filePath)
 		{
 			return await UploadAndDetectFaces(filePath);
 		}
@@ -39,7 +51,7 @@ namespace FaceRecognation._1._0
 			}
 		}
 
-		protected string GetMSKey()
+		private string GetMSKey()
 		{
 			try
 			{
@@ -52,6 +64,15 @@ namespace FaceRecognation._1._0
 				Debug.WriteLine(ex.Message);
 				return "no key";
 			}
+		}
+
+		private void TEST()
+		{
+			var personGroupId = "0x00";
+			var faceGuids = new List<Guid>();
+			_faceServiceClient.CreatePersonGroupAsync(personGroupId, "RecognisedFaces");
+			var ires = _faceServiceClient.IdentifyAsync(personGroupId, faceGuids.ToArray());
+			//_faceServiceClient.AddFaceToFaceListAsync();
 		}
 	}
 }
