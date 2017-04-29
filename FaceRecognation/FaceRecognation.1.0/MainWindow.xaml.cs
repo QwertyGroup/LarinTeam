@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 using Newtonsoft.Json;
 using Microsoft.ProjectOxford.Common;
 using Microsoft.ProjectOxford.Face;
+using System.IO;
 
 namespace FaceRecognation._1._0
 {
