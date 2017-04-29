@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FaceRecognation._1._0"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
-    <Grid>
-        
-    </Grid>
+        Title="Face recognising machine 2017 awarded" Height="400" Width="600" Icon="FRLogo.png">
+	<Grid>
+
+	</Grid>
 </Window>

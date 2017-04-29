@@ -66,12 +66,14 @@ namespace FaceRecognation._1._0
 			}
 		}
 
-		private void TEST()
+		private const string PERSON_GROUP_ID = "0x00";
+		private const string GROUP_NAME = "RecognisedFaces";
+		private List<Guid> faceGuids = new List<Guid>();
+		private async void TEST()
 		{
-			var personGroupId = "0x00";
-			var faceGuids = new List<Guid>();
-			_faceServiceClient.CreatePersonGroupAsync(personGroupId, "RecognisedFaces");
-			var ires = _faceServiceClient.IdentifyAsync(personGroupId, faceGuids.ToArray());
+			await _faceServiceClient.CreatePersonGroupAsync(PERSON_GROUP_ID, GROUP_NAME);
+			var ires = await _faceServiceClient.IdentifyAsync(PERSON_GROUP_ID, faceGuids.ToArray());
+			//ires[1].Candidates
 			//_faceServiceClient.AddFaceToFaceListAsync();
 		}
 	}
