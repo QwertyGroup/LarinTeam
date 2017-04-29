@@ -11,9 +11,9 @@ namespace FaceRecognation._1._0
 {
 	class FaceManager
 	{
-		public async Task<FaceRectangle[]> GetFaceRect()
-		{
-			return await UploadAndDetectFaces(filePath);
-		}
+		//public async Task<FaceRectangle[]> GetFaceRect()
+		//{
+		//	return await UploadAndDetectFaces(filePath);
+		//}
 	}
 }

@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 using Newtonsoft.Json;
 using Microsoft.ProjectOxford.Common;
 using Microsoft.ProjectOxford.Face;
+using System.Diagnostics;
 
 namespace FaceRecognation._1._0
 {
@@ -23,6 +24,13 @@ namespace FaceRecognation._1._0
 		public MainWindow()
 		{
 			InitializeComponent();
+            Start();
 		}
-	}
+        public static async void Start()
+        {
+            var x = await Synchron.Instance.getLastId();
+            Console.WriteLine(x);
+        }
+    }
+    
 }
