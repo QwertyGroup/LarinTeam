@@ -241,5 +241,5 @@ ModelManifest.xml
 # FAKE - F# Make
 .fake/
 
-# File with MS KEY
-.mskey
+# File with All keys
+.keys
