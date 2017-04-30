@@ -9,17 +9,17 @@ using System.Collections.Generic;
 
 namespace FaceRecognation._1._0
 {
-	class FaceManager
+	public class MSAPIManager
 	{
-        //Singleton
-        public static readonly FaceManager FaceManagerInstance = new FaceManager();
+		//Singleton
+		public static readonly MSAPIManager MSAPIManagerInstance = new MSAPIManager();
 
-		private FaceManager()
+		private MSAPIManager()
 		{
 			_faceServiceClient = new FaceServiceClient(GetMSKey());
 		}
 
-        private readonly IFaceServiceClient _faceServiceClient;
+		private readonly IFaceServiceClient _faceServiceClient;
 
 		private async Task<FaceRectangle[]> UploadAndDetectFaces(string imageFilePath)
 		{
@@ -34,7 +34,7 @@ namespace FaceRecognation._1._0
 			}
 			catch (Exception e)
 			{
-                Debug.WriteLine(e.Message);
+				Debug.WriteLine(e.Message);
 				return new FaceRectangle[0];
 			}
 		}
@@ -50,17 +50,17 @@ namespace FaceRecognation._1._0
 			catch (Exception ex)
 			{
 				Debug.WriteLine(ex.Message);
-				return "no key";
+				return "No MS key found";
 			}
 		}
 
 		private const string PERSON_GROUP_ID = "0x00";
 		private const string GROUP_NAME = "RecognisedFaces";
-		private List<Guid> faceGuids = new List<Guid>();
+		private List<Guid> _faceGuids = new List<Guid>();
 		private async void TEST()
 		{
 			await _faceServiceClient.CreatePersonGroupAsync(PERSON_GROUP_ID, GROUP_NAME);
-			var ires = await _faceServiceClient.IdentifyAsync(PERSON_GROUP_ID, faceGuids.ToArray());
+			var ires = await _faceServiceClient.IdentifyAsync(PERSON_GROUP_ID, _faceGuids.ToArray());
 			//ires[1].Candidates
 			//_faceServiceClient.AddFaceToFaceListAsync();
 		}
