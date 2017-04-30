@@ -27,15 +27,55 @@ namespace FaceRecognation._1._0
 			InitializeComponent();
 			new XTests().Run();
 		}
+
+		private void cmdTakePhoto_Click(object sender, RoutedEventArgs e)
+		{
+			var openDlg = new Microsoft.Win32.OpenFileDialog();
+
+			openDlg.Filter = "JPEG Image(*.jpg)|*.jpg|PNG Image(*.png)|*.png";
+			bool? result = openDlg.ShowDialog(this);
+
+			if (!(bool)result)
+			{
+				return;
+			}
+
+			string filePath = openDlg.FileName;
+
+			Uri fileUri = new Uri(filePath);
+			BitmapImage bitmapSource = new BitmapImage();
+
+			bitmapSource.BeginInit();
+			bitmapSource.CacheOption = BitmapCacheOption.None;
+			bitmapSource.UriSource = fileUri;
+			bitmapSource.EndInit();
+
+			imgPhoto.Source = bitmapSource;
+		}
+
+		private void cmdAddFace_Click(object sender, RoutedEventArgs e)
+		{
+
+		}
+
+		private void cmdFindSimilar_Click(object sender, RoutedEventArgs e)
+		{
+
+		}
+
+		private void cmdCreateFaceList_Click(object sender, RoutedEventArgs e)
+		{
+
+		}
 	}
 
 	public class XTests
 	{
-		
+
 		public void Run()
 		{
-            Debug.WriteLine("KEK");
-            VideoManager.getOperationAsync("1.mp4");
+			Debug.WriteLine("KEK");
+			VideoManager.getOperationAsync("1.mp4");
 		}
 	}
 }
