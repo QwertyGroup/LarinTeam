@@ -19,26 +19,6 @@ namespace FaceRecognation._1._0
 			_faceServiceClient = new FaceServiceClient(GetMSKey());
 		}
 
-		private readonly IFaceServiceClient _faceServiceClient;
-
-		private async Task<FaceRectangle[]> UploadAndDetectFaces(string imageFilePath)
-		{
-			try
-			{
-				using (Stream imageFileStream = File.OpenRead(imageFilePath))
-				{
-					var faces = await _faceServiceClient.DetectAsync(imageFileStream);
-					var faceRects = faces.Select(face => face.FaceRectangle);
-					return faceRects.ToArray();
-				}
-			}
-			catch (Exception e)
-			{
-				Debug.WriteLine(e.Message);
-				return new FaceRectangle[0];
-			}
-		}
-
 		private string GetMSKey()
 		{
 			try
@@ -54,15 +34,84 @@ namespace FaceRecognation._1._0
 			}
 		}
 
-		private const string PERSON_GROUP_ID = "0x00";
-		private const string GROUP_NAME = "RecognisedFaces";
-		private List<Guid> _faceGuids = new List<Guid>();
-		private async void TEST()
+		private readonly IFaceServiceClient _faceServiceClient;
+
+		private async void CreateFaceList(string faceListId, string faceListName)
 		{
-			await _faceServiceClient.CreatePersonGroupAsync(PERSON_GROUP_ID, GROUP_NAME);
-			var ires = await _faceServiceClient.IdentifyAsync(PERSON_GROUP_ID, _faceGuids.ToArray());
-			//ires[1].Candidates
-			//_faceServiceClient.AddFaceToFaceListAsync();
+			try
+			{
+				await _faceServiceClient.CreateFaceListAsync(faceListId, faceListName);
+			}
+			catch (Exception ex)
+			{
+				Debug.WriteLine(ex.Message);
+			}
+		}
+
+		private async Task<AddPersistedFaceResult> AddFaceToFaceList(string faceListId, Stream imageAsStream)
+		{
+			try
+			{
+				var faceResult = await _faceServiceClient.AddFaceToFaceListAsync(faceListId, imageAsStream);
+				if (faceResult == null) throw new Exception("AddPersistedFaceResult is null");
+				return faceResult;
+			}
+			catch (Exception ex)
+			{
+				Debug.WriteLine(ex.Message);
+				return new AddPersistedFaceResult();
+			}
+		}
+
+		private async Task<Microsoft.ProjectOxford.Face.Contract.Face[]> DetectFace(Stream imageAsStream)
+		{
+			try
+			{
+				var faces = await _faceServiceClient.DetectAsync(imageAsStream);
+				if (faces.Length == 0) throw new Exception("FaceList is empty");
+				return faces;
+			}
+			catch (Exception ex)
+			{
+				Debug.WriteLine(ex.Message);
+				return new Microsoft.ProjectOxford.Face.Contract.Face[0];
+			}
+		}
+
+		public class FaceIdAndRect
+		{
+			public Guid FaceId { get; set; }
+			public FaceRectangle FaceRect { get; set; }
+			private FaceIdAndRect() { }
+			public FaceIdAndRect(Guid faceId, FaceRectangle faceRectangle)
+			{
+				FaceId = FaceId;
+				FaceRect = faceRectangle;
+			}
+		}
+
+		private async Task<FaceIdAndRect[]> GetFaceRectangle(Stream imageAsStream)
+		{
+			var faces = await DetectFace(imageAsStream);
+			var faceIdAndRectList = new List<FaceIdAndRect>();
+			foreach (var face in await DetectFace(imageAsStream))
+				faceIdAndRectList.Add(new FaceIdAndRect(face.FaceId, face.FaceRectangle));
+			return faceIdAndRectList.ToArray();
+		}
+
+		private async Task<SimilarPersistedFace[]> CheckForSimilarity(FaceIdAndRect faceIdAndRect, string faceListId)
+		{
+			try
+			{
+				var similarFaces = await _faceServiceClient.FindSimilarAsync(faceIdAndRect.FaceId, faceListId);
+				if (similarFaces.Length == 0) throw new Exception("There is no similar faces");
+				return similarFaces;
+			}
+			catch (Exception ex)
+			{
+				Debug.WriteLine(ex.Message);
+				return new SimilarPersistedFace[0];
+			}
 		}
 	}
 }
