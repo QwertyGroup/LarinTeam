@@ -11,7 +11,7 @@ using System.Diagnostics;
 using FireSharp.Response;
 using Newtonsoft;
 using Newtonsoft.Json;
-
+using System.Drawing;
 namespace FaceRecognation._1._0
 {
     public class Synchron
@@ -38,7 +38,7 @@ namespace FaceRecognation._1._0
         private string BasePath;
         private IFirebaseConfig Config;
         private FirebaseClient Client;
-        private int LastId;
+        private int LastId = 0;
         private List<Face> Data;
 
         private string getSecretCode()
@@ -64,20 +64,15 @@ namespace FaceRecognation._1._0
         private List<Face> getData()
         {
             FirebaseResponse response = Client.Get("Faces");
-            return response.ResultAs<List<Face>>();
+            List<Face> Data = response.ResultAs<List<Face>>();
+            return Data == null ? new List<Face>() : Data;
         }
         private int getLastId()
         {
             return Data.Count;
         }
 
-        private async Task<Face> getFace(int id)
-        {
-            FirebaseResponse response = await Client.GetAsync($"Faces/{id}");
-            return response.ResultAs<Face>();
-        }
-
-        private async Task<Face> setFace(Face face)
+        public async Task<Face> AddFace(Face face)
         {
             SetResponse response = await Client.SetAsync($"Faces/{LastId}", face);
             LastId++;
@@ -85,9 +80,8 @@ namespace FaceRecognation._1._0
             Face result = response.ResultAs<Face>();
             return result;
         }
+
+
     }
-    public class Face
-    {
-        List<string> FaceImages;
-    }
+    
 }
