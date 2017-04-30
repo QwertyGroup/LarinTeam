@@ -11,28 +11,15 @@ namespace FaceRecognation._1._0
 {
 	class FaceManager
 	{
-		private readonly IFaceServiceClient _faceServiceClient;
+        //Singleton
+        public static readonly FaceManager FaceManagerInstance = new FaceManager();
 
 		private FaceManager()
 		{
 			_faceServiceClient = new FaceServiceClient(GetMSKey());
 		}
 
-		private static FaceManager _fmInstance;
-		public static FaceManager FaceManagerInstance
-		{
-			get
-			{
-				if (_fmInstance == null)
-					_fmInstance = new FaceManager();
-				return _fmInstance;
-			}
-		}
-
-		private async Task<FaceRectangle[]> GetFaceRect(string filePath)
-		{
-			return await UploadAndDetectFaces(filePath);
-		}
+        private readonly IFaceServiceClient _faceServiceClient;
 
 		private async Task<FaceRectangle[]> UploadAndDetectFaces(string imageFilePath)
 		{
@@ -45,8 +32,9 @@ namespace FaceRecognation._1._0
 					return faceRects.ToArray();
 				}
 			}
-			catch (Exception)
+			catch (Exception e)
 			{
+                Debug.WriteLine(e.Message);
 				return new FaceRectangle[0];
 			}
 		}
