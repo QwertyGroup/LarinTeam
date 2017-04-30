@@ -31,7 +31,7 @@ namespace FaceRecognation._1._0
 			_faceServiceClient = new FaceServiceClient(GetMSKey());
 		}
 
-		private string GetMSKey()
+		public string GetMSKey()
 		{
 			try
 			{

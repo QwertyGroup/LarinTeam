@@ -13,7 +13,7 @@ namespace FaceRecognation._1._0
 {
     public static class VideoManager
     {
-        private static VideoServiceClient videoServiceClient = new VideoServiceClient(Synchron.getSecretCode());
+        private static VideoServiceClient videoServiceClient = new VideoServiceClient(/*MSAPIManager.MSAPIManagerInstance.GetMSKey()*/"80c8c2aa437c4a30a76825d80efb2910 ");
 
         public static async void getOperationAsync(string filePath)
         {
@@ -33,8 +33,8 @@ namespace FaceRecognation._1._0
 
                 Task.Delay(30000).Wait();
             }
-            var motionDetectionJsonString = operationResult.ProcessingResult;
-            var motionDetection = JsonConvert.DeserializeObject<MotionDetectionResult>(motionDetectionJsonString);
+            var faceDetectionTrackingResultJsonString = operationResult.ProcessingResult;
+            var faceDetecionTracking = JsonConvert.DeserializeObject<FaceDetectionResult>(faceDetectionTrackingResultJsonString);
             Debug.WriteLine("END!");
         }
     }
