@@ -16,8 +16,19 @@ namespace FaceRecognation._1._0
 {
 	public class Synchron
 	{
-		//Singleton
-		public static readonly Synchron Instance = new Synchron();
+        //Singleton
+        private static Synchron _instance;
+		public static Synchron Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new Synchron();
+                }
+                return _instance;
+            }
+        }
 
 
 		private Synchron()

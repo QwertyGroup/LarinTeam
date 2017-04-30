@@ -22,9 +22,7 @@ namespace FaceRecognation._1._0
             {
                 videoOperation = await videoServiceClient.CreateOperationAsync(fs, new FaceDetectionOperationSettings());
             }
-
-            var operationResult = await videoServiceClient.GetOperationResultAsync(videoOperation);
-
+            OperationResult operationResult;
             while (true)
             {
                 operationResult = await videoServiceClient.GetOperationResultAsync(videoOperation);
