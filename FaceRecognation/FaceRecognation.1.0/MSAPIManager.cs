@@ -11,8 +11,20 @@ namespace FaceRecognation._1._0
 {
 	public class MSAPIManager
 	{
-		//Singleton
-		public static readonly MSAPIManager MSAPIManagerInstance = new MSAPIManager();
+        //Singleton
+        private static MSAPIManager _mSAPIManagerInstance;
+
+        public static MSAPIManager MSAPIManagerInstance
+        {
+            get
+            {
+                if (_mSAPIManagerInstance == null)
+                {
+                    _mSAPIManagerInstance = new MSAPIManager();
+                }
+                return _mSAPIManagerInstance;
+            }
+        }
 
 		private MSAPIManager()
 		{
