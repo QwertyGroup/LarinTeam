@@ -25,7 +25,7 @@ namespace FaceRecognation._1._0
 		public MainWindow()
 		{
 			InitializeComponent();
-			new XTests().Run();
+			//new XTests().Run();
 		}
 	}
 
@@ -35,7 +35,11 @@ namespace FaceRecognation._1._0
 
 		public void Run()
 		{
-            VideoManager.getOperationAsync("1.mp4");
+			System.Drawing.Image img = System.Drawing.Image.FromFile("6.png");
+			Mark.BaseImages.Add(Face.ImageToBase(img, System.Drawing.Imaging.ImageFormat.Png));
+			img = Face.BaseToImage(Mark.BaseImages[0]);
+			Debug.WriteLine(img.Size);
+			img.Save("kek.png", System.Drawing.Imaging.ImageFormat.Png);
 		}
 	}
 }

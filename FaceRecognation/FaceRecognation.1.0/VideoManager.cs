@@ -5,9 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.ProjectOxford.Video;
 using Microsoft.ProjectOxford.Video.Contract;
-using System.IO;
-using Newtonsoft.Json;
-using System.Diagnostics;
 
 namespace FaceRecognation._1._0
 {
@@ -15,29 +12,13 @@ namespace FaceRecognation._1._0
     {
         private static VideoServiceClient videoServiceClient = new VideoServiceClient(Synchron.getSecretCode());
 
-        public static async void getOperationAsync(string filePath)
+        private getOperation(string filePath)
         {
             Operation videoOperation;
-            using (var fs = new FileStream(filePath, FileMode.Open))
+            using (var fs = new FileStream(@"C:\Videos\Sample.mp4", FileMode.Open))
             {
-                videoOperation = await videoServiceClient.CreateOperationAsync(fs, new FaceDetectionOperationSettings());
+                videoOperation = await videoServiceClient.CreateOperationAsync(fs, OperationType.Stabilize);
             }
-
-            var operationResult = await videoServiceClient.GetOperationResultAsync(videoOperation);
-
-            while (true)
-            {
-                operationResult = await videoServiceClient.GetOperationResultAsync(videoOperation);
-                if (operationResult.Status == OperationStatus.Succeeded || operationResult.Status == OperationStatus.Failed)
-                {
-                    break;
-                }
-
-                Task.Delay(30000).Wait();
-            }
-            var motionDetectionJsonString = operationResult.ProcessingResult;
-            var motionDetection = JsonConvert.DeserializeObject<MotionDetectionResult>(motionDetectionJsonString);
-            Debug.WriteLine("END!");
         }
     }
 }
