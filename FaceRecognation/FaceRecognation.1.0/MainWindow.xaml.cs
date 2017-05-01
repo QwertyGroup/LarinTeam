@@ -17,6 +17,7 @@ using Microsoft.ProjectOxford.Common;
 using Microsoft.ProjectOxford.Face;
 using System.IO;
 using System.Diagnostics;
+using System.Drawing;
 
 namespace FaceRecognation._1._0
 {
@@ -28,7 +29,8 @@ namespace FaceRecognation._1._0
 			new XTests().Run();
 		}
 
-		private void cmdTakePhoto_Click(object sender, RoutedEventArgs e)
+		private MSAPIManager _msapiManager = MSAPIManager.MSAPIManagerInstance;
+		private async void cmdTakePhoto_Click(object sender, RoutedEventArgs e)
 		{
 			var openDlg = new Microsoft.Win32.OpenFileDialog();
 
@@ -51,6 +53,17 @@ namespace FaceRecognation._1._0
 			bitmapSource.EndInit();
 
 			imgPhoto.Source = bitmapSource;
+
+			using (Stream fstream = File.OpenRead(filePath))
+			{
+				var faces = await _msapiManager.DetectFace(fstream);
+				var rect = faces[0].FaceRectangle;
+				//var rect = new Microsoft.ProjectOxford.Common.Rectangle { Left = 100, Top = 50, Width = 300, Height = 200 };
+				var croppedBm = new CroppedBitmap(bitmapSource, new Int32Rect(rect.Left, rect.Top, rect.Width, rect.Height));
+				imgPhoto.Source = croppedBm;
+			}
+
+
 		}
 
 		private void cmdAddFace_Click(object sender, RoutedEventArgs e)
@@ -74,8 +87,8 @@ namespace FaceRecognation._1._0
 
 		public void Run()
 		{
-			Debug.WriteLine("KEK");
-			VideoManager.getOperationAsync("1.mp4");
+			//Debug.WriteLine("KEK");
+			//VideoManager.getOperationAsync("1.mp4");
 		}
 	}
 }
