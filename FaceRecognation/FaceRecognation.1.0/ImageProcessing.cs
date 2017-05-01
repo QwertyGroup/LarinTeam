@@ -5,6 +5,7 @@ using System.Drawing.Imaging;
 using System;
 using System.Linq;
 using System.Windows;
+using System.Diagnostics;
 
 namespace FaceRecognation._1._0
 {
@@ -93,13 +94,21 @@ namespace FaceRecognation._1._0
 
 		private string GetExtention(ImageFormat imgformat)
 		{
-			return ImageCodecInfo.GetImageEncoders()
+			try
+			{
+				return ImageCodecInfo.GetImageEncoders()
 					.First(x => x.FormatID == imgformat.Guid)
 					.FilenameExtension
 					.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
 					.First()
 					.Trim('*')
 					.ToLower();
+			}
+			catch (Exception ex)
+			{
+				Debug.WriteLine(ex.Message);
+				return ".unknown";
+			}
 		}
 
 		private string UnitePathWithDir(string filename)
