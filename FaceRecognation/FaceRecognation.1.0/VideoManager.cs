@@ -9,14 +9,16 @@ using System.IO;
 using Newtonsoft.Json;
 using System.Diagnostics;
 using System.Drawing;
+using MediaToolkit;
+using MediaToolkit.Options;
+using MediaToolkit.Model;
 
 namespace FaceRecognation._1._0
 {
     public static class VideoManager
     {
         private static VideoServiceClient videoServiceClient = new VideoServiceClient(/*MSAPIManager.MSAPIManagerInstance.GetMSKey()*/"80c8c2aa437c4a30a76825d80efb2910 ");
-
-        public static async Task<FaceDetectionResult> getFaceDetectionAsync(string filePath)
+        private static async Task<FaceDetectionResult> getFaceDetectionAsync(string filePath)
         {
             Operation videoOperation;
             using (var fs = new FileStream(filePath, FileMode.Open))
@@ -39,7 +41,7 @@ namespace FaceRecognation._1._0
             getFacesCoordinates(faceDetecionTracking);
             return faceDetecionTracking;
         }
-        public static void getFacesCoordinates(FaceDetectionResult faceDetectionTracking)
+        private static Dictionary<int, Fragment<FaceEvent>> getFacesCoordinates(FaceDetectionResult faceDetectionTracking)
         {
             List<Image> resultFacec = new List<Image>();
 
@@ -48,7 +50,31 @@ namespace FaceRecognation._1._0
             var Fragments = faceDetectionTracking.Fragments.Where(x => x.Events != null).ToArray();
 
             var idDict = getIdDict(Fragments);
-            Debug.WriteLine("TOPKEK");
+            return idDict;
+        }
+
+        public static List<Image> getFacesFromCoords(Dictionary<int, Fragment<FaceEvent>> faceCoordinates)
+        {
+            List<Image> CroppedFaces = new List<Image>();
+
+           
+            return CroppedFaces;
+        }
+
+        private static void getFrame(string path, long startTime, int id)
+        {
+            if (!Directory.Exists("TempData"))
+                Directory.CreateDirectory("TempData");
+
+            var inputFile = new MediaFile() { Filename = path };
+            var outputFile = new MediaFile() { Filename = $@"TempData/{id}.png" };
+
+            using (var engine = new Engine())
+            {
+                engine.GetMetadata(inputFile);
+                var options = new ConversionOptions() { Seek = TimeSpan.FromTicks(startTime) };
+                engine.GetThumbnail(inputFile, outputFile, options);
+            }
         }
 
         private static Dictionary<int, Fragment<FaceEvent>> getIdDict(Fragment<FaceEvent>[] fragments)
@@ -75,6 +101,19 @@ namespace FaceRecognation._1._0
                 coolIdDict[key] = IdDict[key][IdDict[key].Count / 2];
             }
             return coolIdDict;
+        }
+
+        public static async void getFacesFromVideo(string path)
+        {
+            FaceDetectionResult faceDetectionResult = await getFaceDetectionAsync(path);
+            Dictionary<int, Fragment<FaceEvent>> FaceIds = getFacesCoordinates(faceDetectionResult);
+
+            foreach (int id in FaceIds.Keys)
+            {
+                var curFragment = FaceIds[id];
+                var startTime = curFragment.Start;
+                getFrame(path, startTime, id);
+            }
         }
     }
 }
