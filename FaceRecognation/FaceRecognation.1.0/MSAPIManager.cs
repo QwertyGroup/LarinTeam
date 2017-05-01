@@ -82,7 +82,7 @@ namespace FaceRecognation._1._0
 			private FaceIdAndRect() { }
 			public FaceIdAndRect(Guid faceId, FaceRectangle faceRectangle)
 			{
-				FaceId = FaceId;
+				FaceId = faceId;
 				FaceRect = faceRectangle;
 			}
 		}
