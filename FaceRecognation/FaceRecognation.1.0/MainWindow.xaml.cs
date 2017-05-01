@@ -30,6 +30,7 @@ namespace FaceRecognation._1._0
 		}
 
 		private MSAPIManager _msapiManager = MSAPIManager.MSAPIManagerInstance;
+		private ImageProcessing _imgProcessing = ImageProcessing.GetImageProcessingInstance;
 		private async void cmdTakePhoto_Click(object sender, RoutedEventArgs e)
 		{
 			var openDlg = new Microsoft.Win32.OpenFileDialog();
@@ -44,26 +45,12 @@ namespace FaceRecognation._1._0
 
 			string filePath = openDlg.FileName;
 
-			Uri fileUri = new Uri(filePath);
-			BitmapImage bitmapSource = new BitmapImage();
+			var sysdrwImage = System.Drawing.Image.FromFile(filePath);
+			imgPhoto.Source = _imgProcessing.ConvertImageToBitmapImage(sysdrwImage);
 
-			bitmapSource.BeginInit();
-			bitmapSource.CacheOption = BitmapCacheOption.None;
-			bitmapSource.UriSource = fileUri;
-			bitmapSource.EndInit();
+			var faces = await _msapiManager.DetectFace(_imgProcessing.ImageToStream(sysdrwImage));
 
-			imgPhoto.Source = bitmapSource;
-
-			using (Stream fstream = File.OpenRead(filePath))
-			{
-				var faces = await _msapiManager.DetectFace(fstream);
-				var rect = faces[0].FaceRectangle;
-				//var rect = new Microsoft.ProjectOxford.Common.Rectangle { Left = 100, Top = 50, Width = 300, Height = 200 };
-				var croppedBm = new CroppedBitmap(bitmapSource, new Int32Rect(rect.Left, rect.Top, rect.Width, rect.Height));
-				imgPhoto.Source = croppedBm;
-			}
-
-
+			imgPhoto.Source = _imgProcessing.ConvertImageToBitmapImage(_imgProcessing.CropImage(sysdrwImage, faces[0].FaceRectangle));
 		}
 
 		private void cmdAddFace_Click(object sender, RoutedEventArgs e)
@@ -78,7 +65,7 @@ namespace FaceRecognation._1._0
 
 		private void cmdCreateFaceList_Click(object sender, RoutedEventArgs e)
 		{
-
+			_imgProcessing.ClearCache();
 		}
 	}
 
