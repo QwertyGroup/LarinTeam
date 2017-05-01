@@ -31,6 +31,7 @@ namespace FaceRecognation._1._0
 
 		private MSAPIManager _msapiManager = MSAPIManager.MSAPIManagerInstance;
 		private ImageProcessing _imgProcessing = ImageProcessing.GetImageProcessingInstance;
+		private List<System.Drawing.Image> _faces = new List<System.Drawing.Image>();
 		private async void cmdTakePhoto_Click(object sender, RoutedEventArgs e)
 		{
 			var openDlg = new Microsoft.Win32.OpenFileDialog();
@@ -44,18 +45,53 @@ namespace FaceRecognation._1._0
 			}
 
 			string filePath = openDlg.FileName;
+			var photo = System.Drawing.Image.FromFile(filePath);
+			_faces.Add(photo);
+			spTakenPhotos.Children.Add(GenerateImg(photo));
+		}
 
-			var sysdrwImage = System.Drawing.Image.FromFile(filePath);
-			imgPhoto.Source = _imgProcessing.ConvertImageToBitmapImage(sysdrwImage);
-
-			var faces = await _msapiManager.DetectFace(_imgProcessing.ImageToStream(sysdrwImage));
-
-			imgPhoto.Source = _imgProcessing.ConvertImageToBitmapImage(_imgProcessing.CropImage(sysdrwImage, faces[0].FaceRectangle));
+		private System.Windows.Controls.Image GenerateImg(System.Drawing.Image photo)
+		{
+			return new System.Windows.Controls.Image
+			{
+				Source = _imgProcessing.ConvertImageToBitmapImage(photo),
+				Height = 120,
+				Width = 120,
+				Stretch = Stretch.Uniform,
+				Margin = new Thickness(7)
+			};
 		}
 
 		private void cmdAddFace_Click(object sender, RoutedEventArgs e)
 		{
 
+		}
+
+		private async void cmdDetectFace_Click(object sender, RoutedEventArgs e)
+		{
+			var res = new List<System.Drawing.Image>();
+			foreach (var photo in _faces)
+			{
+				var faces = await _msapiManager.DetectFace(_imgProcessing.ImageToStream(photo));
+				foreach (var face in faces)
+				{
+					var croppedFace = _imgProcessing.CropImage(photo, face.FaceRectangle);
+					res.Add(croppedFace);
+				}
+			}
+			_faces = res;
+			spTakenPhotos.Children.Clear();
+			foreach (var face in _faces)
+			{
+				spTakenPhotos.Children.Add(GenerateImg(face));
+			}
+		}
+
+		private void cmdClearCache_Click(object sender, RoutedEventArgs e)
+		{
+			_imgProcessing.ClearCache();
+			_faces = new List<System.Drawing.Image>();
+			spTakenPhotos.Children.Clear();
 		}
 
 		private void cmdFindSimilar_Click(object sender, RoutedEventArgs e)
@@ -65,8 +101,9 @@ namespace FaceRecognation._1._0
 
 		private void cmdCreateFaceList_Click(object sender, RoutedEventArgs e)
 		{
-			_imgProcessing.ClearCache();
+
 		}
+
 	}
 
 	public class XTests

@@ -34,8 +34,15 @@
   <Class Name="FaceRecognation._1._0.ImageProcessing">
     <Position X="6.5" Y="0.5" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAAgAAAAAAEAAAAAAAAAAAAAIABAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAgAAAAAAEBAAAAABAAAAAAIEBUAAAhIAAACAAVAAA=</HashCode>
       <FileName>ImageProcessing.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FaceRecognation._1._0.VideoManager">
+    <Position X="9.25" Y="0.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAARgAAAAAABAAAAAAEAAAABACAAAAAAABAAA=</HashCode>
+      <FileName>VideoManager.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Font Name="Segoe UI" Size="9" />
