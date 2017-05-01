@@ -32,7 +32,7 @@ namespace FaceRecognation._1._0
 		private MSAPIManager _msapiManager = MSAPIManager.MSAPIManagerInstance;
 		private ImageProcessing _imgProcessing = ImageProcessing.GetImageProcessingInstance;
 		private List<System.Drawing.Image> _faces = new List<System.Drawing.Image>();
-		private async void cmdTakePhoto_Click(object sender, RoutedEventArgs e)
+		private void cmdTakePhoto_Click(object sender, RoutedEventArgs e)
 		{
 			var openDlg = new Microsoft.Win32.OpenFileDialog();
 
@@ -111,8 +111,8 @@ namespace FaceRecognation._1._0
 
 		public void Run()
 		{
-			Debug.WriteLine("KEK");
-			VideoManager.getFacesFromVideo("1.mp4");
+			//Debug.WriteLine("KEK");
+			//VideoManager.getFacesFromVideo("1.mp4");
 		}
 	}
 }

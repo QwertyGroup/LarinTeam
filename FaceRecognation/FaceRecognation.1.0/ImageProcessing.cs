@@ -32,7 +32,7 @@ namespace FaceRecognation._1._0
 			return bm;
 		}
 
-		private BitmapImage ConvetrBitmapToBitmapImage(Bitmap bm)
+		private BitmapImage ConvertBitmapToBitmapImage(Bitmap bm)
 		{
 			var memstr = new MemoryStream();
 			bm.Save(memstr, ImageFormat.Jpeg);
@@ -46,7 +46,7 @@ namespace FaceRecognation._1._0
 
 		public BitmapImage ConvertImageToBitmapImage(Image img)
 		{
-			return ConvetrBitmapToBitmapImage(ConvertImageToBitmap(img));
+			return ConvertBitmapToBitmapImage(ConvertImageToBitmap(img));
 		}
 
 		private Bitmap ConvertBitmapImagetoBitmap(BitmapImage bitmapImg)
