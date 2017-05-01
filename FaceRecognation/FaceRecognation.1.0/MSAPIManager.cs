@@ -11,20 +11,20 @@ namespace FaceRecognation._1._0
 {
 	public class MSAPIManager
 	{
-        //Singleton
-        private static MSAPIManager _mSAPIManagerInstance;
+		//Singleton
+		private static MSAPIManager _mSAPIManagerInstance;
 
-        public static MSAPIManager MSAPIManagerInstance
-        {
-            get
-            {
-                if (_mSAPIManagerInstance == null)
-                {
-                    _mSAPIManagerInstance = new MSAPIManager();
-                }
-                return _mSAPIManagerInstance;
-            }
-        }
+		public static MSAPIManager MSAPIManagerInstance
+		{
+			get
+			{
+				if (_mSAPIManagerInstance == null)
+				{
+					_mSAPIManagerInstance = new MSAPIManager();
+				}
+				return _mSAPIManagerInstance;
+			}
+		}
 
 		private MSAPIManager()
 		{
@@ -75,7 +75,7 @@ namespace FaceRecognation._1._0
 			}
 		}
 
-		private async Task<Microsoft.ProjectOxford.Face.Contract.Face[]> DetectFace(Stream imageAsStream)
+		public async Task<Microsoft.ProjectOxford.Face.Contract.Face[]> DetectFace(Stream imageAsStream)
 		{
 			try
 			{
