@@ -33,7 +33,7 @@ namespace FaceRecognation._1._0
 
 		private readonly IFaceServiceClient _faceServiceClient;
 
-		private async void CreateFaceList(string faceListId, string faceListName)
+		public async void CreateFaceList(string faceListId, string faceListName)
 		{
 			try
 			{
@@ -45,7 +45,7 @@ namespace FaceRecognation._1._0
 			}
 		}
 
-		private async Task<AddPersistedFaceResult> AddFaceToFaceList(string faceListId, Stream imageAsStream)
+		public async Task<AddPersistedFaceResult> AddFaceToFaceList(string faceListId, Stream imageAsStream)
 		{
 			try
 			{
@@ -60,11 +60,11 @@ namespace FaceRecognation._1._0
 			}
 		}
 
-		public async Task<Microsoft.ProjectOxford.Face.Contract.Face[]> DetectFace(Stream imageAsStream)
+		private async Task<Microsoft.ProjectOxford.Face.Contract.Face[]> DetectFace(Stream imageAsStream)
 		{
 			try
 			{
-				var faces = await _faceServiceClient.DetectAsync(imageAsStream);
+				var faces = await _faceServiceClient.DetectAsync(imageAsStream, true);
 				if (faces.Length == 0) throw new Exception("FaceList is empty");
 				return faces;
 			}
@@ -82,21 +82,21 @@ namespace FaceRecognation._1._0
 			private FaceIdAndRect() { }
 			public FaceIdAndRect(Guid faceId, FaceRectangle faceRectangle)
 			{
-				FaceId = FaceId;
+				FaceId = faceId;
 				FaceRect = faceRectangle;
 			}
 		}
 
-		private async Task<FaceIdAndRect[]> GetFaceRectangle(Stream imageAsStream)
+		public async Task<FaceIdAndRect[]> GetFaceRectangle(Stream imageAsStream)
 		{
 			var faces = await DetectFace(imageAsStream);
 			var faceIdAndRectList = new List<FaceIdAndRect>();
-			foreach (var face in await DetectFace(imageAsStream))
+			foreach (var face in faces)
 				faceIdAndRectList.Add(new FaceIdAndRect(face.FaceId, face.FaceRectangle));
 			return faceIdAndRectList.ToArray();
 		}
 
-		private async Task<SimilarPersistedFace[]> CheckForSimilarity(FaceIdAndRect faceIdAndRect, string faceListId)
+		public async Task<SimilarPersistedFace[]> CheckForSimilarity(FaceIdAndRect faceIdAndRect, string faceListId)
 		{
 			try
 			{
