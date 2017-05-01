@@ -66,11 +66,15 @@ namespace FaceRecognation._1._0
 		private List<Guid> _persistedIds = new List<Guid>();
 		private async void cmdAddFace_Click(object sender, RoutedEventArgs e)
 		{
+			(sender as Button).Content = "Adding...";
 			foreach (var face in _faces)
 			{
 				var pres = await _msapiManager.AddFaceToFaceList(_facelistId, _imgProcessing.ImageToStream(face));
 				_persistedIds.Add(pres.PersistedFaceId);
 			}
+			(sender as Button).Content = "Added successfuly.";
+			await Task.Delay(TimeSpan.FromSeconds(1));
+			(sender as Button).Content = "Add Taken faces tL";
 		}
 
 		private List<MSAPIManager.FaceIdAndRect> _faceIdAndRectList = new List<MSAPIManager.FaceIdAndRect>();
@@ -115,9 +119,13 @@ namespace FaceRecognation._1._0
 		}
 
 		private string _facelistId = "facelist0";
-		private void cmdCreateFaceList_Click(object sender, RoutedEventArgs e)
+		private async void cmdCreateFaceList_Click(object sender, RoutedEventArgs e)
 		{
+			(sender as Button).Content = "Creating...";
 			_msapiManager.CreateFaceList(_facelistId, "Lace list 0");
+			(sender as Button).Content = "Created.";
+			await Task.Delay(TimeSpan.FromSeconds(1));
+			(sender as Button).Content = "Create FaceList";
 		}
 	}
 
