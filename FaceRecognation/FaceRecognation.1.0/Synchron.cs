@@ -52,7 +52,7 @@ namespace FaceRecognation._1._0
 		private int LastId = 0;
 		private List<Face> Data;
 
-		public static string getSecretCode()
+		private static string getSecretCode()
 		{
 			try
 			{

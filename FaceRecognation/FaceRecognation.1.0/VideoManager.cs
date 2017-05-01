@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.ProjectOxford.Face.Contract;
 using Microsoft.ProjectOxford.Video;
 using Microsoft.ProjectOxford.Video.Contract;
 using System.IO;
@@ -17,8 +18,10 @@ namespace FaceRecognation._1._0
 {
     public static class VideoManager
     {
-        private static VideoServiceClient videoServiceClient = new VideoServiceClient(MSAPIManager.MSAPIManagerInstance.GetMSKey());
+        private static VideoServiceClient videoServiceClient = new VideoServiceClient(/*MSAPIManager.MSAPIManagerInstance.GetMSKey()*/"5eea817fe9524b019fd8145193e76c42");
         private static double TimeScale;
+        private static int VideoWidth;
+        private static int VideoHeight;
         private static async Task<FaceDetectionResult> getFaceDetectionAsync(string filePath)
         {
             Operation videoOperation;
@@ -70,10 +73,13 @@ namespace FaceRecognation._1._0
 
             var inputFile = new MediaFile() { Filename = path };
             var outputFile = new MediaFile() { Filename = $@"TempData/{id}.png" };
-
+            
             using (var engine = new Engine())
             {
                 engine.GetMetadata(inputFile);
+                var FrameSize = inputFile.Metadata.VideoData.FrameSize;
+                VideoWidth = int.Parse(FrameSize.Split('x')[0]);
+                VideoHeight = int.Parse(FrameSize.Split('x')[1]);
                 var options = new ConversionOptions() { Seek = TimeSpan.FromMilliseconds(startTime) };
                 engine.GetThumbnail(inputFile, outputFile, options);
             }
@@ -107,6 +113,7 @@ namespace FaceRecognation._1._0
 
         public static async void getFacesFromVideo(string path)
         {
+            videoServiceClient.Timeout = TimeSpan.FromMinutes(3);
             FaceDetectionResult faceDetectionResult = await getFaceDetectionAsync(path);
             Dictionary<int, Fragment<FaceEvent>> FaceIds = getFacesCoordinates(faceDetectionResult);
 
@@ -115,6 +122,27 @@ namespace FaceRecognation._1._0
                 var curFragment = FaceIds[id];
                 var startTimeMili = curFragment.Start / TimeScale * 1000;
                 getFrame(path, startTimeMili, id);
+
+                FaceRectangle rectangle = new FaceRectangle();
+
+                for (int i = 0; i < curFragment.Events.Length; i++)
+                {
+                    for (int j = 0; j < curFragment.Events[i].Length; j++)
+                    {
+                        if (curFragment.Events[i][j].Id == id)
+                        {
+                            rectangle.Height = Convert.ToInt32(curFragment.Events[i][j].Height * VideoHeight);
+                            rectangle.Top = Convert.ToInt32(curFragment.Events[i][j].Y * VideoHeight);
+                            rectangle.Left = Convert.ToInt32(curFragment.Events[i][j].X * VideoWidth);
+                            rectangle.Width = Convert.ToInt32(curFragment.Events[i][j].Width * VideoWidth);
+                            break;
+                        }
+                    }
+                }
+                var img = ImageProcessing.GetImageProcessingInstance.LoadImageFromFile($@"TempData/{id}.png");
+                img = ImageProcessing.GetImageProcessingInstance.CropImage(img, rectangle);
+                ImageProcessing.GetImageProcessingInstance.SaveImageToFile($@"TempData/{id}Face.png", img, System.Drawing.Imaging.ImageFormat.Png);
+                File.Delete($@"TempData/{id}.png");
             }
         }
     }
