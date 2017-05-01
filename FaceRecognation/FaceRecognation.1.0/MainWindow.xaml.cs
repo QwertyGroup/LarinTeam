@@ -112,10 +112,14 @@ namespace FaceRecognation._1._0
 
 		private async void cmdFindSimilar_Click(object sender, RoutedEventArgs e)
 		{
+			(sender as Button).Content = "Comparing...";
 			if (_faces.Count < 2) return;
 			var compResult = await _msapiManager.CheckForSimilarity(_faceIdAndRectList.First(), _facelistId);
 			foreach (var r in compResult)
 				lbCompResults.Items.Add($"ID: {r.PersistedFaceId}; Conf: {r.Confidence:f}");
+			(sender as Button).Content = "Compared successfuly.";
+			await Task.Delay(TimeSpan.FromSeconds(1));
+			(sender as Button).Content = "Compare faces";
 		}
 
 		private string _facelistId = "facelist0";
