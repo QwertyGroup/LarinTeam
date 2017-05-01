@@ -141,7 +141,7 @@ namespace FaceRecognation._1._0
 		public void Run()
 		{
 			Debug.WriteLine("KEK");
-			//VideoManager.getFacesFromVideo("1.mp4");
+			VideoManager.getFacesFromVideo("1.mp4");
 		}
 	}
 }

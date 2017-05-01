@@ -129,7 +129,7 @@ namespace FaceRecognation._1._0
             Dictionary<int, CoolEvent> coolDic = new Dictionary<int, CoolEvent>();
             foreach(var key in dic.Keys)
             {
-                coolDic[key] = dic[key][dic[key].Count / 3];
+                coolDic[key] = dic[key][dic[key].Count / 2];
             }
             return coolDic;
         }
@@ -140,9 +140,6 @@ namespace FaceRecognation._1._0
             MediaFile testFile = new MediaFile() { Filename = "DeleteIt.png" };
             Engine eng = new Engine();
             eng.GetMetadata(inputFile);
-
-            var FrameSize = inputFile.Metadata.VideoData.FrameSize;
-            if (FrameSize == null) FrameSize = "1920x1080";
 
             var options = new ConversionOptions() { Seek = TimeSpan.FromSeconds(0) };
             eng.GetThumbnail(inputFile, testFile, options);
@@ -156,8 +153,8 @@ namespace FaceRecognation._1._0
             CurrentVideoPath = path;
             setVideoResol();
 
-            videoServiceClient.Timeout = TimeSpan.FromMinutes(5);
-            FaceDetectionResult faceDetectionResult = await getFaceDetectionAsync(path);
+            videoServiceClient.Timeout = TimeSpan.FromMinutes(15);
+            FaceDetectionResult faceDлулetectionResult = await getFaceDetectionAsync(path);
 
             Debug.WriteLine("Got FDR!!!!)))");
             Dictionary<int, CoolEvent> FaceIds = getCoolEvents(faceDetectionResult);
