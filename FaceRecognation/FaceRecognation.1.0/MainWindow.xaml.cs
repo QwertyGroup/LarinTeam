@@ -28,8 +28,8 @@ namespace FaceRecognation._1._0
 		{
 			InitializeComponent();
 
-            XTests test = new XTests();
-            test.Run();
+			XTests test = new XTests();
+			test.Run();
 		}
 
 		private MSAPIManager _msapiManager = MSAPIManager.MSAPIManagerInstance;
@@ -87,6 +87,7 @@ namespace FaceRecognation._1._0
 			foreach (var photo in _faces)
 			{
 				var faces = await _msapiManager.GetFaceRectangle(_imgProcessing.ImageToStream(photo));
+				if (faces.Length == 0) return;
 				foreach (var face in faces)
 				{
 					var croppedFace = _imgProcessing.CropImage(photo, face.FaceRect);
