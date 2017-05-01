@@ -100,7 +100,7 @@ namespace FaceRecognation._1._0
 		{
 			try
 			{
-				var similarFaces = await _faceServiceClient.FindSimilarAsync(faceIdAndRect.FaceId, faceListId);
+				var similarFaces = await _faceServiceClient.FindSimilarAsync(faceIdAndRect.FaceId, faceListId, FindSimilarMatchMode.matchFace);
 				if (similarFaces.Length == 0) throw new Exception("There is no similar faces");
 				return similarFaces;
 			}
@@ -108,6 +108,18 @@ namespace FaceRecognation._1._0
 			{
 				Debug.WriteLine(ex.Message);
 				return new SimilarPersistedFace[0];
+			}
+		}
+
+		public async void ATL_ACIDHOUZE(string faceListId)
+		{
+			try
+			{
+				await _faceServiceClient.DeleteFaceListAsync(faceListId);
+			}
+			catch (Exception ex)
+			{
+				Debug.WriteLine(ex.Message);
 			}
 		}
 	}

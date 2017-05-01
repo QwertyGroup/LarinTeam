@@ -125,6 +125,8 @@ namespace FaceRecognation._1._0
 		private string _facelistId = "facelist0";
 		private async void cmdCreateFaceList_Click(object sender, RoutedEventArgs e)
 		{
+			(sender as Button).Content = "Deleting old list...";
+			_msapiManager.ATL_ACIDHOUZE(_facelistId);
 			(sender as Button).Content = "Creating...";
 			_msapiManager.CreateFaceList(_facelistId, "Lace list 0");
 			(sender as Button).Content = "Created.";
