@@ -17,7 +17,8 @@ namespace FaceRecognation._1._0
 {
     public static class VideoManager
     {
-        private static VideoServiceClient videoServiceClient = new VideoServiceClient(/*MSAPIManager.MSAPIManagerInstance.GetMSKey()*/"80c8c2aa437c4a30a76825d80efb2910 ");
+        private static VideoServiceClient videoServiceClient = new VideoServiceClient(MSAPIManager.MSAPIManagerInstance.GetMSKey());
+        private static double TimeScale;
         private static async Task<FaceDetectionResult> getFaceDetectionAsync(string filePath)
         {
             Operation videoOperation;
@@ -38,6 +39,7 @@ namespace FaceRecognation._1._0
             }
             var faceDetectionTrackingResultJsonString = operationResult.ProcessingResult;
             var faceDetecionTracking = JsonConvert.DeserializeObject<FaceDetectionResult>(faceDetectionTrackingResultJsonString);
+            TimeScale = faceDetecionTracking.Timescale;
             getFacesCoordinates(faceDetecionTracking);
             return faceDetecionTracking;
         }
@@ -53,7 +55,7 @@ namespace FaceRecognation._1._0
             return idDict;
         }
 
-        public static List<Image> getFacesFromCoords(Dictionary<int, Fragment<FaceEvent>> faceCoordinates)
+        private static List<Image> getFacesFromCoords(Dictionary<int, Fragment<FaceEvent>> faceCoordinates)
         {
             List<Image> CroppedFaces = new List<Image>();
 
@@ -61,7 +63,7 @@ namespace FaceRecognation._1._0
             return CroppedFaces;
         }
 
-        private static void getFrame(string path, long startTime, int id)
+        private static void getFrame(string path, double startTime, int id)
         {
             if (!Directory.Exists("TempData"))
                 Directory.CreateDirectory("TempData");
@@ -72,7 +74,7 @@ namespace FaceRecognation._1._0
             using (var engine = new Engine())
             {
                 engine.GetMetadata(inputFile);
-                var options = new ConversionOptions() { Seek = TimeSpan.FromTicks(startTime) };
+                var options = new ConversionOptions() { Seek = TimeSpan.FromMilliseconds(startTime) };
                 engine.GetThumbnail(inputFile, outputFile, options);
             }
         }
@@ -111,8 +113,8 @@ namespace FaceRecognation._1._0
             foreach (int id in FaceIds.Keys)
             {
                 var curFragment = FaceIds[id];
-                var startTime = curFragment.Start;
-                getFrame(path, startTime, id);
+                var startTimeMili = curFragment.Start / TimeScale * 1000;
+                getFrame(path, startTimeMili, id);
             }
         }
     }
