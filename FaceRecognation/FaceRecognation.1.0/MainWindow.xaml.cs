@@ -111,6 +111,7 @@ namespace FaceRecognation._1._0
 			_imgProcessing.ClearCache();
 			_faces = new List<System.Drawing.Image>();
 			spTakenPhotos.Children.Clear();
+			lbCompResults.Items.Clear();
 		}
 
 		private async void cmdFindSimilar_Click(object sender, RoutedEventArgs e)
