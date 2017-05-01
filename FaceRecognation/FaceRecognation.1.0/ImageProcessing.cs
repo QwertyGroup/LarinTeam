@@ -12,7 +12,7 @@ namespace FaceRecognation._1._0
 	{
 		private ImageProcessing() { }
 		private static ImageProcessing _imageProcessingInstance;
-		public static ImageProcessing GetImageProcessingInstance
+		public static ImageProcessing ImageProcessingInstance
 		{
 			get
 			{

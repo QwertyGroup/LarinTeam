@@ -122,6 +122,7 @@
     </ApplicationDefinition>
     <Compile Include="Face.cs" />
     <Compile Include="ImageProcessing.cs" />
+    <Compile Include="KeyManager.cs" />
     <Compile Include="Synchron.cs" />
     <Compile Include="VideoManager.cs" />
     <Page Include="MainWindow.xaml">

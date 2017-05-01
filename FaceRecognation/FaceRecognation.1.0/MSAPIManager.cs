@@ -28,22 +28,7 @@ namespace FaceRecognation._1._0
 
 		private MSAPIManager()
 		{
-			_faceServiceClient = new FaceServiceClient(GetMSKey());
-		}
-
-		public string GetMSKey()
-		{
-			try
-			{
-				var filename = "Keys.keys";
-				if (!File.Exists(filename)) throw new Exception("File with keys does not exist((9(");
-				return File.ReadLines(filename).ToArray()[1];
-			}
-			catch (Exception ex)
-			{
-				Debug.WriteLine(ex.Message);
-				return "No MS key found";
-			}
+			_faceServiceClient = new FaceServiceClient(KeyManager.Instance.MsPhotoKey);
 		}
 
 		private readonly IFaceServiceClient _faceServiceClient;

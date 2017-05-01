@@ -33,7 +33,7 @@ namespace FaceRecognation._1._0
 
 		private Synchron()
 		{
-			AuthSecret = getSecretCode();
+			AuthSecret = KeyManager.Instance.FireBaseKey;
 			BasePath = "https://recognise-faces.firebaseio.com/";
 			Config = new FirebaseConfig
 			{
@@ -52,26 +52,6 @@ namespace FaceRecognation._1._0
 		private int LastId = 0;
 		private List<Face> Data;
 
-		private static string getSecretCode()
-		{
-			try
-			{
-				var fileName = "Keys.keys";
-				if (File.Exists(fileName))
-				{
-					return File.ReadAllLines(fileName).First();
-				}
-				else
-				{
-					throw new Exception("File with keys does not exist");
-				}
-			}
-			catch (Exception e)
-			{
-				Debug.WriteLine(e.Message);
-				return "Null key";
-			}
-		}
 		private List<Face> getData()
 		{
 			FirebaseResponse response = Client.Get("Faces");

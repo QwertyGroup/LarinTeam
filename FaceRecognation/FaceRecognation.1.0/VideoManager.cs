@@ -18,7 +18,7 @@ namespace FaceRecognation._1._0
 {
     public static class VideoManager
     {
-        private static VideoServiceClient videoServiceClient = new VideoServiceClient(/*MSAPIManager.MSAPIManagerInstance.GetMSKey()*/"5eea817fe9524b019fd8145193e76c42");
+        private static VideoServiceClient videoServiceClient = new VideoServiceClient(KeyManager.Instance.MsVideoKey);
         private static double TimeScale;
         private static int VideoWidth;
         private static int VideoHeight;
@@ -139,9 +139,9 @@ namespace FaceRecognation._1._0
                         }
                     }
                 }
-                var img = ImageProcessing.GetImageProcessingInstance.LoadImageFromFile($@"TempData/{id}.png");
-                img = ImageProcessing.GetImageProcessingInstance.CropImage(img, rectangle);
-                ImageProcessing.GetImageProcessingInstance.SaveImageToFile($@"TempData/{id}Face.png", img, System.Drawing.Imaging.ImageFormat.Png);
+                var img = ImageProcessing.ImageProcessingInstance.LoadImageFromFile($@"TempData/{id}.png");
+                img = ImageProcessing.ImageProcessingInstance.CropImage(img, rectangle);
+                ImageProcessing.ImageProcessingInstance.SaveImageToFile($@"TempData/{id}Face.png", img, System.Drawing.Imaging.ImageFormat.Png);
                 File.Delete($@"TempData/{id}.png");
             }
         }
