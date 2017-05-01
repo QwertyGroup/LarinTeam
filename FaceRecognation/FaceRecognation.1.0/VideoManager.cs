@@ -24,7 +24,6 @@ namespace FaceRecognation._1._0
 		private static int VideoHeight;
 		private static string CurrentVideoPath;
 
-
 		private static async Task<FaceDetectionResult> getFaceDetectionAsync(string filePath)
 		{
 			Operation videoOperation;
@@ -157,6 +156,11 @@ namespace FaceRecognation._1._0
 			FaceDetectionResult faceDлулetectionResult = await getFaceDetectionAsync(path);
 
 			Debug.WriteLine("Got FDR!!!!)))");
+
+			// ONLY FOR TEST PURPS 
+			FaceDetectionResult faceDetectionResult = new FaceDetectionResult();
+			//PLS DELETE ME 
+
 			Dictionary<int, CoolEvent> FaceIds = getCoolEvents(faceDetectionResult);
 
 			foreach (int id in FaceIds.Keys)

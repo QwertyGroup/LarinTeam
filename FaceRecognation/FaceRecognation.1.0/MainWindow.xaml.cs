@@ -87,7 +87,7 @@ namespace FaceRecognation._1._0
 			foreach (var photo in _faces)
 			{
 				var faces = await _msapiManager.GetFaceRectangle(_imgProcessing.ImageToStream(photo));
-				if (faces.Length == 0) return;
+				if (faces.Length == 0) continue;
 				foreach (var face in faces)
 				{
 					var croppedFace = _imgProcessing.CropImage(photo, face.FaceRect);
@@ -143,8 +143,8 @@ namespace FaceRecognation._1._0
 
 		public void Run()
 		{
-			Debug.WriteLine("KEK");
-			VideoManager.getFacesFromVideo("1.mp4");
+			//Debug.WriteLine("KEK");
+			//VideoManager.getFacesFromVideo("1.mp4");
 		}
 	}
 }
