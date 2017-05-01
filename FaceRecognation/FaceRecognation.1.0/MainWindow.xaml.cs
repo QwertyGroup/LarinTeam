@@ -27,7 +27,9 @@ namespace FaceRecognation._1._0
 		public MainWindow()
 		{
 			InitializeComponent();
-			new XTests().Run();
+
+            XTests test = new XTests();
+            test.Run();
 		}
 
 		private MSAPIManager _msapiManager = MSAPIManager.MSAPIManagerInstance;
