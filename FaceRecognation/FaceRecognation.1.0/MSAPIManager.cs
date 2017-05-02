@@ -6,6 +6,7 @@ using Microsoft.ProjectOxford.Face;
 using System.IO;
 using System.Diagnostics;
 using System.Collections.Generic;
+using System.Drawing;
 
 namespace FaceRecognation._1._0
 {
@@ -33,7 +34,7 @@ namespace FaceRecognation._1._0
 
 		private readonly IFaceServiceClient _faceServiceClient;
 
-		public async void CreateFaceList(string faceListId, string faceListName)
+		private async void CreateFaceList(string faceListId, string faceListName)
 		{
 			try
 			{
@@ -45,7 +46,7 @@ namespace FaceRecognation._1._0
 			}
 		}
 
-		public async Task<AddPersistedFaceResult> AddFaceToFaceList(string faceListId, Stream imageAsStream)
+		private async Task<AddPersistedFaceResult> AddFaceToFaceList(string faceListId, Stream imageAsStream)
 		{
 			try
 			{
@@ -75,7 +76,7 @@ namespace FaceRecognation._1._0
 			}
 		}
 
-		public class FaceIdAndRect
+		private class FaceIdAndRect
 		{
 			public Guid FaceId { get; set; }
 			public FaceRectangle FaceRect { get; set; }
@@ -87,7 +88,7 @@ namespace FaceRecognation._1._0
 			}
 		}
 
-		public async Task<FaceIdAndRect[]> GetFaceRectangle(Stream imageAsStream)
+		private async Task<FaceIdAndRect[]> GetFaceRectangle(Stream imageAsStream)
 		{
 			var faces = await DetectFace(imageAsStream);
 			var faceIdAndRectList = new List<FaceIdAndRect>();
@@ -96,7 +97,7 @@ namespace FaceRecognation._1._0
 			return faceIdAndRectList.ToArray();
 		}
 
-		public async Task<SimilarPersistedFace[]> CheckForSimilarity(FaceIdAndRect faceIdAndRect, string faceListId)
+		private async Task<SimilarPersistedFace[]> CheckForSimilarity(FaceIdAndRect faceIdAndRect, string faceListId)
 		{
 			try
 			{
@@ -120,6 +121,27 @@ namespace FaceRecognation._1._0
 			catch (Exception ex)
 			{
 				Debug.WriteLine(ex.Message);
+			}
+		}
+
+		private ImageProcessing _imgProcessing = ImageProcessing.ImageProcessingInstance;
+		public async Task<SimilarPersistedFace[]> FindSimilar(Image original, Image[] candidates, bool areCropped = false)
+		{
+			var croppedCandidatesFaces = new List<Image>();
+			var faceIdAndRectList = new List<FaceIdAndRect>();
+			if (!areCropped)
+			{// Cropping candidates if wasnt cropped before 
+				foreach (var photo in candidates)
+				{
+					var faces = await GetFaceRectangle(_imgProcessing.ImageToStream(photo));
+					if (faces.Length == 0) continue;
+					foreach (var face in faces)
+					{
+						var croppedFace = _imgProcessing.CropImage(photo, face.FaceRect);
+						faceIdAndRectList.Add(face);
+						croppedCandidatesFaces.Add(croppedFace);
+					}
+				}
 			}
 		}
 	}
