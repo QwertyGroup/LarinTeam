@@ -51,9 +51,24 @@
       </Class>
     </NestedTypes>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAARQAhACAABAAAAAAMAAAABACAAACAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAABQAhACAABAAIAAAMAAAABACAAACAAAAAAA=</HashCode>
       <FileName>VideoManager.cs</FileName>
     </TypeIdentifier>
+  </Class>
+  <Class Name="FaceRecognation._1._0.MainWindow">
+    <Position X="3" Y="3.5" Width="1.5" />
+    <NestedTypes>
+      <Class Name="FaceRecognation._1._0.MainWindow.FacesSelectedCounter" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MainWindow.xaml.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAQEAAFgAAAQAAACAAAIAAAAAAAAQAAEAIAAACAAwAA=</HashCode>
+      <FileName>MainWindow.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
   </Class>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>

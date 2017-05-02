@@ -35,6 +35,7 @@ namespace FaceRecognation._1._0
 		private MSAPIManager _msapiManager = MSAPIManager.MSAPIManagerInstance;
 		private ImageProcessing _imgProcessing = ImageProcessing.ImageProcessingInstance;
 		private List<System.Drawing.Image> _faces = new List<System.Drawing.Image>();
+		private string _videoPath;
 		private void cmdTakePhoto_Click(object sender, RoutedEventArgs e)
 		{
 			var openDlg = new Microsoft.Win32.OpenFileDialog();
@@ -48,9 +49,14 @@ namespace FaceRecognation._1._0
 			}
 
 			string filePath = openDlg.FileName;
-			var photo = System.Drawing.Image.FromFile(filePath);
-			_faces.Add(photo);
-			spTakenPhotos.Children.Add(GenerateImg(photo));
+
+			// photo
+			//var photo = System.Drawing.Image.FromFile(filePath);
+			//_faces.Add(photo);
+			//spTakenPhotos.Children.Add(GenerateImg(photo));
+
+			// video
+			_videoPath = filePath;
 		}
 
 		private System.Windows.Controls.Image GenerateImg(System.Drawing.Image photo)
@@ -80,27 +86,67 @@ namespace FaceRecognation._1._0
 		}
 
 		private List<MSAPIManager.FaceIdAndRect> _faceIdAndRectList = new List<MSAPIManager.FaceIdAndRect>();
+		private class FacesSelectedCounter
+		{
+			public event EventHandler OnAllWindowsClosed;
+			private int _closedCounter;
+			private int _maxWindows;
+			private FacesSelectedCounter() { }
+			public FacesSelectedCounter(int maxWindows)
+			{
+				_maxWindows = maxWindows;
+			}
+			public void IncCounter()
+			{
+				_closedCounter++;
+				if (_closedCounter == _maxWindows)
+					OnAllWindowsClosed?.Invoke(this, new EventArgs());
+			}
+		}
+
 		private async void cmdDetectFace_Click(object sender, RoutedEventArgs e)
 		{
 			(sender as Button).Content = "Detecting...";
-			var res = new List<System.Drawing.Image>();
-			foreach (var photo in _faces)
+
+			// Detecting for Photos -------------------------------------------------
+			//var res = new List<System.Drawing.Image>();
+			//foreach (var photo in _faces)
+			//{
+			//	var faces = await _msapiManager.GetFaceRectangle(_imgProcessing.ImageToStream(photo));
+			//	if (faces.Length == 0) continue;
+			//	foreach (var face in faces)
+			//	{
+			//		var croppedFace = _imgProcessing.CropImage(photo, face.FaceRect);
+			//		_faceIdAndRectList.Add(face);
+			//		res.Add(croppedFace);
+			//	}
+			//}
+			//_faces = res;
+			//spTakenPhotos.Children.Clear();
+			//foreach (var face in _faces)
+			//	spTakenPhotos.Children.Add(GenerateImg(face));
+			// ----------------------------------------------------------------------
+
+			// Detecting for Videos -------------------------------------------------
+			var faces4eachPerson = await VideoManager.getFacesFromVideo(_videoPath);
+			var faceCounter = new FacesSelectedCounter(faces4eachPerson.Count);
+			foreach (var person in faces4eachPerson)
 			{
-				var faces = await _msapiManager.GetFaceRectangle(_imgProcessing.ImageToStream(photo));
-				if (faces.Length == 0) continue;
-				foreach (var face in faces)
+				var winSf = new windowSelectFace(person.Value);
+				winSf.OnFaceSelected += (s, args) =>
 				{
-					var croppedFace = _imgProcessing.CropImage(photo, face.FaceRect);
-					_faceIdAndRectList.Add(face);
-					res.Add(croppedFace);
-				}
+					_faces.Add(args.Face);
+					faceCounter.OnAllWindowsClosed += (so, a) =>
+					{
+						spTakenPhotos.Children.Clear();
+						foreach (var face in _faces)
+							spTakenPhotos.Children.Add(GenerateImg(face));
+					};
+					winSf.Show();
+				};
 			}
-			_faces = res;
-			spTakenPhotos.Children.Clear();
-			foreach (var face in _faces)
-			{
-				spTakenPhotos.Children.Add(GenerateImg(face));
-			}
+			// ----------------------------------------------------------------------
+
 			(sender as Button).Content = "Detected successfuly.";
 			await Task.Delay(TimeSpan.FromSeconds(3));
 			(sender as Button).Content = "Detect Faces";

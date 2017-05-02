@@ -16,7 +16,7 @@
 			<Border BorderBrush="#FF0088FF" BorderThickness="3" CornerRadius="15" Padding="5" VerticalAlignment="Top" Margin="0,40,24,0" HorizontalAlignment="Right" Width="238" >
 				<StackPanel Margin="5">
 					<TextBlock Text="Commands" FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Center" />
-					<Button x:Name="cmdTakePhoto" Content="Browse photo" FontSize="20" Padding="6,4" Margin="4" Foreground="Black" Background="{x:Null}" BorderBrush="#FF3A3A3A" BorderThickness="2" Click="cmdTakePhoto_Click"/>
+					<Button x:Name="cmdTakePhoto" Content="Browse video" FontSize="20" Padding="6,4" Margin="4" Foreground="Black" Background="{x:Null}" BorderBrush="#FF3A3A3A" BorderThickness="2" Click="cmdTakePhoto_Click"/>
 					<Button x:Name="cmdDetectFace" Content="Detect Faces" FontSize="20" Padding="6,4" Margin="4" Foreground="Black" Background="{x:Null}" BorderBrush="#FF3A3A3A" BorderThickness="2" Click="cmdDetectFace_Click"/>
 					<TextBlock/>
 					<Button x:Name="cmdCreateFaceList" Content="Create FaceList" FontSize="20" Padding="6,4" Margin="4" Background="{x:Null}" Foreground="Black" BorderBrush="#FF3A3A3A" BorderThickness="2" Click="cmdCreateFaceList_Click"/>

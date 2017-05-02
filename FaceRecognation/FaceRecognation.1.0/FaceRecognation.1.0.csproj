@@ -125,6 +125,9 @@
     <Compile Include="KeyManager.cs" />
     <Compile Include="Synchron.cs" />
     <Compile Include="VideoManager.cs" />
+    <Compile Include="windowSelectFace.xaml.cs">
+      <DependentUpon>windowSelectFace.xaml</DependentUpon>
+    </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -138,6 +141,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="windowSelectFace.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
