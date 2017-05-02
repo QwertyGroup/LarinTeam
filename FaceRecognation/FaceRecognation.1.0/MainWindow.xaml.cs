@@ -74,7 +74,7 @@ namespace FaceRecognation._1._0
 			(sender as Button).Content = "Detecting...";
 
 			// Detecting for Videos
-			var faces4eachPerson = await VideoManager.getFacesFromVideo(_videoPath);
+			var faces4eachPerson = await  .getFacesFromVideo(_videoPath);
 			(sender as Button).Content = "Detected successfuly.";
 
 			// Selecting One face from Five given

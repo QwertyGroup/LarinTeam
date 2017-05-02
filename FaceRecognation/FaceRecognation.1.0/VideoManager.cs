@@ -19,8 +19,8 @@ namespace FaceRecognation._1._0
 	public class VideoManager
 	{
         //Singleton
-        private VideoManager _instance;
-        public VideoManager Instance
+        private static VideoManager _instance;
+        public static VideoManager Instance
         {
             get
             {
