@@ -136,7 +136,7 @@ namespace FaceRecognation._1._0
             VideoHeight = testImage.Height;
         }
 
-        public static async void getFacesFromVideo(string path)
+        public static async Task<Dictionary<int, List<Image>>> getFacesFromVideo(string path)
         {
             CurrentVideoPath = path;
             setVideoResol();
@@ -147,11 +147,13 @@ namespace FaceRecognation._1._0
             Debug.WriteLine("Got FDR!!!!)))");
             Dictionary<int, List<CoolEvent>> FaceIds = getCoolEvents(faceDetectionResult);
 
+            Dictionary<int, List<Image>> resultImages = new Dictionary<int, List<Image>>();
             //Choose 1 first and 4 random CoolEvent
             FaceIds = chooseFive(FaceIds);
 
             foreach (int id in FaceIds.Keys)
             {
+                resultImages[id] = new List<Image>();
                 foreach (var curEvent in FaceIds[id])
                 {
                     var startTimeMili = curEvent.startTime / TimeScale * 1000;
@@ -159,10 +161,12 @@ namespace FaceRecognation._1._0
 
                     var img = ImageProcessing.ImageProcessingInstance.LoadImageFromFile($@"TempData/{id}.{(long)startTimeMili}.png");
                     img = ImageProcessing.ImageProcessingInstance.CropImage(img, curEvent.rec);
-                    ImageProcessing.ImageProcessingInstance.SaveImageToFile($@"TempData/{id}.{(long)startTimeMili}Face", img, System.Drawing.Imaging.ImageFormat.Png);
+                    //ImageProcessing.ImageProcessingInstance.SaveImageToFile($@"TempData/{id}.{(long)startTimeMili}Face", img, System.Drawing.Imaging.ImageFormat.Png);
                     //File.Delete($@"TempData/{id}.png");
+                    resultImages[id].Add(img);
                 }
             }
+            return resultImages;
         }
 
         private static Dictionary<int, List<CoolEvent>> chooseFive(Dictionary<int, List<CoolEvent>> faceIds)
