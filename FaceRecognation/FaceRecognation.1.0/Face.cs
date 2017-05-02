@@ -14,12 +14,12 @@ namespace FaceRecognation._1._0
 	{
 		private List<Image> FaceImages = new List<Image>();
 		public List<string> BaseImages = new List<string>();
-
+        public int id;
 		public Face()
 		{
 		}
 
-		public static string ImageToBase(Image image, ImageFormat format)
+		private static string ImageToBase(Image image, ImageFormat format)
 		{
 			using (MemoryStream ms = new MemoryStream())
 			{
@@ -30,7 +30,17 @@ namespace FaceRecognation._1._0
 			}
 		}
 
-		public static Image BaseToImage(string base64String)
+        public void convertAllImagesToBase()
+        {
+            BaseImages = FaceImages.Select(x => ImageToBase(x, x.RawFormat)).ToList();
+        }
+
+        public void convertAllBaseToImages()
+        {
+            FaceImages = BaseImages.Select(x => BaseToImage(x)).ToList();
+        }
+
+		private static Image BaseToImage(string base64String)
 		{
 			byte[] imageBytes = Convert.FromBase64String(base64String);
 			using (var ms = new MemoryStream(imageBytes, 0, imageBytes.Length))

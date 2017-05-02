@@ -42,6 +42,7 @@ namespace FaceRecognation._1._0
 			};
 			Client = new FirebaseClient(Config);
 			Data = getData();
+            Data.ForEach(x => x.convertAllBaseToImages());
 			LastId = getLastId();
 		}
 
@@ -63,15 +64,47 @@ namespace FaceRecognation._1._0
 			return Data.Count;
 		}
 
-		public async Task<Face> AddFace(Face face)
+		private Face AddFace(Face face)
 		{
-			SetResponse response = await Client.SetAsync($"Faces/{LastId}", face);
-			LastId++;
-			Data.Add(face);
+            face.id = LastId;
+			SetResponse response = Client.Set($"Faces/{LastId}", face);
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                LastId++;
+                Data.Add(face);
+            }
 			Face result = response.ResultAs<Face>();
 			return result;
 		}
 
+        private Face UpdateFace(Face face)
+        {
+            FirebaseResponse response = Client.Update($"Faces/{face.id}", face);
+            if (response.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                throw new Exception();
+            }
+            Face result = response.ResultAs<Face>();
+            return result;
+            
+        }
+
+        public void checkAndThenAdd(Face face)
+        {
+            foreach(var otherFace in Data)
+            {
+                float similarity = 0;
+                //similarity = MSAPIManager.MSAPIManagerInstance.getSimilarity();
+                if (similarity > 0.4)
+                {
+                    face.id = otherFace.id;
+                    face.BaseImages.AddRange(otherFace.BaseImages);
+                    Face result = UpdateFace(face);
+                    return;         
+                }
+            }
+            AddFace(face);
+        }
 
 	}
 
