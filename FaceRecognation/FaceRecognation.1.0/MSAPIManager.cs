@@ -42,7 +42,7 @@ namespace FaceRecognation._1._0
 			}
 			catch (Exception ex)
 			{
-				Debug.WriteLine(ex.Message);
+				MessageManager.MsgManagerInstance.WriteMessage(ex.Message);
 			}
 		}
 
@@ -56,7 +56,7 @@ namespace FaceRecognation._1._0
 			}
 			catch (Exception ex)
 			{
-				Debug.WriteLine(ex.Message);
+				MessageManager.MsgManagerInstance.WriteMessage(ex.Message);
 				return new AddPersistedFaceResult();
 			}
 		}
@@ -71,7 +71,7 @@ namespace FaceRecognation._1._0
 			}
 			catch (Exception ex)
 			{
-				Debug.WriteLine(ex.Message);
+				MessageManager.MsgManagerInstance.WriteMessage(ex.Message);
 				return new Microsoft.ProjectOxford.Face.Contract.Face[0];
 			}
 		}
@@ -108,7 +108,7 @@ namespace FaceRecognation._1._0
 			}
 			catch (Exception ex)
 			{
-				Debug.WriteLine(ex.Message);
+				MessageManager.MsgManagerInstance.WriteMessage(ex.Message);
 				return new SimilarPersistedFace[0];
 			}
 		}
@@ -121,7 +121,7 @@ namespace FaceRecognation._1._0
 			}
 			catch (Exception ex)
 			{
-				Debug.WriteLine(ex.Message);
+				MessageManager.MsgManagerInstance.WriteMessage(ex.Message);
 			}
 		}
 

@@ -13,6 +13,7 @@ namespace FaceRecognation._1._0
 		public MainWindow()
 		{
 			InitializeComponent();
+			Loaded += (s, e) => MessageManager.MsgManagerInstance.WriteMessage("Program started");
 
 			XTests test = new XTests();
 			test.Run();
@@ -37,6 +38,8 @@ namespace FaceRecognation._1._0
 
 			// video
 			_videoPath = filePath;
+			MessageManager.MsgManagerInstance.WriteMessage("Video selected");
+			MessageManager.MsgManagerInstance.WriteMessage(_videoPath);
 		}
 
 		private System.Windows.Controls.Image GenerateImg(System.Drawing.Image photo)
@@ -71,11 +74,14 @@ namespace FaceRecognation._1._0
 
 		private async void cmdDetectFace_Click(object sender, RoutedEventArgs e)
 		{
-			(sender as Button).Content = "Detecting...";
+			var btn = sender as Button;
+			btn.Content = "Detecting...";
+			MessageManager.MsgManagerInstance.WriteMessage(btn.Content.ToString());
 
 			// Detecting for Videos
 			var faces4eachPerson = await VideoManager.Instance.getFacesFromVideo(_videoPath);
-			(sender as Button).Content = "Detected successfuly.";
+			btn.Content = "Detected successfuly.";
+			MessageManager.MsgManagerInstance.WriteMessage(btn.Content.ToString());
 
 			// Selecting One face from Five given
 			var faces = new List<System.Drawing.Image>();
@@ -85,15 +91,19 @@ namespace FaceRecognation._1._0
 				spTakenPhotos.Children.Clear();
 				foreach (var face in faces)
 					spTakenPhotos.Children.Add(GenerateImg(face));
-				(sender as Button).Content = "Comparing...";
+				btn.Content = "Comparing...";
+				MessageManager.MsgManagerInstance.WriteMessage(btn.Content.ToString());
+
 				var compResult = await _msapiManager.FindSimilar(faces.First(), faces.ToArray());
 
 				foreach (var r in compResult)
 					lbCompResults.Items.Add($"ID: {r.PersistedFaceId}; Conf: {r.Confidence:f}");
 
-				(sender as Button).Content = "Compared successfuly.";
+				btn.Content = "Compared successfuly.";
+				MessageManager.MsgManagerInstance.WriteMessage(btn.Content.ToString());
+
 				await Task.Delay(TimeSpan.FromSeconds(3));
-				(sender as Button).Content = "Compare Faces";
+				btn.Content = "Compare Faces";
 			};
 			foreach (var person in faces4eachPerson)
 			{
@@ -112,6 +122,7 @@ namespace FaceRecognation._1._0
 			_imgProcessing.ClearCache();
 			spTakenPhotos.Children.Clear();
 			lbCompResults.Items.Clear();
+			MessageManager.MsgManagerInstance.WriteMessage("Cache cleared");
 		}
 	}
 
@@ -120,7 +131,7 @@ namespace FaceRecognation._1._0
 
 		public void Run()
 		{
-			//Debug.WriteLine("KEK");
+			//MessageManager.MsgManagerInstance.WriteMessage("KEK");
 			//VideoManager.getFacesFromVideo("1.mp4");
 		}
 	}

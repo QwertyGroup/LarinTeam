@@ -22,7 +22,7 @@
 					<Button x:Name="cmdClearCache" Content="Clear Cache" FontSize="20" Padding="6,4" Margin="4" Background="{x:Null}" Foreground="Black" BorderBrush="#FF3A3A3A" BorderThickness="2" Click="cmdClearCache_Click"/>
 				</StackPanel>
 			</Border>
-			<ListBox x:Name="lbCompResults" HorizontalAlignment="Left" Height="241" Margin="20,417,0,0" VerticalAlignment="Top" Width="274"/>
+			<ListBox x:Name="lbCompResults" HorizontalAlignment="Left" Height="390" Margin="20,268,0,0" VerticalAlignment="Top" Width="274"/>
 		</Grid>
 		<Border Grid.Column="0" BorderBrush="#FF0088FF" Margin="20,40,0,0" BorderThickness="3" MaxHeight="620" MinHeight="200" CornerRadius="15" Padding="5" VerticalAlignment="Top"  HorizontalAlignment="Left">
 			<ScrollViewer >

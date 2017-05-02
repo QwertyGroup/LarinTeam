@@ -106,7 +106,7 @@ namespace FaceRecognation._1._0
 			}
 			catch (Exception ex)
 			{
-				Debug.WriteLine(ex.Message);
+				MessageManager.MsgManagerInstance.WriteMessage(ex.Message);
 				return ".unknown";
 			}
 		}

@@ -192,8 +192,8 @@ namespace FaceRecognation._1._0
             //Отправляем видосик
             FaceDetectionResult faceDetectionResult = await getFaceDetectionAsync(path);
 
-            //Радуемся ответу, как будто это ответ от Кибернетики про олимпиаду.
-            Debug.WriteLine("Got FDR!!!!)))");
+			//Радуемся ответу, как будто это ответ от Кибернетики про олимпиаду.
+			MessageManager.MsgManagerInstance.WriteMessage("Got FDR!!!!)))");
 
             //Получаем список крутыхСобытий на каждого человека
             Dictionary<int, List<CoolEvent>> FaceIds = getCoolEvents(faceDetectionResult);
