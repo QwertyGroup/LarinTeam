@@ -101,7 +101,8 @@ namespace FaceRecognation._1._0
 		{
 			try
 			{
-				var similarFaces = await _faceServiceClient.FindSimilarAsync(faceIdAndRect.FaceId, faceListId, FindSimilarMatchMode.matchFace);
+				var similarFaces = await _faceServiceClient.FindSimilarAsync(faceIdAndRect.FaceId,
+					faceListId, FindSimilarMatchMode.matchFace);
 				if (similarFaces.Length == 0) throw new Exception("There is no similar faces");
 				return similarFaces;
 			}
@@ -112,7 +113,7 @@ namespace FaceRecognation._1._0
 			}
 		}
 
-		public async void ATL_ACIDHOUZE(string faceListId)
+		private async void DeleteFaceList(string faceListId)
 		{
 			try
 			{
@@ -124,25 +125,75 @@ namespace FaceRecognation._1._0
 			}
 		}
 
-		private ImageProcessing _imgProcessing = ImageProcessing.ImageProcessingInstance;
-		public async Task<SimilarPersistedFace[]> FindSimilar(Image original, Image[] candidates, bool areCropped = false)
+		private class MSFace
 		{
-			var croppedCandidatesFaces = new List<Image>();
-			var faceIdAndRectList = new List<FaceIdAndRect>();
+			public Image Face { get; private set; }
+			public Guid Id { get; private set; }
+			public FaceRectangle Rect { get; private set; }
+
+			private MSFace() { }
+			public MSFace(Image face, Guid id, FaceRectangle rect)
+			{
+				Face = face;
+				Id = id;
+				Rect = rect;
+			}
+		}
+		private ImageProcessing _imgProcessing = ImageProcessing.ImageProcessingInstance;
+		public async Task<SimilarPersistedFace[]> FindSimilar(Image original, Image[] candidates,
+			bool areCropped = false)
+		{
+			var facelistId = "atl_acidhouze";
+
+			// Detecting original face
+			var dd = await GetDetectionData(original);
+			if (dd == null) throw new Exception("No face on original img.");
+			var orgnl = dd.First();
+
+			var cnds = new List<MSFace>();
 			if (!areCropped)
-			{// Cropping candidates if wasnt cropped before 
+			{
+				// Cropping candidates if werent cropped before 
 				foreach (var photo in candidates)
 				{
-					var faces = await GetFaceRectangle(_imgProcessing.ImageToStream(photo));
-					if (faces.Length == 0) continue;
-					foreach (var face in faces)
-					{
-						var croppedFace = _imgProcessing.CropImage(photo, face.FaceRect);
-						faceIdAndRectList.Add(face);
-						croppedCandidatesFaces.Add(croppedFace);
-					}
+					dd = await GetDetectionData(photo);
+					if (dd == null) continue;
+					cnds.AddRange(dd);
 				}
+				if (cnds.Count == 0) throw new Exception("No candidates faces");
 			}
+			else
+				// Just adding cropped candidates 
+				foreach (var c in candidates)
+					cnds.Add(new MSFace(c, Guid.Empty, new FaceRectangle
+					{
+						Top = 0,
+						Left = 0,
+						Width = c.Width,
+						Height = c.Height
+					}));
+
+			DeleteFaceList(facelistId);
+
+			CreateFaceList(facelistId, "Limb");
+			foreach (var pers in cnds)
+				await AddFaceToFaceList(facelistId, _imgProcessing.ImageToStream(pers.Face));
+
+			var compResult = await CheckForSimilarity(new FaceIdAndRect(orgnl.Id, orgnl.Rect), facelistId);
+			return compResult;
+		}
+
+		private async Task<List<MSFace>> GetDetectionData(Image img)
+		{
+			var result = new List<MSFace>();
+			var faces = await GetFaceRectangle(_imgProcessing.ImageToStream(img));
+			if (faces.Length == 0) return null;
+			foreach (var face in faces)
+			{
+				var croppedFace = _imgProcessing.CropImage(img, face.FaceRect);
+				result.Add(new MSFace(croppedFace, face.FaceId, face.FaceRect));
+			}
+			return result;
 		}
 	}
 }
