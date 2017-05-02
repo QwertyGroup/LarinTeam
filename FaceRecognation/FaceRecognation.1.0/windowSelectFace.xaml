@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FaceRecognation._1._0"
         mc:Ignorable="d"
-        Title="windowSelectFace" Height="500" Width="500">
+        Title="windowSelectFace" Height="500" Width="600" MaxWidth="650">
 	<Grid>
 		<ScrollViewer>
 			<WrapPanel x:Name="wpFaces" Background="#FF353535" />

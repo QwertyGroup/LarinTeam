@@ -14,13 +14,13 @@ namespace FaceRecognation._1._0
 
 		private List<System.Drawing.Image> _faces;
 		private ImageProcessing _imgProcessing = ImageProcessing.ImageProcessingInstance;
-		public windowSelectFace(List<System.Drawing.Image> faces)
+		public windowSelectFace(List<System.Drawing.Image> faces) : this()
 		{
 			_faces = faces;
-			Loaded += DisplayFaces;
+			Loaded += (s, e) => DisplayFaces();
 		}
 
-		private void DisplayFaces(object sender, RoutedEventArgs e)
+		private void DisplayFaces()
 		{
 			foreach (var face in _faces)
 			{

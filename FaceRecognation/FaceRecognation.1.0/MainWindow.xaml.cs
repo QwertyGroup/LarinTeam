@@ -130,20 +130,21 @@ namespace FaceRecognation._1._0
 			// Detecting for Videos -------------------------------------------------
 			var faces4eachPerson = await VideoManager.getFacesFromVideo(_videoPath);
 			var faceCounter = new FacesSelectedCounter(faces4eachPerson.Count);
+			faceCounter.OnAllWindowsClosed += (so, a) =>
+			{
+				spTakenPhotos.Children.Clear();
+				foreach (var face in _faces)
+					spTakenPhotos.Children.Add(GenerateImg(face));
+			};
 			foreach (var person in faces4eachPerson)
 			{
 				var winSf = new windowSelectFace(person.Value);
 				winSf.OnFaceSelected += (s, args) =>
 				{
 					_faces.Add(args.Face);
-					faceCounter.OnAllWindowsClosed += (so, a) =>
-					{
-						spTakenPhotos.Children.Clear();
-						foreach (var face in _faces)
-							spTakenPhotos.Children.Add(GenerateImg(face));
-					};
-					winSf.Show();
+					faceCounter.IncCounter();
 				};
+				winSf.Show();
 			}
 			// ----------------------------------------------------------------------
 
