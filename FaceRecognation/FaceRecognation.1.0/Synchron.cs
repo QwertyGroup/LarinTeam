@@ -63,15 +63,25 @@ namespace FaceRecognation._1._0
 			return Data.Count;
 		}
 
-		public async Task<Face> AddFace(Face face)
+		private Face AddFace(Face face)
 		{
-			SetResponse response = await Client.SetAsync($"Faces/{LastId}", face);
-			LastId++;
-			Data.Add(face);
+			SetResponse response = Client.Set($"Faces/{LastId}", face);
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                LastId++;
+                Data.Add(face);
+            }
 			Face result = response.ResultAs<Face>();
 			return result;
 		}
 
+        public void checkAndThenAdd(Face face)
+        {
+            foreach(var otherFace in Data)
+            {
+
+            }
+        }
 
 	}
 
