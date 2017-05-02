@@ -28,8 +28,8 @@ namespace FaceRecognation._1._0
 		{
 			InitializeComponent();
 
-            XTests test = new XTests();
-            test.Run();
+			XTests test = new XTests();
+			test.Run();
 		}
 
 		private MSAPIManager _msapiManager = MSAPIManager.MSAPIManagerInstance;
@@ -87,6 +87,7 @@ namespace FaceRecognation._1._0
 			foreach (var photo in _faces)
 			{
 				var faces = await _msapiManager.GetFaceRectangle(_imgProcessing.ImageToStream(photo));
+				if (faces.Length == 0) continue;
 				foreach (var face in faces)
 				{
 					var croppedFace = _imgProcessing.CropImage(photo, face.FaceRect);
@@ -110,6 +111,7 @@ namespace FaceRecognation._1._0
 			_imgProcessing.ClearCache();
 			_faces = new List<System.Drawing.Image>();
 			spTakenPhotos.Children.Clear();
+			lbCompResults.Items.Clear();
 		}
 
 		private async void cmdFindSimilar_Click(object sender, RoutedEventArgs e)
@@ -142,8 +144,8 @@ namespace FaceRecognation._1._0
 
 		public void Run()
 		{
-			Debug.WriteLine("KEK");
-			VideoManager.getFacesFromVideo("1.mp4");
+			//Debug.WriteLine("KEK");
+			//VideoManager.getFacesFromVideo("1.mp4");
 		}
 	}
 }

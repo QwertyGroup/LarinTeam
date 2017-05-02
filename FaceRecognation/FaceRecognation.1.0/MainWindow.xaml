@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FaceRecognation._1._0"
         mc:Ignorable="d"
-        Title="Face recognising machine 2017 awarded" Height="630" Width="800" Icon="FRLogo.png">
+        Title="Face recognising machine 2017 awarded" Height="710" Width="800" Icon="FRLogo.png">
 	<Grid Background="#FFD5E9FF">
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="3*"/>
@@ -19,18 +19,20 @@
 					<Button x:Name="cmdTakePhoto" Content="Browse photo" FontSize="20" Padding="6,4" Margin="4" Foreground="Black" Background="{x:Null}" BorderBrush="#FF3A3A3A" BorderThickness="2" Click="cmdTakePhoto_Click"/>
 					<Button x:Name="cmdDetectFace" Content="Detect Faces" FontSize="20" Padding="6,4" Margin="4" Foreground="Black" Background="{x:Null}" BorderBrush="#FF3A3A3A" BorderThickness="2" Click="cmdDetectFace_Click"/>
 					<TextBlock/>
+					<Button x:Name="cmdCreateFaceList" Content="Create FaceList" FontSize="20" Padding="6,4" Margin="4" Background="{x:Null}" Foreground="Black" BorderBrush="#FF3A3A3A" BorderThickness="2" Click="cmdCreateFaceList_Click"/>
 					<Button x:Name="cmdAddFace" Content="Add Taken faces tL" FontSize="20" Padding="6,4" Margin="4" Background="{x:Null}" Foreground="Black" BorderBrush="#FF3A3A3A" BorderThickness="2" Click="cmdAddFace_Click"/>
 					<Button x:Name="cmdFindSimilar" Content="Compare faces" FontSize="20" Padding="6,4" Margin="4" Background="{x:Null}" Foreground="Black" BorderBrush="#FF3A3A3A" BorderThickness="2" Click="cmdFindSimilar_Click"/>
-					<Button x:Name="cmdCreateFaceList" Content="Create FaceList" FontSize="20" Padding="6,4" Margin="4" Background="{x:Null}" Foreground="Black" BorderBrush="#FF3A3A3A" BorderThickness="2" Click="cmdCreateFaceList_Click"/>
 					<TextBlock/>
 					<Button x:Name="cmdClearCache" Content="Clear Cache" FontSize="20" Padding="6,4" Margin="4" Background="{x:Null}" Foreground="Black" BorderBrush="#FF3A3A3A" BorderThickness="2" Click="cmdClearCache_Click"/>
 				</StackPanel>
 			</Border>
-			<ListBox x:Name="lbCompResults" HorizontalAlignment="Left" Height="176" Margin="20,417,0,0" VerticalAlignment="Top" Width="274"/>
+			<ListBox x:Name="lbCompResults" HorizontalAlignment="Left" Height="241" Margin="20,417,0,0" VerticalAlignment="Top" Width="274"/>
 		</Grid>
-		<ScrollViewer Grid.Column="0">
-			<WrapPanel x:Name="spTakenPhotos" Height="Auto" Width="450" Margin="4">
-			</WrapPanel>
-		</ScrollViewer>
+		<Border Grid.Column="0" BorderBrush="#FF0088FF" Margin="20,40,0,0" BorderThickness="3" MaxHeight="620" MinHeight="200" CornerRadius="15" Padding="5" VerticalAlignment="Top"  HorizontalAlignment="Left">
+			<ScrollViewer >
+				<WrapPanel x:Name="spTakenPhotos" Height="Auto" Width="450" Margin="4">
+				</WrapPanel>
+			</ScrollViewer>
+		</Border>
 	</Grid>
 </Window>

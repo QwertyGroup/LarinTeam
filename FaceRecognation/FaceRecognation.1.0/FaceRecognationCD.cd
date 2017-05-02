@@ -13,7 +13,7 @@
       </Class>
     </NestedTypes>
     <TypeIdentifier>
-      <HashCode>AAQAAAAAAAIEAQAAEACAAAAAAAAAAAAAEIEAAAAAAAA=</HashCode>
+      <HashCode>AAQAAAAAAAIEAQAAAACAAAAAAAAAAAAAEIEAIAAAAAA=</HashCode>
       <FileName>MSAPIManager.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -27,21 +27,31 @@
   <Class Name="FaceRecognation._1._0.Synchron">
     <Position X="4.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>BAAUAAAAAgAAAAAAAAABAgAAAEAAABAAQAAAQAAAAQQ=</HashCode>
+      <HashCode>BAAUAAAAAgAAAAAAAAAAAgAAAEAAABAAQAAAQAAAAQQ=</HashCode>
       <FileName>Synchron.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="FaceRecognation._1._0.ImageProcessing">
     <Position X="6.5" Y="0.5" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAAgAAAAAAEBAAAAABAAAAAAIEBUAAAhIAAACAAVAAA=</HashCode>
+      <HashCode>AAAAAAAAAAEBAAAAIBAAAAAAIEBUABAhIAAACAAVAAA=</HashCode>
       <FileName>ImageProcessing.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="FaceRecognation._1._0.VideoManager">
     <Position X="9.25" Y="0.5" Width="2" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="FaceRecognation._1._0.VideoManager.CoolEvent">
+        <TypeIdentifier>
+          <NewMemberFileName>VideoManager.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAARgAAAAAABAAAAAAEAAAABACAAAAAAABAAA=</HashCode>
+      <HashCode>AAAAAAAAARQAhACAABAAAAAAMAAAABACAAACAAAAAAA=</HashCode>
       <FileName>VideoManager.cs</FileName>
     </TypeIdentifier>
   </Class>
