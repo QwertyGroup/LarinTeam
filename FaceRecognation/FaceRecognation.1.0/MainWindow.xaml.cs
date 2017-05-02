@@ -40,7 +40,7 @@ namespace FaceRecognation._1._0
 		{
 			var openDlg = new Microsoft.Win32.OpenFileDialog();
 
-			openDlg.Filter = "JPEG Image(*.jpg)|*.jpg|PNG Image(*.png)|*.png";
+			openDlg.Filter = "JPEG Image(*.jpg)|*.jpg|PNG Image(*.png)|*.png|MP4 Video(*.mp4)|*.mp4";
 			bool? result = openDlg.ShowDialog(this);
 
 			if (!(bool)result)
