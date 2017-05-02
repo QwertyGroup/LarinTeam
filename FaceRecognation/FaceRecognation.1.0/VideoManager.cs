@@ -49,22 +49,15 @@ namespace FaceRecognation._1._0
             return faceDetecionTracking;
         }
 
-        private static Dictionary<int, CoolEvent> getCoolEvents(FaceDetectionResult faceDetectionTracking)
+        private static Dictionary<int, List<CoolEvent>> getCoolEvents(FaceDetectionResult faceDetectionTracking)
         {
             //List<int> IDs = faceDetectionTracking.FacesDetected.Select(x => x.FaceId).ToList();
 
             var Fragments = faceDetectionTracking.Fragments.Where(x => x.Events != null).ToArray();
 
             var idDict = getDictionary(Fragments);
+
             return idDict;
-        }
-
-        private static List<Image> getFacesFromCoords(Dictionary<int, Fragment<FaceEvent>> faceCoordinates)
-        {
-            List<Image> CroppedFaces = new List<Image>();
-
-           
-            return CroppedFaces;
         }
 
         private static void getFrame(string path, double startTime, int id)
@@ -73,7 +66,7 @@ namespace FaceRecognation._1._0
                 Directory.CreateDirectory("TempData");
 
             var inputFile = new MediaFile() { Filename = path };
-            var outputFile = new MediaFile() { Filename = $@"TempData/{id}.png" };
+            var outputFile = new MediaFile() { Filename = $@"TempData/{id}.{(long)startTime}.png" };
             
             using (var engine = new Engine())
             {
@@ -90,7 +83,7 @@ namespace FaceRecognation._1._0
             public int Id;
         }
 
-        private static Dictionary<int, CoolEvent> getDictionary(Fragment<FaceEvent>[] fragments)
+        private static Dictionary<int, List<CoolEvent>> getDictionary(Fragment<FaceEvent>[] fragments)
         {
             Dictionary<int, List<CoolEvent>> dic = new Dictionary<int, List<CoolEvent>>();
 
@@ -126,12 +119,7 @@ namespace FaceRecognation._1._0
                     }
                 }
             }
-            Dictionary<int, CoolEvent> coolDic = new Dictionary<int, CoolEvent>();
-            foreach(var key in dic.Keys)
-            {
-                coolDic[key] = dic[key][dic[key].Count / 2];
-            }
-            return coolDic;
+            return dic;
         }
 
         private static void setVideoResol()
@@ -154,22 +142,56 @@ namespace FaceRecognation._1._0
             setVideoResol();
 
             videoServiceClient.Timeout = TimeSpan.FromMinutes(15);
-            FaceDetectionResult faceDлулetectionResult = await getFaceDetectionAsync(path);
+            FaceDetectionResult faceDetectionResult = await getFaceDetectionAsync(path);
 
             Debug.WriteLine("Got FDR!!!!)))");
-            Dictionary<int, CoolEvent> FaceIds = getCoolEvents(faceDetectionResult);
+            Dictionary<int, List<CoolEvent>> FaceIds = getCoolEvents(faceDetectionResult);
+
+            //Choose 1 first and 4 random CoolEvent
+            FaceIds = chooseFive(FaceIds);
 
             foreach (int id in FaceIds.Keys)
             {
-                var curEvent = FaceIds[id];
-                var startTimeMili = curEvent.startTime / TimeScale * 1000;
-                getFrame(path, startTimeMili, id);
-                
-                var img = ImageProcessing.ImageProcessingInstance.LoadImageFromFile($@"TempData/{id}.png");
-                img = ImageProcessing.ImageProcessingInstance.CropImage(img, FaceIds[id].rec);
-                ImageProcessing.ImageProcessingInstance.SaveImageToFile($@"TempData/{id}Face.png", img, System.Drawing.Imaging.ImageFormat.Png);
-                //File.Delete($@"TempData/{id}.png");
+                foreach (var curEvent in FaceIds[id])
+                    {
+                        var startTimeMili = curEvent.startTime / TimeScale * 1000;
+                        getFrame(path, startTimeMili, id);
+
+                        var img = ImageProcessing.ImageProcessingInstance.LoadImageFromFile($@"TempData/{id}.{(long)startTimeMili}.png");
+                        img = ImageProcessing.ImageProcessingInstance.CropImage(img, curEvent.rec);
+                        ImageProcessing.ImageProcessingInstance.SaveImageToFile($@"TempData/{id}.{(long)startTimeMili}Face", img, System.Drawing.Imaging.ImageFormat.Png);
+                        //File.Delete($@"TempData/{id}.png");
+                    }
             }
+        }
+
+        private static Dictionary<int, List<CoolEvent>> chooseFive(Dictionary<int, List<CoolEvent>> faceIds)
+        {
+            var coolIds = new Dictionary<int, List<CoolEvent>>();
+            Random rnd = new Random();
+
+            foreach (var id in faceIds.Keys)
+            {
+                coolIds[id] = new List<CoolEvent>();
+                if (faceIds[id].Count > 4)
+                {
+                    //First
+                    coolIds[id].Add(faceIds[id].FirstOrDefault());
+
+                    //4 Random
+                    for (int i = 0; i < 4; i++)
+                    {
+                        var randomId = rnd.Next(1, faceIds[id].Count - 1);
+                        coolIds[id].Add(faceIds[id][randomId]);
+                    }
+                }
+                else
+                {
+                    coolIds[id].AddRange(faceIds[id]);
+                }
+            }
+
+            return coolIds;
         }
     }
 }
