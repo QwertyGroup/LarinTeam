@@ -65,7 +65,7 @@ namespace FaceRecognation._1._0
 					break;
 				}
                 //Экономим количество запросов.
-                await Task.Delay(5000);
+                await Task.Delay(30000);
 			}
 			var faceDetectionTrackingResultJsonString = operationResult.ProcessingResult;
 			var faceDetecionTracking = JsonConvert.DeserializeObject<FaceDetectionResult>(faceDetectionTrackingResultJsonString);
