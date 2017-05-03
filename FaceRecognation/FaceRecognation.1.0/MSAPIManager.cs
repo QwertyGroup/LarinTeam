@@ -139,6 +139,7 @@ namespace FaceRecognation._1._0
 				Rect = rect;
 			}
 		}
+
 		private ImageProcessing _imgProcessing = ImageProcessing.ImageProcessingInstance;
 		public async Task<SimilarPersistedFace[]> FindSimilar(Image original, Image[] candidates,
 			bool areCropped = false)
