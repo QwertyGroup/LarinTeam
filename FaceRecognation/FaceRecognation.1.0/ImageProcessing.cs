@@ -5,7 +5,6 @@ using System.Drawing.Imaging;
 using System;
 using System.Linq;
 using System.Windows;
-using System.Diagnostics;
 
 namespace FaceRecognation._1._0
 {

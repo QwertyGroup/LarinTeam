@@ -94,7 +94,7 @@ namespace FaceRecognation._1._0
 				btn.Content = "Comparing...";
 				MessageManager.MsgManagerInstance.WriteMessage(btn.Content.ToString());
 
-				var compResult = await _msapiManager.FindSimilar(faces.First(), faces.ToArray());
+				var compResult = await _msapiManager.FindSimilar(faces.First(), faces.ToArray(), true);
 
 				foreach (var r in compResult)
 					lbCompResults.Items.Add($"ID: {r.PersistedFaceId}; Conf: {r.Confidence:f}");
