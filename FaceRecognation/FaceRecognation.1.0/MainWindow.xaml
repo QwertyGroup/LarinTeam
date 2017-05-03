@@ -11,41 +11,54 @@
 			<ColumnDefinition Width="1*"/>
 			<ColumnDefinition Width="2*"/>
 		</Grid.ColumnDefinitions>
-		<Grid Grid.Column="0">
-            <Grid>
+        <Border BorderThickness="0, 0, 4, 0" BorderBrush="#000">
+            <Grid Grid.Column="0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Border Height="Auto" Grid.Row="0" BorderBrush="#000" Margin="0, 10, 0, 10" BorderThickness="0" CornerRadius="15" Padding="5" VerticalAlignment="Center" HorizontalAlignment="Center" Width="280" >
+                        <Grid Margin="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0" Text="Commands" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                            <Button Grid.Row="1" x:Name="cmdTakePhoto" Content="Browse video" FontSize="20" Padding="6,4" Margin="4" Foreground="Black" Background="{x:Null}" BorderBrush="#FF3A3A3A" BorderThickness="2" Click="cmdTakePhoto_Click"/>
+                            <Button Grid.Row="2" x:Name="cmdDetectFace" Content="Compare Faces" FontSize="20" Padding="6,4" Margin="4" Foreground="Black" Background="{x:Null}" BorderBrush="#FF3A3A3A" BorderThickness="2" Click="cmdDetectFace_Click"/>
+                            <TextBlock Grid.Row="3"/>
+                            <Button Grid.Row="4" x:Name="cmdClearCache" Content="Clear Cache" FontSize="20" Padding="6,4" Margin="4" Background="{x:Null}" Foreground="Black" BorderBrush="#FF3A3A3A" BorderThickness="2" Click="cmdClearCache_Click"/>
+                        </Grid>
+                    </Border>
+                    <ListBox Grid.Row="1" x:Name="lbCompResults" HorizontalAlignment="Center" Height="430" VerticalAlignment="Center" Width="280"/>
+                </Grid>
+            </Grid>
+        </Border>
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <Border Height="Auto" Grid.Row="0" BorderBrush="#000" Margin="0, 20, 0, 20" BorderThickness="3" CornerRadius="15" Padding="5" VerticalAlignment="Center" HorizontalAlignment="Center" Width="238" >
-                    <Grid Margin="5">
-                        <Grid.RowDefinitions>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                        </Grid.RowDefinitions>
-                        <TextBlock Grid.Row="0" Text="Commands" FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Center" />
-                        <Button Grid.Row="1" x:Name="cmdTakePhoto" Content="Browse video" FontSize="20" Padding="6,4" Margin="4" Foreground="Black" Background="{x:Null}" BorderBrush="#FF3A3A3A" BorderThickness="2" Click="cmdTakePhoto_Click"/>
-                        <Button Grid.Row="2" x:Name="cmdDetectFace" Content="Compare Faces" FontSize="20" Padding="6,4" Margin="4" Foreground="Black" Background="{x:Null}" BorderBrush="#FF3A3A3A" BorderThickness="2" Click="cmdDetectFace_Click"/>
-                        <TextBlock Grid.Row="3"/>
-                        <Button Grid.Row="4" x:Name="cmdClearCache" Content="Clear Cache" FontSize="20" Padding="6,4" Margin="4" Background="{x:Null}" Foreground="Black" BorderBrush="#FF3A3A3A" BorderThickness="2" Click="cmdClearCache_Click"/>
-                    </Grid>
-                </Border>
-                <ListBox Grid.Row="1" x:Name="lbCompResults" HorizontalAlignment="Center" Height="390" VerticalAlignment="Center" Width="280"/>
-            </Grid>
-        </Grid>
-        <Grid Grid.Column="1">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="auto"/>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
-            <Border Grid.Column="0" Height="300" BorderBrush="#000" Width="580" BorderThickness="3" Margin="0, 20, 0, 20" CornerRadius="15" Padding="5" VerticalAlignment="Center"  HorizontalAlignment="Center">
-                <ScrollViewer >
-                    <WrapPanel x:Name="spTakenPhotos" Height="Auto" Margin="4">
-                    </WrapPanel>
+                <Label Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20">
+                    Choose Best Cropped Face:
+                </Label>
+                <ScrollViewer Grid.Row="1">
+                    <StackPanel/>
                 </ScrollViewer>
+            </Grid>
+            <Border Grid.Row="1" Height="330" BorderBrush="#000" Width="580" BorderThickness="3" Margin="0, 10, 0, 10" CornerRadius="15" Padding="5" VerticalAlignment="Center"  HorizontalAlignment="Center">
+                <ListBox x:Name="lbLog">
+                    
+                </ListBox>
             </Border>
         </Grid>
     </Grid>

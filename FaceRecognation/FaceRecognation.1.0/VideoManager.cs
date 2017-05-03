@@ -245,13 +245,13 @@ namespace FaceRecognation._1._0
 			foreach (var id in faceIds.Keys)
 			{
 				coolIds[id] = new List<CoolEvent>();
-				if (faceIds[id].Count > 4)
+				if (faceIds[id].Count > 5)
 				{
 					//First лет ми тейк э селфи ТУТУТУТУТ
 					coolIds[id].Add(faceIds[id].FirstOrDefault());
 
 					//Я знаю, ты люишь комбинаторику, посчитай, какая вероятность совпадения хотя бы двух фоток при 100 евентах.
-					for (int i = 0; i < 4; i++)
+					for (int i = 0; i < 5; i++)
 					{
 						var randomId = rnd.Next(1, faceIds[id].Count - 1);
 						coolIds[id].Add(faceIds[id][randomId]);
