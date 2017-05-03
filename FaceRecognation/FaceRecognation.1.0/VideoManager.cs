@@ -59,11 +59,13 @@ namespace FaceRecognation._1._0
             //Очевидный цикл.
             while (true)
 			{
+                MessageManager.MsgManagerInstance.WriteMessage("Getting operation result...");
 				operationResult = await videoServiceClient.GetOperationResultAsync(videoOperation);
 				if (operationResult.Status == OperationStatus.Succeeded || operationResult.Status == OperationStatus.Failed)
 				{
 					break;
 				}
+                MessageManager.MsgManagerInstance.WriteMessage($"Status is {operationResult.Status}. Trying again...\n");
                 //Экономим количество запросов.
                 await Task.Delay(30000);
 			}
@@ -143,9 +145,14 @@ namespace FaceRecognation._1._0
                         faceEvent.rec.Height = Convert.ToInt32(VideoHeight * face.Height);
 						faceEvent.rec.Width = Convert.ToInt32(VideoWidth * face.Width);
 						faceEvent.rec.Left = Convert.ToInt32(VideoWidth * face.X);
-						faceEvent.rec.Top = Convert.ToInt32(VideoHeight * face.Y);
+                        if (faceEvent.rec.Left < 0)
+                            faceEvent.rec.Left = 0;
 
-						if (faceEvent.rec.Height + faceEvent.rec.Top > VideoHeight)
+                        faceEvent.rec.Top = Convert.ToInt32(VideoHeight * face.Y);
+                        if (faceEvent.rec.Top < 0)
+                            faceEvent.rec.Top = 0;
+
+                        if (faceEvent.rec.Height + faceEvent.rec.Top > VideoHeight)
 							faceEvent.rec.Height = VideoHeight - faceEvent.rec.Top;
 						if (faceEvent.rec.Width + faceEvent.rec.Left > VideoWidth)
 							faceEvent.rec.Width = VideoWidth - faceEvent.rec.Left;
@@ -193,7 +200,7 @@ namespace FaceRecognation._1._0
             FaceDetectionResult faceDetectionResult = await getFaceDetectionAsync(path);
 
 			//Радуемся ответу, как будто это ответ от Кибернетики про олимпиаду.
-			MessageManager.MsgManagerInstance.WriteMessage("Got FDR!!!!)))");
+			MessageManager.MsgManagerInstance.WriteMessage("Got Face Detection Result!!!!)))");
 
             //Получаем список крутыхСобытий на каждого человека
             Dictionary<int, List<CoolEvent>> FaceIds = getCoolEvents(faceDetectionResult);
@@ -208,13 +215,21 @@ namespace FaceRecognation._1._0
 				resultImages[id] = new List<Image>();
 				foreach (var curEvent in FaceIds[id])
 				{
-					var startTimeMili = curEvent.startTime / TimeScale * 1000;
-					getFrame(path, startTimeMili, id);
+                    try
+                    {
+                        var startTimeMili = curEvent.startTime / TimeScale * 1000;
+                        getFrame(path, startTimeMili, id);
 
-					var img = ImageProcessing.ImageProcessingInstance.LoadImageFromFile($@"TempData/{id}.{(long)startTimeMili}.png");
-					img = ImageProcessing.ImageProcessingInstance.CropImage(img, curEvent.rec);
-					//ImageProcessing.ImageProcessingInstance.SaveImageToFile($@"TempData/{id}.{(long)startTimeMili}Face", img, System.Drawing.Imaging.ImageFormat.Png);
-					resultImages[id].Add(img);
+                        var img = ImageProcessing.ImageProcessingInstance.LoadImageFromFile($@"TempData/{id}.{(long)startTimeMili}.png");
+                        img = ImageProcessing.ImageProcessingInstance.CropImage(img, curEvent.rec);
+                        //ImageProcessing.ImageProcessingInstance.SaveImageToFile($@"TempData/{id}.{(long)startTimeMili}Face", img, System.Drawing.Imaging.ImageFormat.Png);
+                        resultImages[id].Add(img);
+                    }
+                    catch
+                    {
+                        
+                        MessageManager.MsgManagerInstance.WriteMessage(" ");
+                    }
 				}
 			}
 			return resultImages;
