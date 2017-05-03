@@ -38,6 +38,7 @@ namespace FaceRecognation._1._0
 
 			// video
 			_videoPath = filePath;
+			(sender as Button).Content = "Video selected";
 			MessageManager.MsgManagerInstance.WriteMessage("Video selected");
 			MessageManager.MsgManagerInstance.WriteMessage(_videoPath);
 		}
