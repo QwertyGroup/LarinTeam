@@ -121,6 +121,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Face.cs" />
+    <Compile Include="FaceSelector.xaml.cs">
+      <DependentUpon>FaceSelector.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ImageProcessing.cs" />
     <Compile Include="KeyManager.cs" />
     <Compile Include="LogWindow.xaml.cs">
@@ -132,6 +135,10 @@
     <Compile Include="windowSelectFace.xaml.cs">
       <DependentUpon>windowSelectFace.xaml</DependentUpon>
     </Compile>
+    <Page Include="FaceSelector.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="LogWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
