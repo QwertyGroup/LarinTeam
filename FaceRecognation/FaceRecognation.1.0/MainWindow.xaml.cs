@@ -14,9 +14,6 @@ namespace FaceRecognation._1._0
 		{
 			InitializeComponent();
 			Loaded += (s, e) => MessageManager.MsgManagerInstance.WriteMessage("Program started");
-
-			XTests test = new XTests();
-			test.Run();
 		}
 
 		private MSAPIManager _msapiManager = MSAPIManager.MSAPIManagerInstance;
@@ -124,16 +121,6 @@ namespace FaceRecognation._1._0
 			spTakenPhotos.Children.Clear();
 			lbCompResults.Items.Clear();
 			MessageManager.MsgManagerInstance.WriteMessage("Cache cleared");
-		}
-	}
-
-	public class XTests
-	{
-
-		public void Run()
-		{
-			//MessageManager.MsgManagerInstance.WriteMessage("KEK");
-			//VideoManager.getFacesFromVideo("1.mp4");
 		}
 	}
 }
