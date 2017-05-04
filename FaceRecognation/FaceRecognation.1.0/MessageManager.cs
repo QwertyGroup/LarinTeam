@@ -5,6 +5,7 @@ namespace FaceRecognation._1._0
 	public class MessageManager
 	{
 		private static MessageManager _msgManagerInstance;
+        public MainWindow mainWindow;
 		public static MessageManager MsgManagerInstance
 		{
 			get
@@ -14,23 +15,18 @@ namespace FaceRecognation._1._0
 			}
 		}
 
-		private LogWindow _logWindow;
 		private MessageManager()
 		{
-			_logWindow = new LogWindow();
-			_logWindow.ShowInTaskbar = false;
-			_logWindow.Owner = Application.Current.MainWindow;
-			_logWindow.Show();
 		}
 
 		public void WriteMessage(string msg)
 		{
-			_logWindow.AddMsg(msg);
+            mainWindow.lbLog.Items.Add(msg);
 		}
 
 		public void ClearLog()
 		{
-			_logWindow.Clear();
+			mainWindow.lbLog.Items.Clear();
 		}
 	}
 }

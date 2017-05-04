@@ -121,28 +121,11 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Face.cs" />
-    <Compile Include="FaceSelector.xaml.cs">
-      <DependentUpon>FaceSelector.xaml</DependentUpon>
-    </Compile>
     <Compile Include="ImageProcessing.cs" />
     <Compile Include="KeyManager.cs" />
-    <Compile Include="LogWindow.xaml.cs">
-      <DependentUpon>LogWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="MessageManager.cs" />
     <Compile Include="Synchron.cs" />
     <Compile Include="VideoManager.cs" />
-    <Compile Include="windowSelectFace.xaml.cs">
-      <DependentUpon>windowSelectFace.xaml</DependentUpon>
-    </Compile>
-    <Page Include="FaceSelector.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="LogWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -156,10 +139,6 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="windowSelectFace.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
