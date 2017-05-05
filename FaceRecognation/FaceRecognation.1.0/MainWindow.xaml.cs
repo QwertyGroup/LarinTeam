@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -27,7 +28,7 @@ namespace FaceRecognation._1._0
 		private void cmdTakePhoto_Click(object sender, RoutedEventArgs e)
 		{
 			var openDlg = new Microsoft.Win32.OpenFileDialog();
-
+            cmdDetectFace.IsEnabled = true;
 			openDlg.Filter = "MP4 Video(*.mp4) | *.mp4"; //"JPEG Image(*.jpg)|*.jpg|PNG Image(*.png)|*.png|MP4 Video(*.mp4)|*.mp4";
 			bool? result = openDlg.ShowDialog(this);
 
@@ -63,35 +64,41 @@ namespace FaceRecognation._1._0
                 if (LoadedPeople < unchosenPhotos.Keys.Count)
                 {
                     fillUndetectedFaces();
+                    return;
                 }
                 if (LoadedPeople == unchosenPhotos.Keys.Count)
                 {
-                    fillUndetectedFaces();
+                    //fillUndetectedFaces();
                     DetectFacesPanel.Children.Clear();
+                    notFaceButton.Visibility = Visibility.Collapsed;
+                    cmdTakePhoto.Content = "Browse Video";
+                    cmdDetectFace.Content = "Detect Faces";
+                    cmdDetectFace.IsEnabled = false;
+                    SavePhotos();
                 }
             };
             return img;
 		}
 
-		private class FacesSelectedCounter
-		{
-			public event EventHandler OnAllWindowsClosed;
-			private int _closedCounter;
-			private int _maxWindows;
-			private FacesSelectedCounter() { }
-			public FacesSelectedCounter(int maxWindows)
-			{
-				_maxWindows = maxWindows;
-			}
-			public void IncCounter()
-			{
-				_closedCounter++;
-				if (_closedCounter == _maxWindows)
-					OnAllWindowsClosed?.Invoke(this, new EventArgs());
-			}
-		}
+        private void SavePhotos()
+        {
+            if (!Directory.Exists("ResultFaces"))
+                Directory.CreateDirectory("ResultFaces");
+            foreach (var path in Directory.GetFiles("ResultFaces"))
+            {
+                File.Delete(path);
+            }
+            for(int i=0; i< Faces.Count; i++)
+            {
+                ImageProcessing.ImageProcessingInstance.SaveImageToFile($"ResultFaces/{i}", Faces[i], System.Drawing.Imaging.ImageFormat.Png);
+                Faces[i].Dispose();
+            }
+            MessageManager.MsgManagerInstance.WriteMessage("Saved all faces to ResultFaces");
+        }
+
         private void fillUndetectedFaces()
         {
+            notFaceButton.Visibility = Visibility.Visible;
             DetectFacesPanel.Children.Clear();
             var currentPerson = unchosenPhotos[unchosenPhotos.Keys.ElementAt(LoadedPeople)];
             foreach(var person in currentPerson)
@@ -100,9 +107,9 @@ namespace FaceRecognation._1._0
             }
             LoadedPeople++;
         }
-
-		private async void cmdDetectFace_Click(object sender, RoutedEventArgs e)
-		{
+        private async void cmdDetectFace_Click(object sender, RoutedEventArgs e)
+        {
+            LoadedPeople = 0;
             Faces.Clear();
 			var btn = sender as Button;
 			btn.Content = "Detecting...";
@@ -110,52 +117,50 @@ namespace FaceRecognation._1._0
 
             // Detecting for Videos
             unchosenPhotos = await VideoManager.Instance.getFacesFromVideo(_videoPath);
+
 			btn.Content = "Detected successfuly.";
 			MessageManager.MsgManagerInstance.WriteMessage(btn.Content.ToString());
 			// Selecting One face from Five given
 			var faces = new List<System.Drawing.Image>();
+            if (unchosenPhotos.Count > 1)
+            {
+                MessageManager.MsgManagerInstance.WriteMessage($"Found {unchosenPhotos.Count} people");
+            }
+            else
+            {
+                MessageManager.MsgManagerInstance.WriteMessage($"Found {unchosenPhotos.Count} person");
+            }
             fillUndetectedFaces();
-
-            /*
-			var faceCounter = new FacesSelectedCounter(faces4eachPerson.Count);
-			faceCounter.OnAllWindowsClosed += async (so, a) =>
-			{
-				spTakenPhotos.Children.Clear();
-				foreach (var face in faces)
-					spTakenPhotos.Children.Add(GenerateImg(face));
-				btn.Content = "Comparing...";
-				MessageManager.MsgManagerInstance.WriteMessage(btn.Content.ToString());
-
-				var compResult = await _msapiManager.FindSimilar(faces.First(), faces.ToArray(), true);
-
-				foreach (var r in compResult)
-					lbCompResults.Items.Add($"ID: {r.PersistedFaceId}; Conf: {r.Confidence:f}");
-
-				btn.Content = "Compared successfuly.";
-				MessageManager.MsgManagerInstance.WriteMessage(btn.Content.ToString());
-
-				await Task.Delay(TimeSpan.FromSeconds(3));
-				btn.Content = "Compare Faces";
-			};
-			foreach (var person in faces4eachPerson)
-			{
-				var winSf = new windowSelectFace(person.Value);
-				winSf.OnFaceSelected += (s, args) =>
-				{
-					faces.Add(args.Face);
-					faceCounter.IncCounter();
-				};
-				winSf.Show();
-			}
-            */
 		}
 
 		private void cmdClearCache_Click(object sender, RoutedEventArgs e)
 		{
 			_imgProcessing.ClearCache();
+            if (Directory.Exists("TempData"))
+            {
+                Directory.Delete("TempData", true);
+            }
 			//spTakenPhotos.Children.Clear();
 			lbCompResults.Items.Clear();
 			MessageManager.MsgManagerInstance.WriteMessage("Cache cleared");
 		}
-	}
+
+        private void notFaceButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (LoadedPeople < unchosenPhotos.Keys.Count)
+            {
+                fillUndetectedFaces();
+                return;
+            }
+            if (LoadedPeople == unchosenPhotos.Keys.Count)
+            {
+                DetectFacesPanel.Children.Clear();
+                notFaceButton.Visibility = Visibility.Collapsed;
+                cmdTakePhoto.Content = "Browse Video";
+                cmdDetectFace.Content = "Detect Faces";
+                cmdDetectFace.IsEnabled = false;
+                SavePhotos();
+            }
+        }
+    }
 }

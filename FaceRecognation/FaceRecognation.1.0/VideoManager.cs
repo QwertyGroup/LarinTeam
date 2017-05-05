@@ -171,6 +171,8 @@ namespace FaceRecognation._1._0
 		{
             //Это просто, ебать, говноМагия говнокода. Одним камушком два кувшинчика ёбнул.
             //Беру, во-первых, разрешение (Выебать твою маман, ухухух). Во-вторых, создаю скриншот первого фрейма видоса.
+            if (!Directory.Exists("TempData"))
+                Directory.CreateDirectory("TempData");
             MediaFile inputFile = new MediaFile() { Filename = path };
 			MediaFile testFile = new MediaFile() { Filename = "TempData/RandomScreen.png" };
             using (Engine eng = new Engine())

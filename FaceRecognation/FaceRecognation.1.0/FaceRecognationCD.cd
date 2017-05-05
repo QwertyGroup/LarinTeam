@@ -6,12 +6,12 @@
       <Compartment Name="Nested Types" Collapsed="false" />
     </Compartments>
     <NestedTypes>
-      <Class Name="FaceRecognation._1._0.MSAPIManager.MSFace" Collapsed="true">
+      <Class Name="FaceRecognation._1._0.MSAPIManager.FaceIdAndRect">
         <TypeIdentifier>
           <NewMemberFileName>MSAPIManager.cs</NewMemberFileName>
         </TypeIdentifier>
       </Class>
-      <Class Name="FaceRecognation._1._0.MSAPIManager.FaceIdAndRect">
+      <Class Name="FaceRecognation._1._0.MSAPIManager.MSFace" Collapsed="true">
         <TypeIdentifier>
           <NewMemberFileName>MSAPIManager.cs</NewMemberFileName>
         </TypeIdentifier>
@@ -70,7 +70,7 @@
       </Class>
     </NestedTypes>
     <TypeIdentifier>
-      <HashCode>AAAAAAFAAAAAAAACAAAAAAAAAAAAAAAEAIAAACAAQAA=</HashCode>
+      <HashCode>AAAgAIFAAgEAAAACAAAAAAAAAAAAAAAEAIAAACAAQAA=</HashCode>
       <FileName>MainWindow.xaml.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />

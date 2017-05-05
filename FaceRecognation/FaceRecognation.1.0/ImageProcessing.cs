@@ -146,6 +146,8 @@ namespace FaceRecognation._1._0
 		private string _cacheDir = "Cache";
 		public void ClearCache()
 		{
+            if (!Directory.Exists(_cacheDir))
+                return;
 			foreach (var file in new DirectoryInfo(_cacheDir).GetFiles())
 				file.Delete();
 		}
