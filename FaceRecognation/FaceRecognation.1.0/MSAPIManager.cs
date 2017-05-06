@@ -152,7 +152,7 @@ namespace FaceRecognation._1._0
 			bool areCropped = false)
 		{
 			var facelistId = "atl_acidhouze";
-
+            Debug.WriteLine("kek");
 			// Detecting original face
 			var dd = await GetDetectionData(original);
 			if (dd == null) throw new Exception("No face on original img.");

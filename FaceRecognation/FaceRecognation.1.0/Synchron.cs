@@ -52,16 +52,19 @@ namespace FaceRecognation._1._0
 		private int LastId = 0;
 		private List<Face> Data;
 
-        public class RootObject
-        {
-            public List<Face> Faces { get; set; }
-        }
-
         private List<Face> getData()
 		{
-			FirebaseResponse response = Client.Get("");
-			List<Face> Data = response.ResultAs<RootObject>().Faces;
-			return Data == null ? new List<Face>() : Data.ToList();
+            try
+            {
+                FirebaseResponse response = Client.Get("Faces");
+                var PrimitiveData = response.ResultAs<List<PrimitiveFace>>();
+                var Data = PrimitiveData.Select(x => x.getFaceFromPrimitive()).ToList();
+                return Data == null ? new List<Face>() : Data;
+            }
+            catch
+            {
+                return new List<Face>();
+            }
 		}
 		private int getLastId()
 		{
@@ -70,36 +73,42 @@ namespace FaceRecognation._1._0
 
 		private void AddFace(Face face)
 		{
-            face.id = LastId;
-			SetResponse response = Client.Set($"Faces/{LastId}", face);
-            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            if (face.id == -1)
             {
-                LastId++;
-                Data.Add(face);
+                face.id = LastId;
+                SetResponse response = Client.Set($"Faces/{LastId}", face.getPrimitiveFace());
+                if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    LastId++;
+                    Data.Add(face);
+                }
+            }
+            else
+            {
+                FirebaseResponse response = Client.Update($"Faces/{face.id}", face.getPrimitiveFace());
+                if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    Data[face.id] = face;
+                }
             }
 		}
 
-        private Face UpdateFace(Face face)
-        {
-            FirebaseResponse response = Client.Update($"Faces/{face.id}", face);
-            if (response.StatusCode != System.Net.HttpStatusCode.OK)
-            {
-                throw new Exception();
-            }
-            Face result = response.ResultAs<Face>();
-            return result;
-            
-        }
-
-        public void checkAndThenAdd(Face face)
+        public async void checkAndThenAdd(Face face)
         {
             foreach(var otherFace in Data)
             {
-                float similarity = 0;
-                //similarity = MSAPIManager.MSAPIManagerInstance.FindSimilar();
-                if (similarity > 0.4)
+                //float similarity = 0;
+                var faceImage = face.FaceImage;
+                var otherImage = otherFace.FaceImage;
+                var similarity = await MSAPIManager.MSAPIManagerInstance.FindSimilar(faceImage, otherImage);
+                if (similarity.Length == 0)
+                    continue;
+                var confidence = similarity[0].Confidence;
+                MessageManager.MsgManagerInstance.WriteMessage($"{face.id} and {otherFace.id} similarity - {confidence}");
+                if (confidence > 0.4)
                 {
-                    Face result = UpdateFace(face);
+                    face.id = otherFace.id;
+                    AddFace(face);
                     return;         
                 }
             }
@@ -108,12 +117,14 @@ namespace FaceRecognation._1._0
 
         public void Test()
         {
-            Face Kostya = new Face(ImageProcessing.ImageProcessingInstance.LoadImageFromFile("ResultFaces/0.png"));
-            Face Dima = new Face(ImageProcessing.ImageProcessingInstance.LoadImageFromFile("ResultFaces/1.png"));
-            AddFace(Kostya);
-            AddFace(Dima);
+            Face Katya = new Face(ImageProcessing.ImageProcessingInstance.LoadImageFromFile("ResultFaces/0.jpg"));
+            Face Mark = new Face(ImageProcessing.ImageProcessingInstance.LoadImageFromFile("ResultFaces/1.jpg"));
+            AddFace(Mark);
+            AddFace(Katya);
+            checkAndThenAdd(Katya);
+            checkAndThenAdd(Mark);
         }
 
-	}
+    }
 
 }
