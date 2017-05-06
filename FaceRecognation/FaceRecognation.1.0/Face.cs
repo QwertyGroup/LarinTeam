@@ -12,34 +12,73 @@ namespace FaceRecognation._1._0
 {
 	public class Face
 	{
-		private List<Image> FaceImages = new List<Image>();
-		public List<string> BaseImages = new List<string>();
+        private Image _faceImage;
+        private Image FaceImage
+        {
+            get
+            {
+                if (_faceImage == null)
+                {
+                    if (_baseFaceImage == null)
+                    {
+                        throw new Exception("FaceImage and BaseFaceImage are nulls");
+                    }
+
+                    _faceImage = BaseToImage(BaseFaceImage);
+                }
+                return _faceImage;
+            }
+            set
+            {
+                _faceImage = value;
+            }
+        }
+        private string _baseFaceImage;
+        public string BaseFaceImage
+        {
+            get
+            {
+                if (_baseFaceImage == null)
+                {
+                    if (_faceImage == null)
+                    {
+                        throw new Exception("FaceImage and BaseFaceImage are nulls");
+                    }
+
+                    _baseFaceImage = ImageToBase(FaceImage);
+                }
+                return _baseFaceImage;
+            }
+            private set
+            {
+                _baseFaceImage = value;
+            }
+        }
         public int id;
-		public Face()
+
+		public Face(Image FaceImage)
 		{
+            this.FaceImage = FaceImage;
+            BaseFaceImage = ImageToBase(FaceImage);
 		}
 
-		private static string ImageToBase(Image image, ImageFormat format)
+        public Face(string BaseFaceImage)
+        {
+            this.BaseFaceImage = BaseFaceImage;
+            FaceImage = BaseToImage(BaseFaceImage);
+        }
+
+        private static string ImageToBase(Image image)
 		{
 			using (MemoryStream ms = new MemoryStream())
 			{
-				image.Save(ms, format);
+				image.Save(ms, ImageFormat.Png);
 				byte[] imagebytes = ms.ToArray();
 				string base64String = Convert.ToBase64String(imagebytes);
 				return base64String;
 			}
 		}
-
-        public void convertAllImagesToBase()
-        {
-            BaseImages = FaceImages.Select(x => ImageToBase(x, x.RawFormat)).ToList();
-        }
-
-        public void convertAllBaseToImages()
-        {
-            FaceImages = BaseImages.Select(x => BaseToImage(x)).ToList();
-        }
-
+        
 		private static Image BaseToImage(string base64String)
 		{
 			byte[] imageBytes = Convert.FromBase64String(base64String);

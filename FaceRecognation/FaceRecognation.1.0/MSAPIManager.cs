@@ -141,6 +141,13 @@ namespace FaceRecognation._1._0
 		}
 
 		private ImageProcessing _imgProcessing = ImageProcessing.ImageProcessingInstance;
+
+        public async Task<SimilarPersistedFace[]> FindSimilar(Image original, Image candidate,
+            bool areCropped = false)
+        {
+            return await FindSimilar(original, new Image[] { candidate }, areCropped);
+        }
+
 		public async Task<SimilarPersistedFace[]> FindSimilar(Image original, Image[] candidates,
 			bool areCropped = false)
 		{

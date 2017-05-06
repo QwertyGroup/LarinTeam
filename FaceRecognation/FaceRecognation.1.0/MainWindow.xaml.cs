@@ -17,6 +17,9 @@ namespace FaceRecognation._1._0
 			InitializeComponent();
             MessageManager.MsgManagerInstance.mainWindow = this;
 			Loaded += (s, e) => MessageManager.MsgManagerInstance.WriteMessage("Program started");
+
+            Synchron.Instance.Test();
+            MessageManager.MsgManagerInstance.WriteMessage("Test Done");
 		}
 
 		private MSAPIManager _msapiManager = MSAPIManager.MSAPIManagerInstance;

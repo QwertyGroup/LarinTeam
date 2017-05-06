@@ -42,7 +42,6 @@ namespace FaceRecognation._1._0
 			};
 			Client = new FirebaseClient(Config);
 			Data = getData();
-            Data.ForEach(x => x.convertAllBaseToImages());
 			LastId = getLastId();
 		}
 
@@ -53,18 +52,23 @@ namespace FaceRecognation._1._0
 		private int LastId = 0;
 		private List<Face> Data;
 
-		private List<Face> getData()
+        public class RootObject
+        {
+            public List<Face> Faces { get; set; }
+        }
+
+        private List<Face> getData()
 		{
-			FirebaseResponse response = Client.Get("Faces");
-			List<Face> Data = response.ResultAs<List<Face>>();
-			return Data == null ? new List<Face>() : Data;
+			FirebaseResponse response = Client.Get("");
+			List<Face> Data = response.ResultAs<RootObject>().Faces;
+			return Data == null ? new List<Face>() : Data.ToList();
 		}
 		private int getLastId()
 		{
 			return Data.Count;
 		}
 
-		private Face AddFace(Face face)
+		private void AddFace(Face face)
 		{
             face.id = LastId;
 			SetResponse response = Client.Set($"Faces/{LastId}", face);
@@ -73,8 +77,6 @@ namespace FaceRecognation._1._0
                 LastId++;
                 Data.Add(face);
             }
-			Face result = response.ResultAs<Face>();
-			return result;
 		}
 
         private Face UpdateFace(Face face)
@@ -94,16 +96,22 @@ namespace FaceRecognation._1._0
             foreach(var otherFace in Data)
             {
                 float similarity = 0;
-                //similarity = MSAPIManager.MSAPIManagerInstance.getSimilarity();
+                //similarity = MSAPIManager.MSAPIManagerInstance.FindSimilar();
                 if (similarity > 0.4)
                 {
-                    face.id = otherFace.id;
-                    face.BaseImages.AddRange(otherFace.BaseImages);
                     Face result = UpdateFace(face);
                     return;         
                 }
             }
             AddFace(face);
+        }
+
+        public void Test()
+        {
+            Face Kostya = new Face(ImageProcessing.ImageProcessingInstance.LoadImageFromFile("ResultFaces/0.png"));
+            Face Dima = new Face(ImageProcessing.ImageProcessingInstance.LoadImageFromFile("ResultFaces/1.png"));
+            AddFace(Kostya);
+            AddFace(Dima);
         }
 
 	}
