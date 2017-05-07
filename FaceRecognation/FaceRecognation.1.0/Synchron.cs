@@ -93,7 +93,7 @@ namespace FaceRecognation._1._0
             }
 		}
 
-        public async void checkAndThenAdd(Face face)
+        public async Task<SyncronResult> checkAndThenAdd(Face face)
         {
             foreach(var otherFace in Data)
             {
@@ -109,22 +109,26 @@ namespace FaceRecognation._1._0
                 {
                     face.id = otherFace.id;
                     AddFace(face);
-                    return;         
+                    return new SyncronResult();         
                 }
             }
             AddFace(face);
+            return new SyncronResult();
         }
 
-        public void Test()
+        public async void Test()
         {
-            Face Katya = new Face(ImageProcessing.ImageProcessingInstance.LoadImageFromFile("ResultFaces/0.jpg"));
-            Face Mark = new Face(ImageProcessing.ImageProcessingInstance.LoadImageFromFile("ResultFaces/1.jpg"));
+            Face Katya = new Face(ImageProcessing.ImageProcessingInstance.LoadImageFromFile("ResultFaces/0.png"));
+            Face Mark = new Face(ImageProcessing.ImageProcessingInstance.LoadImageFromFile("ResultFaces/0.png"));
             AddFace(Mark);
             AddFace(Katya);
-            checkAndThenAdd(Katya);
-            checkAndThenAdd(Mark);
+            var result = await checkAndThenAdd(Mark);
+            var result1 = await checkAndThenAdd(Katya);
         }
 
     }
 
+    public class SyncronResult
+    {
+    }
 }

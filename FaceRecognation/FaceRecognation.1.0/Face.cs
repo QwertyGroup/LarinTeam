@@ -92,7 +92,7 @@ namespace FaceRecognation._1._0
         {
             using (MemoryStream ms = new MemoryStream())
             {
-                image.Save(ms, ImageFormat.Jpeg);
+                image.Save(ms, ImageFormat.Png);
                 byte[] imagebytes = ms.ToArray();
                 string base64String = Convert.ToBase64String(imagebytes);
                 return base64String;
