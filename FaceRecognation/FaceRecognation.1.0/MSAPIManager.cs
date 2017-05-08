@@ -19,11 +19,12 @@ namespace FaceRecognation._1._0
 		{
 			get
 			{
-				if (_mSAPIManagerInstance == null)
-				{
-					_mSAPIManagerInstance = new MSAPIManager();
-				}
-				return _mSAPIManagerInstance;
+				//if (_mSAPIManagerInstance == null)
+				//{
+				//	_mSAPIManagerInstance = new MSAPIManager();
+				//}
+				//return _mSAPIManagerInstance;
+				return new MSAPIManager();
 			}
 		}
 
@@ -142,20 +143,20 @@ namespace FaceRecognation._1._0
 
 		private ImageProcessing _imgProcessing = ImageProcessing.ImageProcessingInstance;
 
-        public async Task<SimilarPersistedFace[]> FindSimilar(Image original, Image candidate,
-            bool areCropped = false)
-        {
-            return await FindSimilar(original, new Image[] { candidate }, areCropped);
-        }
+		public async Task<SimilarPersistedFace[]> FindSimilar(Image original, Image candidate,
+			bool areCropped = false)
+		{
+			return await FindSimilar(original, new Image[] { candidate }, areCropped);
+		}
 
 		public async Task<SimilarPersistedFace[]> FindSimilar(Image original, Image[] candidates,
 			bool areCropped = false)
 		{
 			var facelistId = "atl_acidhouze";
-            Debug.WriteLine("kek");
+			Debug.WriteLine("kek");
 			// Detecting original face
 			var dd = await GetDetectionData(original);
-			if (dd == null) throw new Exception("No face on original img.");
+			if (dd == null) { _imgProcessing.SaveImageToFile("EXCEPTIONIMG", original); throw new Exception("No face on original img."); }
 			var orgnl = dd.First();
 
 			var cnds = new List<MSFace>();
@@ -193,6 +194,7 @@ namespace FaceRecognation._1._0
 
 		private async Task<List<MSFace>> GetDetectionData(Image img)
 		{
+			Debug.WriteLine("MS requested! x LSP");
 			var result = new List<MSFace>();
 			var faces = await GetFaceRectangle(_imgProcessing.ImageToStream(img));
 			if (faces.Length == 0) return null;
