@@ -20,12 +20,16 @@ namespace FaceRecognition.UI
 {
 	public partial class MainWindow : Window
 	{
-		private Video _video = new Video();
+        private Video _video;
+        
 		private MessageManager _msgManager = MessageManager.MsgManagerInstance;
+
+        private int peopleLoaded = 0;
 
 		public MainWindow()
 		{
 			InitializeComponent();
+            _video = new Video(ImageValidatingPanel);
 			Loaded += (s, e) => DataContext = _video;
 			_msgManager.OnMessageSended += (s, e) =>
 			{
