@@ -117,10 +117,10 @@ namespace FaceRecognation._1._0
 
         public void Test()
         {
-            Face Katya = new Face(ImageProcessing.ImageProcessingInstance.LoadImageFromFile("ResultFaces/0.png"));
-            Face Mark = new Face(ImageProcessing.ImageProcessingInstance.LoadImageFromFile("ResultFaces/1.png"));
-            //AddFace(Mark);
-            //AddFace(Katya);
+            Face Katya = new Face(ImageProcessing.ImageProcessingInstance.LoadImageFromFile("ResultFaces/0.jpg"));
+            Face Mark = new Face(ImageProcessing.ImageProcessingInstance.LoadImageFromFile("ResultFaces/1.jpg"));
+            AddFace(Mark);
+            AddFace(Katya);
             checkAndThenAdd(Katya);
             checkAndThenAdd(Mark);
         }

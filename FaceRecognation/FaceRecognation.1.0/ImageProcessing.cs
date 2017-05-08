@@ -35,7 +35,7 @@ namespace FaceRecognation._1._0
 		private BitmapImage ConvertBitmapToBitmapImage(Bitmap bm)
 		{
 			var memstr = new MemoryStream();
-			bm.Save(memstr, ImageFormat.Png);
+			bm.Save(memstr, ImageFormat.Jpeg);
 			var bitmapImg = new BitmapImage();
 			bitmapImg.BeginInit();
 			memstr.Seek(0, SeekOrigin.Begin);
