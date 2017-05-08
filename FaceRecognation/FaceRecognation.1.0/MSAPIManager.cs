@@ -1,31 +1,20 @@
-﻿using System;
+﻿using Microsoft.ProjectOxford.Face;
+using Microsoft.ProjectOxford.Face.Contract;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.ProjectOxford.Face.Contract;
-using Microsoft.ProjectOxford.Face;
-using System.IO;
-using System.Diagnostics;
-using System.Collections.Generic;
-using System.Drawing;
 
 namespace FaceRecognation._1._0
 {
 	public class MSAPIManager
 	{
 		//Singleton
-		private static MSAPIManager _mSAPIManagerInstance;
-
-		public static MSAPIManager MSAPIManagerInstance
-		{
-			get
-			{
-				if (_mSAPIManagerInstance == null)
-				{
-					_mSAPIManagerInstance = new MSAPIManager();
-				}
-				return _mSAPIManagerInstance;
-			}
-		}
+		private static Lazy<MSAPIManager> _MSAPIManagerInstance;
+		public static MSAPIManager MSAPIManagerInstance { get { return _MSAPIManagerInstance.Value; } }
 
 		private MSAPIManager()
 		{
@@ -142,17 +131,17 @@ namespace FaceRecognation._1._0
 
 		private ImageProcessing _imgProcessing = ImageProcessing.ImageProcessingInstance;
 
-        public async Task<SimilarPersistedFace[]> FindSimilar(Image original, Image candidate,
-            bool areCropped = false)
-        {
-            return await FindSimilar(original, new Image[] { candidate }, areCropped);
-        }
+		public async Task<SimilarPersistedFace[]> FindSimilar(Image original, Image candidate,
+			bool areCropped = false)
+		{
+			return await FindSimilar(original, new Image[] { candidate }, areCropped);
+		}
 
 		public async Task<SimilarPersistedFace[]> FindSimilar(Image original, Image[] candidates,
 			bool areCropped = false)
 		{
 			var facelistId = "atl_acidhouze";
-            Debug.WriteLine("kek");
+			Debug.WriteLine("kek");
 			// Detecting original face
 			var dd = await GetDetectionData(original);
 			if (dd == null) throw new Exception("No face on original img.");
