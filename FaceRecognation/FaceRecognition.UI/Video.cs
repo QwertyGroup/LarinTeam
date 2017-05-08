@@ -61,9 +61,10 @@ namespace FaceRecognition.UI
                 Height = 146,
                 Stretch = System.Windows.Media.Stretch.Fill
             };
-            Image.MouseLeftButtonUp += (sender, e) =>
+            Border.Child = Image;
+            Border.MouseLeftButtonUp += (sender, e) =>
             {
-                
+                MessageManager.MsgManagerInstance.WriteMessage("ClickClack");
             };
         }
 
