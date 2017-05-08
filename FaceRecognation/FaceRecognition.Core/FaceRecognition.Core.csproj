@@ -91,6 +91,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Face.cs" />
+    <Compile Include="GFace.cs" />
     <Compile Include="ImageProcessing.cs" />
     <Compile Include="KeyManager.cs" />
     <Compile Include="MessageManager.cs" />
