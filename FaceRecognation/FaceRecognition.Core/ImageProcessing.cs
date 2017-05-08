@@ -97,7 +97,7 @@ namespace FaceRecognition.Core
 			}
 			catch (Exception ex)
 			{
-				MessageManager.MsgManagerInstance.WriteMessage(ex.Message);
+				MessageManager.MsgManagerInstance.writeMessage(ex.Message);
 				return ".unknown";
 			}
 		}

@@ -99,8 +99,15 @@
         <ScrollViewer Grid.Column="1" Grid.Row="1" Background="White">
 			<StackPanel x:Name="spLog"/>
 		</ScrollViewer>
-
-        <WrapPanel x:Name="ImageValidatingPanel" Grid.Column="1" Grid.Row="0">
-        </WrapPanel>
+        <Grid Grid.Column="1" Grid.Row="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Button Content="This is not a Face" Grid.Row="0" Height="40" Width="100" VerticalAlignment="Top" Margin="308,2,120,2"/>
+            <Button Content="Validate this Faces" Grid.Row="0" Height="40" Width="100" VerticalAlignment="Top" Margin="100,2,328,0" Click="Button_Click"/>
+            <WrapPanel Grid.Row="1" x:Name="ImageValidatingPanel">
+            </WrapPanel>
+        </Grid>
     </Grid>
 </Window>

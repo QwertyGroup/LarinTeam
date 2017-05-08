@@ -14,7 +14,7 @@ namespace FaceRecognition.Core
 		private MessageManager() { }
 
 		public event EventHandler<string> OnMessageSended;
-		public void WriteMessage(string msg)
+		public void writeMessage(string msg)
 		{
 			OnMessageSended?.Invoke(this, msg);
 		}

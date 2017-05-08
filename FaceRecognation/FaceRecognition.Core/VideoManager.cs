@@ -51,13 +51,13 @@ namespace FaceRecognition.Core
 			//Очевидный цикл.
 			while (true)
 			{
-				MessageManager.MsgManagerInstance.WriteMessage("Getting operation result...");
+				MessageManager.MsgManagerInstance.writeMessage("Getting operation result...");
 				operationResult = await videoServiceClient.GetOperationResultAsync(videoOperation);
 				if (operationResult.Status == OperationStatus.Succeeded || operationResult.Status == OperationStatus.Failed)
 				{
 					break;
 				}
-				MessageManager.MsgManagerInstance.WriteMessage($"Status is {operationResult.Status}. Trying again...");
+				MessageManager.MsgManagerInstance.writeMessage($"Status is {operationResult.Status}. Trying again...");
 				//Экономим количество запросов.
 				await Task.Delay(30000);
 			}
@@ -194,7 +194,7 @@ namespace FaceRecognition.Core
 			FaceDetectionResult faceDetectionResult = await getFaceDetectionAsync(path);
 
 			//Радуемся ответу, как будто это ответ от Кибернетики про олимпиаду.
-			MessageManager.MsgManagerInstance.WriteMessage("Got Face Detection Result!!!!)))");
+			MessageManager.MsgManagerInstance.writeMessage("Got Face Detection Result!!!!)))");
 
 			//Получаем список крутыхСобытий на каждого человека
 			Dictionary<int, List<CoolEvent>> FaceIds = getCoolEvents(faceDetectionResult);
@@ -222,7 +222,7 @@ namespace FaceRecognition.Core
 					catch
 					{
 
-						MessageManager.MsgManagerInstance.WriteMessage(" ");
+						MessageManager.MsgManagerInstance.writeMessage(" ");
 					}
 				}
 			}

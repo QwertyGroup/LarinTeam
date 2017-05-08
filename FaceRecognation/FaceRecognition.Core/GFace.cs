@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace FaceRecognition.Core
 {
-	public class GFace // Generalizing not G )0))
+	public class GFace // Generalizing not G )0)) (G - govno)
 	{
 		public Image Img { get; set; }
 		public AddPersistedFaceResult FaceIdOnAdding { get; set; }

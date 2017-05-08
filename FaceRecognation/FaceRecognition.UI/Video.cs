@@ -35,7 +35,7 @@ namespace FaceRecognition.UI
 		public static readonly DependencyProperty VideoSelectedProperty =
 			DependencyProperty.Register("VideoSelected", typeof(bool), typeof(Video));
 
-		private Dictionary<int, List<Image>> _extractedFaces;
+		public Dictionary<int, List<Image>> _extractedFaces;
 		public async Task ExtractFaces()
 		{
 			_extractedFaces = await VideoManager.VManagerInstance.getFacesFromVideo(Path);
@@ -51,8 +51,7 @@ namespace FaceRecognition.UI
             {
                 Width = 150,
                 Height = 150,
-                BorderBrush = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(255, 0, 0)),
-                BorderThickness = new Thickness(0)
+                BorderBrush = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(255, 0, 0))
             };
             System.Windows.Controls.Image Image = new System.Windows.Controls.Image
             {
@@ -64,22 +63,30 @@ namespace FaceRecognition.UI
             Border.Child = Image;
             Border.MouseLeftButtonUp += (sender, e) =>
             {
-                MessageManager.MsgManagerInstance.WriteMessage("ClickClack");
+                var brd = (System.Windows.Controls.Border)sender;
+                if (brd.BorderThickness.Top == 0)
+                    brd.BorderThickness = new Thickness(2);
+                else
+                    brd.BorderThickness = new Thickness(0);
+                MessageManager.MsgManagerInstance.writeMessage(brd.BorderThickness.Top.ToString());
             };
+            return Border;
         }
-
-        private void loadNextPerson(int num)
+        public int _num;
+        public void loadNextPerson()
         {
-            var currentPerson = _extractedFaces[num];
+            ImageValidatingPanel.Children.Clear();
+            var currentPerson = _extractedFaces[_num];
             foreach(var faceImage in currentPerson)
             {
-                ImageValidatingPanel.Children.Add()
+                ImageValidatingPanel.Children.Add(createImage(faceImage));
             }
+            _num++;
         }
 
         public void ValidateFaces()
 		{
-
+            loadNextPerson();
 		}
 	}
 }

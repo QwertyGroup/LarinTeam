@@ -32,7 +32,7 @@ namespace FaceRecognition.Core
 			}
 			catch (Exception ex)
 			{
-				MessageManager.MsgManagerInstance.WriteMessage(ex.Message);
+				MessageManager.MsgManagerInstance.writeMessage(ex.Message);
 			}
 		}
 
@@ -46,7 +46,7 @@ namespace FaceRecognition.Core
 			}
 			catch (Exception ex)
 			{
-				MessageManager.MsgManagerInstance.WriteMessage(ex.Message);
+				MessageManager.MsgManagerInstance.writeMessage(ex.Message);
 				return new AddPersistedFaceResult();
 			}
 		}
@@ -61,7 +61,7 @@ namespace FaceRecognition.Core
 			}
 			catch (Exception ex)
 			{
-				MessageManager.MsgManagerInstance.WriteMessage(ex.Message);
+				MessageManager.MsgManagerInstance.writeMessage(ex.Message);
 				return new Microsoft.ProjectOxford.Face.Contract.Face[0];
 			}
 		}
@@ -86,7 +86,7 @@ namespace FaceRecognition.Core
 			}
 			catch (Exception ex)
 			{
-				MessageManager.MsgManagerInstance.WriteMessage(ex.Message);
+				MessageManager.MsgManagerInstance.writeMessage(ex.Message);
 				return new SimilarPersistedFace[0];
 			}
 		}
@@ -99,7 +99,7 @@ namespace FaceRecognition.Core
 			}
 			catch (Exception ex)
 			{
-				MessageManager.MsgManagerInstance.WriteMessage(ex.Message);
+				MessageManager.MsgManagerInstance.writeMessage(ex.Message);
 			}
 		}
 
@@ -188,7 +188,7 @@ namespace FaceRecognition.Core
 		}
 		public async Task CreatePersonGroup(string customGroupId)
 		{
-			_msgManager.WriteMessage($"Creating group: {customGroupId}");
+			_msgManager.writeMessage($"Creating group: {customGroupId}");
 			await _faceServiceClient.CreatePersonGroupAsync(customGroupId, "BFS");
 		}
 
@@ -198,7 +198,7 @@ namespace FaceRecognition.Core
 		}
 		public async Task<CreatePersonResult> CreatePerson(string customGroupId, string personName)
 		{
-			_msgManager.WriteMessage($"Creating person: {personName}");
+			_msgManager.writeMessage($"Creating person: {personName}");
 			return await _faceServiceClient.CreatePersonAsync(customGroupId, personName);
 		}
 
@@ -208,7 +208,7 @@ namespace FaceRecognition.Core
 		}
 		public async Task<AddPersistedFaceResult> AddPersonFace(string customGroupId, CreatePersonResult personId, Stream faceImg)
 		{
-			_msgManager.WriteMessage("Adding face to person");
+			_msgManager.writeMessage("Adding face to person");
 			return await _faceServiceClient.AddPersonFaceAsync(customGroupId, personId.PersonId, faceImg);
 		}
 
@@ -218,7 +218,7 @@ namespace FaceRecognition.Core
 		}
 		public async Task TrainGroup(string customGroupId)
 		{
-			_msgManager.WriteMessage("Group training had started");
+			_msgManager.writeMessage("Group training had started");
 			await _faceServiceClient.TrainPersonGroupAsync(customGroupId);
 		}
 
@@ -228,7 +228,7 @@ namespace FaceRecognition.Core
 		}
 		public async Task<TrainingStatus> GetTrainStatus(string customGroupId)
 		{
-			_msgManager.WriteMessage("Getting training status...");
+			_msgManager.writeMessage("Getting training status...");
 			return await _faceServiceClient.GetPersonGroupTrainingStatusAsync(customGroupId);
 		}
 	}

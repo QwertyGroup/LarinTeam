@@ -22,7 +22,6 @@ namespace FaceRecognition.Core
 		//Singleton
 		private static Lazy<Synchron> _syncInstance = new Lazy<Synchron>(() => new Synchron());
 		public static Synchron Instance { get { return _syncInstance.Value; } }
-
 		private Synchron()
 		{
 			AuthSecret = KeyManager.Instance.FireBaseKey;
@@ -96,7 +95,7 @@ namespace FaceRecognition.Core
 				if (similarity.Length == 0)
 					continue;
 				var confidence = similarity[0].Confidence;
-				MessageManager.MsgManagerInstance.WriteMessage($"{face.id} and {otherFace.id} similarity - {confidence}");
+				MessageManager.MsgManagerInstance.writeMessage($"{face.id} and {otherFace.id} similarity - {confidence}");
 				if (confidence > 0.4)
 				{
 					face.id = otherFace.id;

@@ -53,23 +53,23 @@ namespace FaceRecognition.UI
 			bool? result = fileDialog.ShowDialog(this);
 			if (!(bool)result)
 			{
-				_msgManager.WriteMessage("Video selection aborted");
+				_msgManager.writeMessage("Video selection aborted");
 				return;
 			}
 			_video.Path = fileDialog.FileName;
 
 			(sender as Button).Content = "Video selected";
-			_msgManager.WriteMessage("Video selected" + Environment.NewLine + _video.Path);
+			_msgManager.writeMessage("Video selected" + Environment.NewLine + _video.Path);
 		}
 
 		private async void DetectFaces_Click(object sender, RoutedEventArgs e)
 		{
 			var bnt = (Button)sender;
 			bnt.Content = "Extracting faces...";
-			_msgManager.WriteMessage("Extracting faces...");
+			_msgManager.writeMessage("Extracting faces...");
 			await _video.ExtractFaces();
 			bnt.Content = "Extracted";
-			_msgManager.WriteMessage("Faces were successfuly extracted.");
+			_msgManager.writeMessage("Faces were successfuly extracted.");
 			await Task.Delay(500);
 			bnt.Content = "Validating faces...";
 			//_msgManager.WriteMessage("Seleced 0 faces of 6.");
@@ -84,7 +84,29 @@ namespace FaceRecognition.UI
 			{
 				Directory.Delete("TempData", true);
 			}
-			_msgManager.WriteMessage("Cache cleared");
+			_msgManager.writeMessage("Cache cleared");
 		}
-	}
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            List<System.Drawing.Image> resultFacesOfPerson = new List<System.Drawing.Image>();
+            foreach(var border in ImageValidatingPanel.Children)
+            {
+                var brd = (Border)border;
+                if (brd.BorderThickness.Bottom == 2)
+                {
+                    var img = ImageProcessing.ImageProcessingInstance.ConvertBitmapImageToImage((BitmapImage)((Image) brd.Child).Source);
+                    resultFacesOfPerson.Add(img);
+                }
+            }
+            _video.ValidFaces[_video.ValidFaces.Count] = resultFacesOfPerson;
+            if (_video._num == _video._extractedFaces.Count)
+            {
+                ImageValidatingPanel.Children.Clear();
+                return;
+            }
+            _video.loadNextPerson();
+
+        }
+    }
 }
