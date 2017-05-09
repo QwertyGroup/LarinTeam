@@ -18,8 +18,13 @@ namespace FaceRecognition.Core
             }
         }
 
+        //Microsoft Face Api Key
         public string MsPhotoKey { get; private set; }
+        
+        //Microsoft Video Api Key
         public string MsVideoKey { get; private set; }
+
+        //FireBase OAth Key
         public string FireBaseKey { get; private set; }
 
         private KeyManager()

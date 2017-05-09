@@ -10,6 +10,7 @@ using System.Diagnostics;
 
 namespace FaceRecognition.Core
 {
+    //Base class of Face. Needed to convert dataBase data to c# objects.
 	public class PrimitiveFace
 	{
         public string _baseFaceImage;
@@ -29,7 +30,7 @@ namespace FaceRecognition.Core
             return face;
         }
 	}
-
+    //Complicated PrimitiveFace class. Can convert textBase image to Image and vice versa.
     public class Face : PrimitiveFace
     {
         private Image _faceImage;
@@ -109,6 +110,7 @@ namespace FaceRecognition.Core
                 return image;
             }
         }
+        //Converting this Face to primitive.
         public PrimitiveFace GetPrimitiveFace()
         {
             PrimitiveFace primitiveFace = new PrimitiveFace(this.BaseFaceImage);

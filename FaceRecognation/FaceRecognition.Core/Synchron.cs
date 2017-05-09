@@ -43,6 +43,7 @@ namespace FaceRecognition.Core
 		private int LastId = 0;
 		private List<Face> Data;
 
+        //Downloads all Data from FireBase and saves it to List<Face>
 		private List<Face> GetData()
 		{
 			try
@@ -64,6 +65,7 @@ namespace FaceRecognition.Core
 
 		private void AddFace(Face face)
 		{
+            //face._id == -1 means that this face is new and should be added to the end of Data Base.
 			if (face._id == -1)
 			{
 				face._id = LastId;
