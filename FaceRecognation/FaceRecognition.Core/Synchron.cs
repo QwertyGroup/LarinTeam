@@ -32,8 +32,8 @@ namespace FaceRecognition.Core
 				BasePath = this.BasePath
 			};
 			Client = new FirebaseClient(Config);
-			Data = getData();
-			LastId = getLastId();
+			Data = GetData();
+			LastId = GetLastId();
 		}
 
 		private string AuthSecret;
@@ -43,13 +43,13 @@ namespace FaceRecognition.Core
 		private int LastId = 0;
 		private List<Face> Data;
 
-		private List<Face> getData()
+		private List<Face> GetData()
 		{
 			try
 			{
 				FirebaseResponse response = Client.Get("Faces");
 				var PrimitiveData = response.ResultAs<List<PrimitiveFace>>();
-				var Data = PrimitiveData.Select(x => x.getFaceFromPrimitive()).ToList();
+				var Data = PrimitiveData.Select(x => x.GetFaceFromPrimitive()).ToList();
 				return Data == null ? new List<Face>() : Data;
 			}
 			catch
@@ -57,17 +57,17 @@ namespace FaceRecognition.Core
 				return new List<Face>();
 			}
 		}
-		private int getLastId()
+		private int GetLastId()
 		{
 			return Data.Count;
 		}
 
 		private void AddFace(Face face)
 		{
-			if (face.id == -1)
+			if (face._id == -1)
 			{
-				face.id = LastId;
-				SetResponse response = Client.Set($"Faces/{LastId}", face.getPrimitiveFace());
+				face._id = LastId;
+				SetResponse response = Client.Set($"Faces/{LastId}", face.GetPrimitiveFace());
 				if (response.StatusCode == System.Net.HttpStatusCode.OK)
 				{
 					LastId++;
@@ -76,29 +76,29 @@ namespace FaceRecognition.Core
 			}
 			else
 			{
-				FirebaseResponse response = Client.Update($"Faces/{face.id}", face.getPrimitiveFace());
+				FirebaseResponse response = Client.Update($"Faces/{face._id}", face.GetPrimitiveFace());
 				if (response.StatusCode == System.Net.HttpStatusCode.OK)
 				{
-					Data[face.id] = face;
+					Data[face._id] = face;
 				}
 			}
 		}
 
-		public async Task<SyncronResult> checkAndThenAdd(Face face)
+		public async Task<SyncronResult> CheckAndThenAdd(Face face)
 		{
 			foreach (var otherFace in Data)
 			{
 				//float similarity = 0;
 				var faceImage = face.FaceImage;
 				var otherImage = otherFace.FaceImage;
-				var similarity = await FaceApiManager.MSAPIManagerInstance.FindSimilar(faceImage, otherImage);
+				var similarity = await FaceApiManager.FaceApiManagerInstance.FindSimilar(faceImage, otherImage);
 				if (similarity.Length == 0)
 					continue;
 				var confidence = similarity[0].Confidence;
-				MessageManager.MsgManagerInstance.writeMessage($"{face.id} and {otherFace.id} similarity - {confidence}");
+				MessageManager.MsgManagerInstance.WriteMessage($"{face._id} and {otherFace._id} similarity - {confidence}");
 				if (confidence > 0.4)
 				{
-					face.id = otherFace.id;
+					face._id = otherFace._id;
 					AddFace(face);
 					return new SyncronResult();
 				}
@@ -113,8 +113,8 @@ namespace FaceRecognition.Core
 			Face Mark = new Face(ImageProcessing.ImageProcessingInstance.LoadImageFromFile("ResultFaces/0.png"));
 			AddFace(Mark);
 			AddFace(Katya);
-			var result = await checkAndThenAdd(Mark);
-			var result1 = await checkAndThenAdd(Katya);
+			var result = await CheckAndThenAdd(Mark);
+			var result1 = await CheckAndThenAdd(Katya);
 		}
 
 	}

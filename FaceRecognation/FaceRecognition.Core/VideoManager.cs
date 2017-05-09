@@ -25,18 +25,18 @@ namespace FaceRecognition.Core
 
 		private VideoManager()
 		{
-			videoServiceClient = new VideoServiceClient(KeyManager.Instance.MsVideoKey);
-			videoServiceClient.Timeout = TimeSpan.FromMinutes(15);
+			_videoServiceClient = new VideoServiceClient(KeyManager.Instance.MsVideoKey);
+			_videoServiceClient.Timeout = TimeSpan.FromMinutes(15);
 		}
 
 
-		private VideoServiceClient videoServiceClient;
+		private VideoServiceClient _videoServiceClient;
 		//Количество тиков в секунду, майкрософт не хочет использовать тики, как в шарпе.
-		private static double TimeScale;
-		private static int VideoWidth;
-		private static int VideoHeight;
+		private static double _timeScale;
+		private static int _videoWidth;
+		private static int _videoHeight;
 
-		private async Task<FaceDetectionResult> getFaceDetectionAsync(string filePath)
+		private async Task<FaceDetectionResult> GetFaceDetectionAsync(string filePath)
 		{
 			//Создаем новую операцию в Каунтер Страйке
 			Operation videoOperation;
@@ -45,38 +45,38 @@ namespace FaceRecognition.Core
 			//Стрим = Обострим = Местерим = Обматерим, не так уж и трудно
 			using (var fs = new FileStream(filePath, FileMode.Open))
 			{
-				videoOperation = await videoServiceClient.CreateOperationAsync(fs, new FaceDetectionOperationSettings());
+				videoOperation = await _videoServiceClient.CreateOperationAsync(fs, new FaceDetectionOperationSettings());
 			}
 			OperationResult operationResult;
 			//Очевидный цикл.
 			while (true)
 			{
-				MessageManager.MsgManagerInstance.writeMessage("Getting operation result...");
-				operationResult = await videoServiceClient.GetOperationResultAsync(videoOperation);
+				MessageManager.MsgManagerInstance.WriteMessage("Getting operation result...");
+				operationResult = await _videoServiceClient.GetOperationResultAsync(videoOperation);
 				if (operationResult.Status == OperationStatus.Succeeded || operationResult.Status == OperationStatus.Failed)
 				{
 					break;
 				}
-				MessageManager.MsgManagerInstance.writeMessage($"Status is {operationResult.Status}. Trying again...");
+				MessageManager.MsgManagerInstance.WriteMessage($"Status is {operationResult.Status}. Trying again...");
 				//Экономим количество запросов.
 				await Task.Delay(30000);
 			}
 			var faceDetectionTrackingResultJsonString = operationResult.ProcessingResult;
 			var faceDetecionTracking = JsonConvert.DeserializeObject<FaceDetectionResult>(faceDetectionTrackingResultJsonString);
 
-			TimeScale = faceDetecionTracking.Timescale;
+			_timeScale = faceDetecionTracking.Timescale;
 			return faceDetecionTracking;
 		}
 
-		private Dictionary<int, List<CoolEvent>> getCoolEvents(FaceDetectionResult faceDetectionTracking)
+		private Dictionary<int, List<CoolEvent>> GetCoolEvents(FaceDetectionResult faceDetectionTracking)
 		{
 			//Почему майкрософт в свою программу не добавили эту строку? Зачем мне фрагменты без событий?
 			var Fragments = faceDetectionTracking.Fragments.Where(x => x.Events != null).ToArray();
-			var idDict = getDictionary(Fragments);
+			var idDict = GetDictionary(Fragments);
 			return idDict;
 		}
 
-		private void getFrame(string path, double startTime, int id)
+		private void GetFrame(string path, double startTime, int id)
 		{
 			//Создаем папочку, если её нет. Нужно же максимально засрать папку с екзешником.
 			//Если что, удалять эту папку программа не будет.
@@ -110,7 +110,7 @@ namespace FaceRecognition.Core
 			public int Id;
 		}
 
-		private Dictionary<int, List<CoolEvent>> getDictionary(Fragment<FaceEvent>[] fragments)
+		private Dictionary<int, List<CoolEvent>> GetDictionary(Fragment<FaceEvent>[] fragments)
 		{
 			//Ну давай же, добавь букву "к" к названию, будет так смешно))0)
 			Dictionary<int, List<CoolEvent>> dic = new Dictionary<int, List<CoolEvent>>();
@@ -134,20 +134,20 @@ namespace FaceRecognition.Core
 						};
 
 						//Равно такой диагональю, это потому что кол-во букв в словах уменьшается по одной. Красиво.
-						faceEvent.rec.Height = Convert.ToInt32(VideoHeight * face.Height);
-						faceEvent.rec.Width = Convert.ToInt32(VideoWidth * face.Width);
-						faceEvent.rec.Left = Convert.ToInt32(VideoWidth * face.X);
+						faceEvent.rec.Height = Convert.ToInt32(_videoHeight * face.Height);
+						faceEvent.rec.Width = Convert.ToInt32(_videoWidth * face.Width);
+						faceEvent.rec.Left = Convert.ToInt32(_videoWidth * face.X);
 						if (faceEvent.rec.Left < 0)
 							faceEvent.rec.Left = 0;
 
-						faceEvent.rec.Top = Convert.ToInt32(VideoHeight * face.Y);
+						faceEvent.rec.Top = Convert.ToInt32(_videoHeight * face.Y);
 						if (faceEvent.rec.Top < 0)
 							faceEvent.rec.Top = 0;
 
-						if (faceEvent.rec.Height + faceEvent.rec.Top > VideoHeight)
-							faceEvent.rec.Height = VideoHeight - faceEvent.rec.Top;
-						if (faceEvent.rec.Width + faceEvent.rec.Left > VideoWidth)
-							faceEvent.rec.Width = VideoWidth - faceEvent.rec.Left;
+						if (faceEvent.rec.Height + faceEvent.rec.Top > _videoHeight)
+							faceEvent.rec.Height = _videoHeight - faceEvent.rec.Top;
+						if (faceEvent.rec.Width + faceEvent.rec.Left > _videoWidth)
+							faceEvent.rec.Width = _videoWidth - faceEvent.rec.Left;
 
 						if (!dic.Keys.Contains(faceEvent.Id))
 							dic[faceEvent.Id] = new List<CoolEvent>();
@@ -159,7 +159,7 @@ namespace FaceRecognition.Core
 		}
 
 		//Получаем разрешение видосика
-		private void setVideoResol(string path)
+		private void SetVideoResol(string path)
 		{
 			//Это просто, ебать, говноМагия говнокода. Одним камушком два кувшинчика ёбнул.
 			//Беру, во-первых, разрешение (Выебать твою маман, ухухух). Во-вторых, создаю скриншот первого фрейма видоса.
@@ -178,30 +178,30 @@ namespace FaceRecognition.Core
 				eng.GetThumbnail(inputFile, testFile, options);
 				Image testImage = ImageProcessing.ImageProcessingInstance.LoadImageFromFile("TempData/RandomScreen.png");
 				//ВидеоШирина = тестКартинка.Ширина.
-				VideoWidth = testImage.Width;
+				_videoWidth = testImage.Width;
 				//ВидеоВысота = тестКартинка.Высота.
-				VideoHeight = testImage.Height;
+				_videoHeight = testImage.Height;
 				//Это была миниатюра о том, как Американцы воспринимают си шарп, и программування в целом.
 			}
 		}
 
-		public async Task<Dictionary<int, List<Image>>> getFacesFromVideo(string path)
+		public async Task<Dictionary<int, List<Image>>> GetFacesFromVideo(string path)
 		{
 			//Получаем разрешение
-			setVideoResol(path);
+			SetVideoResol(path);
 
 			//Отправляем видосик
-			FaceDetectionResult faceDetectionResult = await getFaceDetectionAsync(path);
+			FaceDetectionResult faceDetectionResult = await GetFaceDetectionAsync(path);
 
 			//Радуемся ответу, как будто это ответ от Кибернетики про олимпиаду.
-			MessageManager.MsgManagerInstance.writeMessage("Got Face Detection Result!!!!)))");
+			MessageManager.MsgManagerInstance.WriteMessage("Got Face Detection Result!!!!)))");
 
 			//Получаем список крутыхСобытий на каждого человека
-			Dictionary<int, List<CoolEvent>> FaceIds = getCoolEvents(faceDetectionResult);
+			Dictionary<int, List<CoolEvent>> FaceIds = GetCoolEvents(faceDetectionResult);
 			Dictionary<int, List<Image>> resultImages = new Dictionary<int, List<Image>>();
 
 			//Choose 1 first and 4 random CoolEvent - Гы, инглишь завтра просто первой парой, нужно попрактиковаться
-			FaceIds = chooseFive(FaceIds);
+			FaceIds = ChooseFive(FaceIds);
 
 			//Тут все очевидно
 			foreach (int id in FaceIds.Keys)
@@ -211,8 +211,8 @@ namespace FaceRecognition.Core
 				{
 					try
 					{
-						var startTimeMili = curEvent.startTime / TimeScale * 1000;
-						getFrame(path, startTimeMili, id);
+						var startTimeMili = curEvent.startTime / _timeScale * 1000;
+						GetFrame(path, startTimeMili, id);
 
 						var img = ImageProcessing.ImageProcessingInstance.LoadImageFromFile($@"TempData/{id}.{(long)startTimeMili}.png");
 						img = ImageProcessing.ImageProcessingInstance.CropImage(img, curEvent.rec);
@@ -222,14 +222,14 @@ namespace FaceRecognition.Core
 					catch
 					{
 
-						MessageManager.MsgManagerInstance.writeMessage(" ");
+						MessageManager.MsgManagerInstance.WriteMessage(" ");
 					}
 				}
 			}
 			return resultImages;
 		}
 
-		private Dictionary<int, List<CoolEvent>> chooseFive(Dictionary<int, List<CoolEvent>> faceIds)
+		private Dictionary<int, List<CoolEvent>> ChooseFive(Dictionary<int, List<CoolEvent>> faceIds)
 		{
 			var coolIds = new Dictionary<int, List<CoolEvent>>();
 

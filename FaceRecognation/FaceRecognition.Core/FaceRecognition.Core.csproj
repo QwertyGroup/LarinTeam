@@ -91,6 +91,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Face.cs" />
+    <Compile Include="FileManager.cs" />
     <Compile Include="GFace.cs" />
     <Compile Include="ImageProcessing.cs" />
     <Compile Include="KeyManager.cs" />
@@ -102,6 +103,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="CoreDiagram.cd" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -25,7 +25,7 @@ namespace FaceRecognation._1._0
 			//Synchron.Instance.Test();
 		}
 
-		private FaceApiManager _msapiManager = FaceApiManager.MSAPIManagerInstance;
+		private FaceApiManager _msapiManager = FaceApiManager.FaceApiManagerInstance;
 		private ImageProcessing _imgProcessing = ImageProcessing.ImageProcessingInstance;
 		private string _videoPath;
 		private Dictionary<int, List<System.Drawing.Image>> unchosenPhotos;
@@ -122,7 +122,7 @@ namespace FaceRecognation._1._0
 			MessageManager.MsgManagerInstance.WriteMessage(btn.Content.ToString());
 
 			// Detecting for Videos
-			unchosenPhotos = await VideoManager.VManagerInstance.getFacesFromVideo(_videoPath);
+			unchosenPhotos = await VideoManager.VManagerInstance.GetFacesFromVideo(_videoPath);
 
 			btn.Content = "Detected successfuly.";
 			MessageManager.MsgManagerInstance.WriteMessage(btn.Content.ToString());

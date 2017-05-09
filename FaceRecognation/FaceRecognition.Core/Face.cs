@@ -12,20 +12,20 @@ namespace FaceRecognition.Core
 {
 	public class PrimitiveFace
 	{
-        public string BaseFaceImage;
-        public int id;
+        public string _baseFaceImage;
+        public int _id;
 
         public PrimitiveFace(string BaseFaceImage)
         {
-            this.BaseFaceImage = BaseFaceImage;
+			_baseFaceImage = BaseFaceImage;
         }
 
         public PrimitiveFace() { }
 
-        public Face getFaceFromPrimitive()
+        public Face GetFaceFromPrimitive()
         {
-            Face face = new Face(this.BaseFaceImage);
-            face.id = this.id;
+            Face face = new Face(this._baseFaceImage);
+            face._id = this._id;
             return face;
         }
 	}
@@ -77,14 +77,14 @@ namespace FaceRecognition.Core
         public Face(Image FaceImage) : base()
         {
             this.FaceImage = FaceImage;
-            this.id = -1;
+            this._id = -1;
             BaseFaceImage = ImageToBase(FaceImage);
         }
 
         public Face(string BaseFaceImage) : base()
         {
             this.BaseFaceImage = BaseFaceImage;
-            this.id = -1;
+            this._id = -1;
             FaceImage = BaseToImage(BaseFaceImage);
         }
 
@@ -109,10 +109,10 @@ namespace FaceRecognition.Core
                 return image;
             }
         }
-        public PrimitiveFace getPrimitiveFace()
+        public PrimitiveFace GetPrimitiveFace()
         {
             PrimitiveFace primitiveFace = new PrimitiveFace(this.BaseFaceImage);
-            primitiveFace.id = this.id;
+            primitiveFace._id = this._id;
             return primitiveFace;
         }
     }

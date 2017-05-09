@@ -16,6 +16,7 @@ namespace FaceRecognition.Core
 
 	public class GPerson
 	{
+		public int PersonLocalId { get; set; }
 		public string PersonGroupId { get; set; }
 		public CreatePersonResult PersonCreationId { get; set; }
 		public List<GFace> Faces { get; set; } = new List<GFace>();
