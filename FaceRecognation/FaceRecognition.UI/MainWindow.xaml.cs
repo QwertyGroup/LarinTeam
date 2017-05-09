@@ -128,7 +128,8 @@ namespace FaceRecognition.UI
 			await _faceApiManager.CreatePersonGroup();
 			// LOCAL ARCH Clear
 			_video.GPersons = new Dictionary<int, GPerson>();
-		}
+            _msgManager.WriteMessage("Group Created");
+        }
 
 		private async void Button_Click(object sender, RoutedEventArgs e)
 		{

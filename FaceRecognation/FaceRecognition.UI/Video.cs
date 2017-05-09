@@ -138,23 +138,56 @@ namespace FaceRecognition.UI
 				btn.Content = "Identifying...";
 				MessageManager.MsgManagerInstance.WriteMessage("Aggregating MS ids for comparing face request...");
 				var listofGuidsToCompare = new List<Guid[]>();
+                /*
 				var counter = 0;
-				var tenfaces = new Guid[10];
-				foreach (var person in GPersons)
-					foreach (var face in person.Value.Faces)
-					{
-						if (counter == 10)
-						{
-							listofGuidsToCompare.Add(tenfaces);
-							counter = 0;
-							tenfaces = new Guid[10];
-						}
-						tenfaces[counter] = (await _faceApiManager.DetectFace(
-							ImageProcessing.ImageProcessingInstance.ImageToStream(face.Img)))[0].FaceId;
-						counter++;
-					}
-				MessageManager.MsgManagerInstance.WriteMessage("Successfuly aggregated.");
+				var tenfaces = new List<Guid>();
+                foreach (var person in GPersons)
+                {
+                    foreach (var face in person.Value.Faces)
+                    {
+                        if (counter == 10)
+                        {
+                            listofGuidsToCompare.Add(tenfaces.ToArray());
+                            counter = 0;
+                            tenfaces = new List<Guid>();
+                        }
+                        tenfaces.Add((await _faceApiManager.DetectFace(
+                            ImageProcessing.ImageProcessingInstance.ImageToStream(face.Img)))[0].FaceId);
+                        counter++;
+                    }
+                }
+                if (tenfaces.Count > 0)
+                {
+                    listofGuidsToCompare.Add(tenfaces.ToArray());
+                    tenfaces = new List<Guid>();
+                }
+                */
+                List<Guid> rowGuidList = new List<Guid>();
+                foreach(var person in GPersons)
+                {
+                    foreach(var face in person.Value.Faces)
+                    {
+                        rowGuidList.Add((await _faceApiManager.DetectFace(
+                            ImageProcessing.ImageProcessingInstance.ImageToStream(face.Img)))[0].FaceId);
+                    }
+                }
+                for (int i = 0; i < rowGuidList.Count; i += 10)
+                {
+                    listofGuidsToCompare.Add(rowGuidList.GetRange(i, Math.Min(10, rowGuidList.Count - i)).ToArray());
+                }
+                
+                MessageManager.MsgManagerInstance.WriteMessage("Successfuly aggregated.");
 				await _faceApiManager.TrainGroup();
+                while (true)
+                {
+                    var status = (await FaceApiManager.FaceApiManagerInstance.GetTrainStatus()).Status;
+                    if (status == Status.Succeeded)
+                    {
+                        break;
+                    }
+                    MessageManager.MsgManagerInstance.WriteMessage($"Status of training is {status}. Trying again...");
+                    await Task.Delay(15000);
+                }
 				MessageManager.MsgManagerInstance.WriteMessage("Comparing new faces with archive...");
 				var result = new List<IdentifyResult>();
 				foreach (var tens in listofGuidsToCompare)
@@ -166,6 +199,8 @@ namespace FaceRecognition.UI
 			{
 				MessageManager.MsgManagerInstance.WriteMessage(ex.Message);
 			}
-		}
-	}
+            MessageManager.MsgManagerInstance.WriteMessage("Group Appended!");
+
+        }
+    }
 }
