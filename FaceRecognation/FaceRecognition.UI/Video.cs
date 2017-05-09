@@ -138,37 +138,16 @@ namespace FaceRecognition.UI
 				btn.Content = "Identifying...";
 				MessageManager.MsgManagerInstance.WriteMessage("Aggregating MS ids for comparing face request...");
 				var listofGuidsToCompare = new List<Guid[]>();
-				/*
-				var counter = 0;
-				var tenfaces = new List<Guid>();
-                foreach (var person in GPersons)
-                {
-                    foreach (var face in person.Value.Faces)
-                    {
-                        if (counter == 10)
-                        {
-                            listofGuidsToCompare.Add(tenfaces.ToArray());
-                            counter = 0;
-                            tenfaces = new List<Guid>();
-                        }
-                        tenfaces.Add((await _faceApiManager.DetectFace(
-                            ImageProcessing.ImageProcessingInstance.ImageToStream(face.Img)))[0].FaceId);
-                        counter++;
-                    }
-                }
-                if (tenfaces.Count > 0)
-                {
-                    listofGuidsToCompare.Add(tenfaces.ToArray());
-                    tenfaces = new List<Guid>();
-                }
-                */
 				List<Guid> rowGuidList = new List<Guid>();
+				var personMatchGuid = new Dictionary<Guid, int>();
 				foreach (var person in GPersons)
 				{
 					foreach (var face in person.Value.Faces)
 					{
-						rowGuidList.Add((await _faceApiManager.DetectFace(
-							ImageProcessing.ImageProcessingInstance.ImageToStream(face.Img)))[0].FaceId);
+						var id = (await _faceApiManager.DetectFace(
+							ImageProcessing.ImageProcessingInstance.ImageToStream(face.Img)))[0].FaceId;
+						personMatchGuid.Add(id, person.Key);
+						rowGuidList.Add(id);
 					}
 				}
 				for (int i = 0; i < rowGuidList.Count; i += 10)
@@ -192,6 +171,39 @@ namespace FaceRecognition.UI
 				var result = new List<IdentifyResult>();
 				foreach (var tens in listofGuidsToCompare)
 					result.AddRange(await _faceApiManager.Identify(tens));
+
+				var unrecognisedFaces = result.Where(x => x.Candidates.Length == 0 || x.Candidates == null).ToList();
+				var addedPeopleLinking = new Dictionary<int, CreatePersonResult>();
+				var currentPersonCounter = 0;
+				var currentPerson = personMatchGuid[unrecognisedFaces[0].FaceId]; // Может будет работать?)
+				foreach (var unrecFace in unrecognisedFaces)
+				{
+					try
+					{
+						var personId = personMatchGuid[unrecFace.FaceId];
+						if (!addedPeopleLinking.ContainsKey(personId))
+						{
+							var res = await _faceApiManager.CreatePerson(personId.ToString());
+							MessageManager.MsgManagerInstance.WriteMessage($"Added {personId} to group.");
+							addedPeopleLinking.Add(personId, res);
+						}
+
+						if (currentPerson == personId) currentPersonCounter++;
+						else
+						{
+							currentPersonCounter = 1;
+							currentPerson = personId;
+						}
+						await Task.Delay(TimeSpan.FromSeconds(5));
+						await _faceApiManager.AddPersonFace(addedPeopleLinking[personId],
+							ImageProcessing.ImageProcessingInstance.ImageToStream(GPersons[personId].Faces[currentPersonCounter - 1].Img));
+						MessageManager.MsgManagerInstance.WriteMessage($"{currentPersonCounter}th face added to {personId} person.");
+					}
+					catch (Exception ex)
+					{
+						MessageManager.MsgManagerInstance.WriteMessage(ex.Message);
+					}
+				}
 
 				MessageManager.MsgManagerInstance.WriteMessage("Comparing result recived!");
 			}

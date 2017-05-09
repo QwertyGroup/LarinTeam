@@ -126,13 +126,14 @@ namespace FaceRecognition.UI
 				_msgManager.WriteMessage(ex.Message);
 			}
 			await _faceApiManager.CreatePersonGroup();
+			_msgManager.WriteMessage("Group Created");
 			var orsensId = await _faceApiManager.CreatePerson("Orsen");
 			await _faceApiManager.AddPersonFace(orsensId,
 				ImageProcessing.ImageProcessingInstance.ImageToStream(
 					ImageProcessing.ImageProcessingInstance.LoadImageFromFile("Orsen.jpg")));
+			_msgManager.WriteMessage("Face added.");
 			// LOCAL ARCH Clear
 			_video.GPersons = new Dictionary<int, GPerson>();
-			_msgManager.WriteMessage("Group Created");
 		}
 
 		private async void Button_Click(object sender, RoutedEventArgs e)
