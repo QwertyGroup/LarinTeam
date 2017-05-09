@@ -47,7 +47,7 @@ namespace FaceRecognition.Core
 				videoOperation = await _videoServiceClient.CreateOperationAsync(fs, new FaceDetectionOperationSettings());
 			}
 			OperationResult operationResult;
-            //Checking status of operation every 30 sec untill it's Succeeded
+            //Checking status of operation every 30 sec untill it's succeeded
 			while (true)
 			{
 				MessageManager.MsgManagerInstance.WriteMessage("Getting operation result...");
@@ -59,9 +59,9 @@ namespace FaceRecognition.Core
 				MessageManager.MsgManagerInstance.WriteMessage($"Status is {operationResult.Status}. Trying again...");
 				await Task.Delay(30000);
 			}
-            //Getting JSOn string
+            //Getting JSON string
 			var faceDetectionTrackingResultJsonString = operationResult.ProcessingResult;
-            //Converting JSON to c# object
+            //Converting JSON to C# object
 			var faceDetecionTracking = JsonConvert.DeserializeObject<FaceDetectionResult>(faceDetectionTrackingResultJsonString);
             //Getting timeScale from object
 			_timeScale = faceDetecionTracking.Timescale;
