@@ -57,8 +57,9 @@ namespace FaceRecognition.UI
 		public async Task ExtractFaces()
 		{
 			ExtractedFaces = await VideoManager.VManagerInstance.GetFacesFromVideo(Path);
+			var curFaceCount = GPersons.Count;
 			foreach (var exFace in ExtractedFaces)
-				GPersons.Add(exFace.Key, new GPerson { PersonLocalId = exFace.Key });
+				GPersons.Add(exFace.Key + curFaceCount, new GPerson { PersonLocalId = exFace.Key });
 		}
 
 		public Dictionary<int, List<Image>> ValidFaces { get; set; } = new Dictionary<int, List<Image>>();
