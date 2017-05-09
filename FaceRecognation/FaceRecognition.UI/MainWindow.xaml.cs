@@ -117,7 +117,14 @@ namespace FaceRecognition.UI
 		private FaceApiManager _faceApiManager = FaceApiManager.FaceApiManagerInstance;
 		private async void ClearFaceArchive_Click(object sender, RoutedEventArgs e)
 		{
-			await _faceApiManager.DeleteGroup();
+			try
+			{
+				await _faceApiManager.DeleteGroup();
+			}
+			catch (Exception ex)
+			{
+				_msgManager.WriteMessage(ex.Message);
+			}
 			await _faceApiManager.CreatePersonGroup();
 			// LOCAL ARCH Clear
 			_video.GPersons = new Dictionary<int, GPerson>();
