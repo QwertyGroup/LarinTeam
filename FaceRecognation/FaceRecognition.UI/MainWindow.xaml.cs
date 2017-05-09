@@ -130,8 +130,14 @@ namespace FaceRecognition.UI
 			_video.GPersons = new Dictionary<int, GPerson>();
 		}
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private async void Button_Click(object sender, RoutedEventArgs e)
         {
+            if (_video._num == _video.ExtractedFaces.Count)
+            {
+                ImageValidatingPanel.Children.Clear();
+                await _video.AppendGroup();
+                return;
+            }
             _video.LoadNextPerson();
         }
     }
