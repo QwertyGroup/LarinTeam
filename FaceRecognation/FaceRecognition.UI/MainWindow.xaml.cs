@@ -122,5 +122,10 @@ namespace FaceRecognition.UI
 			// LOCAL ARCH Clear
 			_video.GPersons = new Dictionary<int, GPerson>();
 		}
-	}
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            _video.LoadNextPerson();
+        }
+    }
 }

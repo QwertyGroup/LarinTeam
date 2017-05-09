@@ -111,7 +111,7 @@
 			</Grid.RowDefinitions>
 			<StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
 				<Button Style="{DynamicResource DefaultButtonStyle}" Margin="10,4" Content="Validate this Faces" Foreground="#FF0035B4" Click="Validate_Click" IsEnabled="{Binding AreFacesExtracted}" />
-				<Button Style="{DynamicResource DefaultButtonStyle}" Margin="10,4" Content="This is not a Face" Foreground="#FFAF003F" IsEnabled="{Binding AreFacesExtracted}" />
+				<Button Style="{DynamicResource DefaultButtonStyle}" Margin="10,4" Content="This is not a Face" Foreground="#FFAF003F" IsEnabled="{Binding AreFacesExtracted}" Click="Button_Click" />
 			</StackPanel>
 			<WrapPanel Grid.Row="1" x:Name="ImageValidatingPanel"/>
 		</Grid>
