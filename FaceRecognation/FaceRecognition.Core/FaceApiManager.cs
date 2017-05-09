@@ -51,7 +51,7 @@ namespace FaceRecognition.Core
 			}
 		}
 
-		private async Task<Microsoft.ProjectOxford.Face.Contract.Face[]> DetectFace(Stream imageAsStream)
+		public async Task<Microsoft.ProjectOxford.Face.Contract.Face[]> DetectFace(Stream imageAsStream)
 		{
 			try
 			{
@@ -241,5 +241,24 @@ namespace FaceRecognition.Core
 			_msgManager.WriteMessage("Deleting person group...");
 			await _faceServiceClient.DeletePersonGroupAsync(customGroupId);
 		}
+
+		public async Task<List<IdentifyResult>> Identify(AddPersistedFaceResult[] faceIds)
+		{
+			return await Identify(_personGroupId, faceIds);
+		}
+		public async Task<List<IdentifyResult>> Identify(string customGroupId, AddPersistedFaceResult[] faceIds)
+		{
+			var ids = faceIds.Select(x => x.PersistedFaceId).ToArray();
+			return await Identify(customGroupId, ids);
+		}
+		public async Task<List<IdentifyResult>> Identify(Guid[] faceIds)
+		{
+			return await Identify(_personGroupId, faceIds);
+		}
+		public async Task<List<IdentifyResult>> Identify(string customGroupId, Guid[] faceIds)
+		{
+			return (await _faceServiceClient.IdentifyAsync(customGroupId, faceIds)).ToList();
+		}
+
 	}
 }

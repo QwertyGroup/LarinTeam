@@ -1,10 +1,12 @@
 ﻿using FaceRecognition.Core;
+using Microsoft.ProjectOxford.Face.Contract;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace FaceRecognition.UI
 {
@@ -38,8 +40,8 @@ namespace FaceRecognition.UI
 
 		public Dictionary<int, GPerson> GPersons { get; set; } = new Dictionary<int, GPerson>();
 
-		private Dictionary<int, List<Image>> _extractedFaces;
-		public Dictionary<int, List<Image>> ExtractedFaces
+		private Dictionary<int, List<System.Drawing.Image>> _extractedFaces;
+		public Dictionary<int, List<System.Drawing.Image>> ExtractedFaces
 		{
 			get { return _extractedFaces; }
 			set { _extractedFaces = value; if (_extractedFaces.Count != 0) AreFacesExtracted = true; else AreFacesExtracted = false; }
@@ -60,22 +62,23 @@ namespace FaceRecognition.UI
 			var curFaceCount = GPersons.Count;
 			foreach (var exFace in ExtractedFaces)
 				GPersons.Add(exFace.Key + curFaceCount, new GPerson { PersonLocalId = exFace.Key });
+			_num = 0;
 		}
 
-		public Dictionary<int, List<Image>> ValidFaces { get; set; } = new Dictionary<int, List<Image>>();
+		public Dictionary<int, List<System.Drawing.Image>> ValidFaces { get; set; } = new Dictionary<int, List<System.Drawing.Image>>();
 
 		private System.Windows.Controls.WrapPanel _imageValidatingPanel;
 
 		private int _selectedFaceCounter;
 		private int _totalSelctedFaceCounter;
-		private System.Windows.Controls.Border CreateImage(Image img)
+		private System.Windows.Controls.Border CreateImage(System.Drawing.Image img)
 		{
 			System.Windows.Controls.Border Border = new System.Windows.Controls.Border()
 			{
 				Width = 150,
 				Height = 150,
 				Margin = new Thickness(5),
-				BorderBrush = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(255, 0, 0))
+				BorderBrush = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(0, 255, 0))
 			};
 			System.Windows.Controls.Image Image = new System.Windows.Controls.Image
 			{
@@ -122,16 +125,47 @@ namespace FaceRecognition.UI
 		}
 
 		private FaceApiManager _faceApiManager = FaceApiManager.FaceApiManagerInstance;
-		public async Task AppendGroup()
+		public async Task AppendGroup(Button btn)
 		{
-			foreach (var vFace in ValidFaces) // fill GPersons with valid faces
-				GPersons[vFace.Key].Faces = vFace.Value.Select(x => new GFace { Img = x }).ToList();
+			try
+			{
+				foreach (var vFace in ValidFaces) // fill GPersons with valid faces
+					GPersons[vFace.Key].Faces = vFace.Value.Select(x => new GFace { Img = x }).ToList();
 
-			for (int i = 0; i < GPersons.Count; i++) // Remove people with unvalid faces
-				if (GPersons[i].Faces.Count == 0) GPersons.Remove(i);
+				for (int i = 0; i < GPersons.Count; i++) // Remove people with unvalid faces
+					if (GPersons[i].Faces.Count == 0) GPersons.Remove(i);
 
-			//await _faceApiManager.A
+				btn.Content = "Identifying...";
+				MessageManager.MsgManagerInstance.WriteMessage("Aggregating MS ids for comparing face request...");
+				var listofGuidsToCompare = new List<Guid[]>();
+				var counter = 0;
+				var tenfaces = new Guid[10];
+				foreach (var person in GPersons)
+					foreach (var face in person.Value.Faces)
+					{
+						if (counter == 10)
+						{
+							listofGuidsToCompare.Add(tenfaces);
+							counter = 0;
+							tenfaces = new Guid[10];
+						}
+						tenfaces[counter] = (await _faceApiManager.DetectFace(
+							ImageProcessing.ImageProcessingInstance.ImageToStream(face.Img)))[0].FaceId;
+						counter++;
+					}
+				MessageManager.MsgManagerInstance.WriteMessage("Successfuly aggregated.");
+				await _faceApiManager.TrainGroup();
+				MessageManager.MsgManagerInstance.WriteMessage("Comparing new faces with archive...");
+				var result = new List<IdentifyResult>();
+				foreach (var tens in listofGuidsToCompare)
+					result.AddRange(await _faceApiManager.Identify(tens));
 
+				MessageManager.MsgManagerInstance.WriteMessage("Comparing result recived!");
+			}
+			catch (Exception ex)
+			{
+				MessageManager.MsgManagerInstance.WriteMessage(ex.Message);
+			}
 		}
 	}
 }

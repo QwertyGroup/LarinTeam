@@ -71,8 +71,6 @@ namespace FaceRecognition.UI
 			_msgManager.WriteMessage("Faces were successfuly extracted.");
 			await Task.Delay(500);
 			bnt.Content = "Validating faces...";
-			//_msgManager.WriteMessage("Seleced 0 faces of 6.");
-			// ДАЛЬШЕ ВЫБИРАЕМ ЛИЦА И ... Это пишет Марк
 			_video.ValidateFaces();
 		}
 
@@ -103,7 +101,9 @@ namespace FaceRecognition.UI
 			if (_video._num == _video.ExtractedFaces.Count)
 			{
 				ImageValidatingPanel.Children.Clear();
-				await _video.AppendGroup();
+				cmdDetectFaces.Content = "Adding ppl to g..";
+				_msgManager.WriteMessage("Adding people to group...");
+				await _video.AppendGroup(cmdDetectFaces);
 				return;
 			}
 			_video.LoadNextPerson();
@@ -130,15 +130,15 @@ namespace FaceRecognition.UI
 			_video.GPersons = new Dictionary<int, GPerson>();
 		}
 
-        private async void Button_Click(object sender, RoutedEventArgs e)
-        {
-            if (_video._num == _video.ExtractedFaces.Count)
-            {
-                ImageValidatingPanel.Children.Clear();
-                await _video.AppendGroup();
-                return;
-            }
-            _video.LoadNextPerson();
-        }
-    }
+		private async void Button_Click(object sender, RoutedEventArgs e)
+		{
+			if (_video._num == _video.ExtractedFaces.Count)
+			{
+				ImageValidatingPanel.Children.Clear();
+				await _video.AppendGroup(cmdDetectFaces);
+				return;
+			}
+			_video.LoadNextPerson();
+		}
+	}
 }
