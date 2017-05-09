@@ -53,11 +53,11 @@ namespace FaceRecognition.UI
 		private int _totalSelctedFaceCounter;
 		private System.Windows.Controls.Border CreateImage(Image img)
 		{
-            System.Windows.Controls.Border Border = new System.Windows.Controls.Border()
-            {
-                Width = 150,
-                Height = 150,
-                Margin = new Thickness(5),
+			System.Windows.Controls.Border Border = new System.Windows.Controls.Border()
+			{
+				Width = 150,
+				Height = 150,
+				Margin = new Thickness(5),
 				BorderBrush = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(255, 0, 0))
 			};
 			System.Windows.Controls.Image Image = new System.Windows.Controls.Image

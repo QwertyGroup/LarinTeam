@@ -231,5 +231,15 @@ namespace FaceRecognition.Core
 			_msgManager.WriteMessage("Getting training status...");
 			return await _faceServiceClient.GetPersonGroupTrainingStatusAsync(customGroupId);
 		}
+
+		public async Task DeleteGroup()
+		{
+			await DeleteGroup(_personGroupId);
+		}
+		public async Task DeleteGroup(string customGroupId)
+		{
+			_msgManager.WriteMessage("Deleting person group...");
+			await _faceServiceClient.DeletePersonGroupAsync(customGroupId);
+		}
 	}
 }

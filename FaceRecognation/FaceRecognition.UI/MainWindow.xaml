@@ -6,113 +6,113 @@
         xmlns:local="clr-namespace:FaceRecognition.UI"
         mc:Ignorable="d"
         Title="Face recognising machine 0x02" Height="540.5" Width="701.5" Icon="FRLogo.png" ResizeMode="NoResize">
-    <Window.Resources>
-        <SolidColorBrush x:Key="unfocusedTextBrush" Color="#FF4C4C4C"/>
-        <SolidColorBrush x:Key="focusedTextBrush" Color="#FF1E1E1E"/>
-        <SolidColorBrush x:Key="transparentBrush" Color="#00FFFFFF"/>
-        <SolidColorBrush x:Key="selectedbgBrush" Color="#69939393"/>
-        <SolidColorBrush x:Key="greybgBrush" Color="#FFECF0F1"/>
-        <SolidColorBrush x:Key="unabledBrush" Color="#cecece"/>
+	<Window.Resources>
+		<SolidColorBrush x:Key="unfocusedTextBrush" Color="#FF4C4C4C"/>
+		<SolidColorBrush x:Key="focusedTextBrush" Color="#FF1E1E1E"/>
+		<SolidColorBrush x:Key="transparentBrush" Color="#00FFFFFF"/>
+		<SolidColorBrush x:Key="selectedbgBrush" Color="#69939393"/>
+		<SolidColorBrush x:Key="greybgBrush" Color="#FFECF0F1"/>
+		<SolidColorBrush x:Key="unabledBrush" Color="#cecece"/>
 
 
-        <Style x:Key="DefaultTextStyle" TargetType="TextBlock">
-            <Setter Property="FontFamily" Value="Segoe UI Semilight"/>
-            <Setter Property="FontSize" Value="18"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="HorizontalAlignment" Value="Center"/>
-            <Setter Property="Foreground" Value="{DynamicResource unfocusedTextBrush}"/>
-        </Style>
+		<Style x:Key="DefaultTextStyle" TargetType="TextBlock">
+			<Setter Property="FontFamily" Value="Segoe UI Semilight"/>
+			<Setter Property="FontSize" Value="18"/>
+			<Setter Property="VerticalAlignment" Value="Center"/>
+			<Setter Property="HorizontalAlignment" Value="Center"/>
+			<Setter Property="Foreground" Value="{DynamicResource unfocusedTextBrush}"/>
+		</Style>
 
-        <Style x:Key="DefaultButtonStyle" TargetType="Button">
-            <Style.Setters>
-                <Setter Property="Background" Value="{DynamicResource transparentBrush}"/>
-                <Setter Property="Foreground" Value="{DynamicResource unfocusedTextBrush}"/>
-                <Setter Property="FontFamily" Value="Segoe UI Semibold"/>
-                <Setter Property="FontSize" Value="15"/>
-                <Setter Property="Margin" Value="20,3,20,3"/>
-                <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
-                <Setter Property="BorderBrush" Value="{DynamicResource unfocusedTextBrush}"/>
-                <Setter Property="Padding" Value="10,4,10,5"/>
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="Button" >
-                            <Border
+		<Style x:Key="DefaultButtonStyle" TargetType="Button">
+			<Style.Setters>
+				<Setter Property="Background" Value="{DynamicResource transparentBrush}"/>
+				<Setter Property="Foreground" Value="{DynamicResource unfocusedTextBrush}"/>
+				<Setter Property="FontFamily" Value="Square721 BT"/>
+				<Setter Property="FontSize" Value="15"/>
+				<Setter Property="Margin" Value="20,3,20,3"/>
+				<Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+				<Setter Property="BorderBrush" Value="{DynamicResource unfocusedTextBrush}"/>
+				<Setter Property="Padding" Value="10,4,10,5"/>
+				<Setter Property="Template">
+					<Setter.Value>
+						<ControlTemplate TargetType="Button" >
+							<Border
 								BorderThickness="2,1,2,1"
 								BorderBrush = "{TemplateBinding BorderBrush}"
 								Padding="{TemplateBinding Padding}"
 								Background="{TemplateBinding Background}">
-                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                            </Border>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Style.Setters>
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Foreground" Value="{DynamicResource focusedTextBrush}"/>
-                    <Setter Property="BorderBrush" Value="{DynamicResource focusedTextBrush}"/>
-                    <Setter Property="Background" Value="{DynamicResource selectedbgBrush}"/>
-                    <Setter Property="RenderTransform" >
-                        <Setter.Value>
-                            <ScaleTransform ScaleX="1.03" ScaleY="1.03"/>
-                        </Setter.Value>
-                    </Setter>
-                </Trigger>
-                <Trigger Property="IsMouseOver" Value="False">
-                    <Setter Property="Foreground" Value="{DynamicResource unfocusedTextBrush}"/>
-                    <Setter Property="BorderBrush" Value="{DynamicResource unfocusedTextBrush}"/>
-                    <Setter Property="Background" Value="{DynamicResource transparentBrush}"/>
-                    <Setter Property="RenderTransform" >
-                        <Setter.Value>
-                            <ScaleTransform ScaleX="1" ScaleY="1"/>
-                        </Setter.Value>
-                    </Setter>
-                </Trigger>
-                <Trigger Property="IsEnabled" Value="False">
-                    <Setter Property="Foreground" Value="{DynamicResource unabledBrush}"/>
-                    <Setter Property="BorderBrush" Value="{DynamicResource unabledBrush}"/>
-                </Trigger>
-                <Trigger Property="IsEnabled" Value="True">
-                    <Setter Property="Foreground" Value="{DynamicResource unfocusedTextBrush}"/>
-                    <Setter Property="BorderBrush" Value="{DynamicResource unfocusedTextBrush}"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-    </Window.Resources>
+								<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+							</Border>
+						</ControlTemplate>
+					</Setter.Value>
+				</Setter>
+			</Style.Setters>
+			<Style.Triggers>
+				<Trigger Property="IsMouseOver" Value="True">
+					<Setter Property="Foreground" Value="{DynamicResource focusedTextBrush}"/>
+					<Setter Property="BorderBrush" Value="{DynamicResource focusedTextBrush}"/>
+					<Setter Property="Background" Value="{DynamicResource selectedbgBrush}"/>
+					<Setter Property="RenderTransform" >
+						<Setter.Value>
+							<ScaleTransform ScaleX="1.03" ScaleY="1.03"/>
+						</Setter.Value>
+					</Setter>
+				</Trigger>
+				<Trigger Property="IsMouseOver" Value="False">
+					<Setter Property="Foreground" Value="{DynamicResource unfocusedTextBrush}"/>
+					<Setter Property="BorderBrush" Value="{DynamicResource unfocusedTextBrush}"/>
+					<Setter Property="Background" Value="{DynamicResource transparentBrush}"/>
+					<Setter Property="RenderTransform" >
+						<Setter.Value>
+							<ScaleTransform ScaleX="1" ScaleY="1"/>
+						</Setter.Value>
+					</Setter>
+				</Trigger>
+				<Trigger Property="IsEnabled" Value="False">
+					<Setter Property="Foreground" Value="{DynamicResource unabledBrush}"/>
+					<Setter Property="BorderBrush" Value="{DynamicResource unabledBrush}"/>
+				</Trigger>
+				<Trigger Property="IsEnabled" Value="True">
+					<Setter Property="Foreground" Value="{DynamicResource unfocusedTextBrush}"/>
+					<Setter Property="BorderBrush" Value="{DynamicResource unfocusedTextBrush}"/>
+				</Trigger>
+			</Style.Triggers>
+		</Style>
+	</Window.Resources>
 
-    <Grid Background="White">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="5*"/>
-            <RowDefinition Height="2*"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*"/>
-            <ColumnDefinition Width="5*"/>
-        </Grid.ColumnDefinitions>
-        <Border Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" BorderBrush="Black" BorderThickness="0, 0, 1, 0">
-            <StackPanel Background="White">
-                <TextBlock Style="{DynamicResource DefaultTextStyle}" Margin="0,10,0,6" Text="Commands >_" />
-                <Button Style="{DynamicResource DefaultButtonStyle}" Content="Browse Video" Click="BrowseVideo_Click" IsTabStop="False" />
-                <Button Style="{DynamicResource DefaultButtonStyle}" Content="Detect Faces" Click="DetectFaces_Click" IsEnabled="{ Binding VideoSelected}" IsTabStop="False"/>
-                <TextBlock/>
-                <Button Style="{DynamicResource DefaultButtonStyle}" Content="Clear Cache" Click="ClearCache_Click" IsTabStop="False"/>
-            </StackPanel>
-        </Border>
-        <ScrollViewer Grid.Column="1" Grid.Row="1" Background="White">
-            <StackPanel x:Name="spLog"/>
-        </ScrollViewer>
-        <Grid Grid.Column="1" Grid.Row="0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button Style="{DynamicResource DefaultButtonStyle}" Margin="10,4" Content="Validate this Faces" FontFamily="Segoe WP" Foreground="#FF0035B4" Click="Validate_Click"/>
-                <Button Style="{DynamicResource DefaultButtonStyle}" Margin="10,4" Content="This is not a Face" FontFamily="Segoe WP" Foreground="#FFAF003F"/>
-            </StackPanel>
-            <WrapPanel Grid.Row="1" x:Name="ImageValidatingPanel">
-                
-            </WrapPanel>
-        </Grid>
-    </Grid>
+	<Grid Background="White">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="5*"/>
+			<RowDefinition Height="2*"/>
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="2*"/>
+			<ColumnDefinition Width="5*"/>
+		</Grid.ColumnDefinitions>
+		<Border Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" BorderBrush="Black" BorderThickness="0, 0, 1, 0">
+			<StackPanel Background="White">
+				<TextBlock Style="{DynamicResource DefaultTextStyle}" Margin="0,10,0,6" Text="Commands >_" />
+				<Button Style="{DynamicResource DefaultButtonStyle}" Content="Browse Video" Click="BrowseVideo_Click" IsTabStop="False" />
+				<Button Style="{DynamicResource DefaultButtonStyle}" Content="Detect Faces" Click="DetectFaces_Click" IsEnabled="{ Binding VideoSelected}" IsTabStop="False"/>
+				<TextBlock/>
+				<Button Style="{DynamicResource DefaultButtonStyle}" Content="Clear Cache" Click="ClearCache_Click" IsTabStop="False"/>
+			</StackPanel>
+		</Border>
+		<ScrollViewer Grid.Column="1" Grid.Row="1" Background="White">
+			<StackPanel x:Name="spLog"/>
+		</ScrollViewer>
+		<Grid Grid.Column="1" Grid.Row="0">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition/>
+			</Grid.RowDefinitions>
+			<StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+				<Button Style="{DynamicResource DefaultButtonStyle}" Margin="10,4" Content="Validate this Faces" Foreground="#FF0035B4" Click="Validate_Click"/>
+				<Button Style="{DynamicResource DefaultButtonStyle}" Margin="10,4" Content="This is not a Face" Foreground="#FFAF003F"/>
+			</StackPanel>
+			<WrapPanel Grid.Row="1" x:Name="ImageValidatingPanel">
+
+			</WrapPanel>
+		</Grid>
+	</Grid>
 </Window>
