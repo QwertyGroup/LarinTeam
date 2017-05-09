@@ -93,10 +93,12 @@
 			<StackPanel Background="White">
 				<TextBlock Style="{DynamicResource DefaultTextStyle}" Margin="0,10,0,6" Text="Commands >_" />
 				<Button Style="{DynamicResource DefaultButtonStyle}" Content="Browse Video" Click="BrowseVideo_Click" IsTabStop="False" />
-				<Button Style="{DynamicResource DefaultButtonStyle}" Content="Detect Faces" Click="DetectFaces_Click" IsEnabled="{ Binding VideoSelected}" IsTabStop="False"/>
+				<Button Style="{DynamicResource DefaultButtonStyle}" Content="Detect Faces" Click="DetectFaces_Click" IsTabStop="False" IsEnabled="{ Binding VideoSelected}"/>
 				<TextBlock/>
 				<Button Style="{DynamicResource DefaultButtonStyle}" Content="Clear Cache" Click="ClearCache_Click" IsTabStop="False"/>
-				<Button Style="{DynamicResource DefaultButtonStyle}" Content="Clear face archive" Click="ClearFaceArchive_Click" IsTabStop="False"/>
+				<TextBlock/>
+				<Button Style="{DynamicResource DefaultButtonStyle}" Content="Exhibit archive" Click="ExhibitFaceArchive_Click" IsTabStop="False"/>
+				<Button Style="{DynamicResource DefaultButtonStyle}" Content="Clear archive" Click="ClearFaceArchive_Click" IsTabStop="False"/>
 			</StackPanel>
 		</Border>
 		<ScrollViewer Grid.Column="1" Grid.Row="1" Background="White">

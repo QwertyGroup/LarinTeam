@@ -1,4 +1,5 @@
 ﻿using FaceRecognition.Core;
+using FaceRecognition.UI.Galley;
 
 using System;
 using System.Collections.Generic;
@@ -98,14 +99,26 @@ namespace FaceRecognition.UI
 				}
 			}
 			_video.ValidFaces[_video.ValidFaces.Count] = resultFacesOfPerson;
-            MessageManager.MsgManagerInstance.WriteMessage($"{resultFacesOfPerson.Count} faces selected");
-            if (_video._num == _video._extractedFaces.Count)
+			MessageManager.MsgManagerInstance.WriteMessage($"{resultFacesOfPerson.Count} faces selected");
+			if (_video._num == _video._extractedFaces.Count)
 			{
 				ImageValidatingPanel.Children.Clear();
 				await _video.AppendGroup();
 				return;
 			}
 			_video.LoadNextPerson();
+		}
+
+		private void ExhibitFaceArchive_Click(object sender, RoutedEventArgs e)
+		{
+			new FaceExhibition(_video.GPersons).Show();
+		}
+
+		private async void ClearFaceArchive_Click(object sender, RoutedEventArgs e)
+		{
+			await FaceApiManager.FaceApiManagerInstance.DeleteGroup();
+			// LOCAL ARCH Clear
+			_video.GPersons = new Dictionary<int, GPerson>();
 		}
 	}
 }
