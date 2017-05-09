@@ -96,6 +96,7 @@
 				<Button Style="{DynamicResource DefaultButtonStyle}" Content="Detect Faces" Click="DetectFaces_Click" IsEnabled="{ Binding VideoSelected}" IsTabStop="False"/>
 				<TextBlock/>
 				<Button Style="{DynamicResource DefaultButtonStyle}" Content="Clear Cache" Click="ClearCache_Click" IsTabStop="False"/>
+				<Button Style="{DynamicResource DefaultButtonStyle}" Content="Clear face archive" Click="ClearFaceArchive_Click" IsTabStop="False"/>
 			</StackPanel>
 		</Border>
 		<ScrollViewer Grid.Column="1" Grid.Row="1" Background="White">
@@ -110,9 +111,7 @@
 				<Button Style="{DynamicResource DefaultButtonStyle}" Margin="10,4" Content="Validate this Faces" Foreground="#FF0035B4" Click="Validate_Click"/>
 				<Button Style="{DynamicResource DefaultButtonStyle}" Margin="10,4" Content="This is not a Face" Foreground="#FFAF003F"/>
 			</StackPanel>
-			<WrapPanel Grid.Row="1" x:Name="ImageValidatingPanel">
-
-			</WrapPanel>
+			<WrapPanel Grid.Row="1" x:Name="ImageValidatingPanel"/>
 		</Grid>
 	</Grid>
 </Window>
