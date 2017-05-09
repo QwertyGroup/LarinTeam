@@ -24,8 +24,6 @@ namespace FaceRecognition.UI
 
 		private MessageManager _msgManager = MessageManager.MsgManagerInstance;
 
-		private int _peopleLoaded = 0;
-
 		public MainWindow()
 		{
 			InitializeComponent();
@@ -100,7 +98,8 @@ namespace FaceRecognition.UI
 				}
 			}
 			_video.ValidFaces[_video.ValidFaces.Count] = resultFacesOfPerson;
-			if (_video._num == _video._extractedFaces.Count)
+            MessageManager.MsgManagerInstance.WriteMessage($"{resultFacesOfPerson.Count} faces selected");
+            if (_video._num == _video._extractedFaces.Count)
 			{
 				ImageValidatingPanel.Children.Clear();
 				await _video.AppendGroup();

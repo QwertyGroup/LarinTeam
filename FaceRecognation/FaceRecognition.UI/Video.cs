@@ -38,6 +38,7 @@ namespace FaceRecognition.UI
 
 		public Dictionary<int, GPerson> GPersons { get; set; } = new Dictionary<int, GPerson>();
 		public Dictionary<int, List<Image>> _extractedFaces;
+
 		public async Task ExtractFaces()
 		{
 			_extractedFaces = await VideoManager.VManagerInstance.GetFacesFromVideo(Path);
@@ -83,8 +84,6 @@ namespace FaceRecognition.UI
 					_selectedFaceCounter--;
 					_totalSelctedFaceCounter--;
 				}
-				MessageManager.MsgManagerInstance.WriteMessage(
-					$"{_selectedFaceCounter} faces selected.{Environment.NewLine}Total: {_totalSelctedFaceCounter}");
 			};
 			_selectedFaceCounter = 0;
 			return Border;
