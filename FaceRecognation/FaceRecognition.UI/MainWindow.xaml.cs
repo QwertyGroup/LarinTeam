@@ -100,7 +100,7 @@ namespace FaceRecognition.UI
 			}
 			_video.ValidFaces[_video.ValidFaces.Count] = resultFacesOfPerson;
 			MessageManager.MsgManagerInstance.WriteMessage($"{resultFacesOfPerson.Count} faces selected");
-			if (_video._num == _video._extractedFaces.Count)
+			if (_video._num == _video.ExtractedFaces.Count)
 			{
 				ImageValidatingPanel.Children.Clear();
 				await _video.AppendGroup();
@@ -114,9 +114,11 @@ namespace FaceRecognition.UI
 			new FaceExhibition(_video.GPersons).Show();
 		}
 
+		private FaceApiManager _faceApiManager = FaceApiManager.FaceApiManagerInstance;
 		private async void ClearFaceArchive_Click(object sender, RoutedEventArgs e)
 		{
-			await FaceApiManager.FaceApiManagerInstance.DeleteGroup();
+			await _faceApiManager.DeleteGroup();
+			await _faceApiManager.CreatePersonGroup();
 			// LOCAL ARCH Clear
 			_video.GPersons = new Dictionary<int, GPerson>();
 		}

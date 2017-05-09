@@ -12,7 +12,7 @@
 			<RowDefinition></RowDefinition>
 		</Grid.RowDefinitions>
 		<TextBlock x:Name="tbInfo" Text="Persons Id"/>
-		<ScrollViewer HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Disabled" >
+		<ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Disabled" >
 			<StackPanel x:Name="spFaceContainer" Orientation="Horizontal"/>
 		</ScrollViewer>
 	</Grid>

@@ -37,12 +37,27 @@ namespace FaceRecognition.UI
 			DependencyProperty.Register("VideoSelected", typeof(bool), typeof(Video));
 
 		public Dictionary<int, GPerson> GPersons { get; set; } = new Dictionary<int, GPerson>();
-		public Dictionary<int, List<Image>> _extractedFaces;
+
+		private Dictionary<int, List<Image>> _extractedFaces;
+		public Dictionary<int, List<Image>> ExtractedFaces
+		{
+			get { return _extractedFaces; }
+			set { _extractedFaces = value; if (_extractedFaces.Count != 0) AreFacesExtracted = true; else AreFacesExtracted = false; }
+		}
+
+		public bool AreFacesExtracted
+		{
+			get { return (bool)GetValue(AreFacesExtractedProperty); }
+			set { SetValue(AreFacesExtractedProperty, value); }
+		}
+		public static readonly DependencyProperty AreFacesExtractedProperty =
+			DependencyProperty.Register("AreFacesExtracted", typeof(bool), typeof(Video));
+
 
 		public async Task ExtractFaces()
 		{
-			_extractedFaces = await VideoManager.VManagerInstance.GetFacesFromVideo(Path);
-			foreach (var exFace in _extractedFaces)
+			ExtractedFaces = await VideoManager.VManagerInstance.GetFacesFromVideo(Path);
+			foreach (var exFace in ExtractedFaces)
 				GPersons.Add(exFace.Key, new GPerson { PersonLocalId = exFace.Key });
 		}
 
@@ -92,7 +107,7 @@ namespace FaceRecognition.UI
 		public void LoadNextPerson()
 		{
 			_imageValidatingPanel.Children.Clear();
-			var currentPerson = _extractedFaces[_num];
+			var currentPerson = ExtractedFaces[_num];
 			foreach (var faceImage in currentPerson)
 			{
 				_imageValidatingPanel.Children.Add(CreateImage(faceImage));
