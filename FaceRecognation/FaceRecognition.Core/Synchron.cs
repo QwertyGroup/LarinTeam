@@ -85,30 +85,7 @@ namespace FaceRecognition.Core
 				}
 			}
 		}
-        /*
-		public async Task<SyncronResult> CheckAndThenAdd(Face face)
-		{
-			foreach (var otherFace in Data)
-			{
-				//float similarity = 0;
-				var faceImage = face.FaceImage;
-				var otherImage = otherFace.FaceImage;
-				var similarity = await FaceApiManager.FaceApiManagerInstance.FindSimilar(faceImage, otherImage);
-				if (similarity.Length == 0)
-					continue;
-				var confidence = similarity[0].Confidence;
-				MessageManager.MsgManagerInstance.WriteMessage($"{face._id} and {otherFace._id} similarity - {confidence}");
-				if (confidence > 0.4)
-				{
-					face._id = otherFace._id;
-					AddFace(face);
-					return new SyncronResult();
-				}
-			}
-			AddFace(face);
-			return new SyncronResult();
-		}
-        */
+       
 		public void Test()
 		{
 			Person Katya = new Person(new List<Image> {

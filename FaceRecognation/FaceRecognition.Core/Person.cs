@@ -35,7 +35,7 @@ namespace FaceRecognition.Core
     {
         public string BaseImage;
         public Image Image;
-        public string MicrosofId;
+        public Guid MicrosofId;
 
         public FaceImage(string BaseImage)
         {
@@ -71,6 +71,12 @@ namespace FaceRecognition.Core
             }
         }
 
+        public static async Task<Guid> ImageToMSID(Image img)
+        {
+            var stream = ImageProcessing.ImageProcessingInstance.ImageToStream(img, ImageFormat.Png);
+            var Face = await FaceApiManager.FaceApiManagerInstance.DetectFace(stream);
+            return Face.First().FaceId;
+        }
     }
 
     //Complicated PrimitiveFace class. Can convert textBase image to Image and vice versa.
@@ -87,6 +93,22 @@ namespace FaceRecognition.Core
         public Person(List<Image> ImageFaces)
         {
             Faces = ImageFaces.Select(x => new FaceImage(x)).ToList();
+        }
+
+        public async void GetMicrosoftData()
+        {
+            foreach(var face in Faces)
+            {
+                try
+                {
+                    face.MicrosofId = await FaceImage.ImageToMSID(face.Image);
+                }
+                catch
+                {
+                    Debug.WriteLine("Problem with convertin FaceImage to Microsoft.");
+                }
+            }
+            Faces.RemoveAll(x => x.MicrosofId == null);
         }
 
         public PrimitivePerson GetPrimitive()
