@@ -13,6 +13,7 @@ using System.Windows.Controls;
 
 namespace FaceRecognition.UI
 {
+	// Its Probalby DEAD class
 	public class Video : DependencyObject
 	{
 		private string _path;
