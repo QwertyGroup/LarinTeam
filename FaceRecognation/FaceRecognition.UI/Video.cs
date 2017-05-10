@@ -164,8 +164,8 @@ namespace FaceRecognition.UI
 				foreach (var up in unrecognisedGPeople) // Danger zone
 					GPeople.Add(GPeople.Count, up.Value);
 				FileManager fm = new FileManagerJson();
-				fm.UnsafeSave("GArchive", "GPeople", GPeople);
 				new FaceExhibition(unrecognisedGPeople).Show(); // Show new faces
+				// Тут пишет Марк связку с БД и в ГПипл при создании нужно подгружать людей из БД
 				MessageManager.MsgManagerInstance.WriteMessage("Comparing result recived!");
 			}
 			catch (Exception ex)
