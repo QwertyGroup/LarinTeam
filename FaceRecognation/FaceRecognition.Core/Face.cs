@@ -13,10 +13,10 @@ namespace FaceRecognition.Core
     //Base class of Face. Needed to convert dataBase data to c# objects.
 	public class PrimitiveFace
 	{
-        public string _baseFaceImage;
+        public List<string> _baseFaceImage;
         public int _id;
 
-        public PrimitiveFace(string BaseFaceImage)
+        public PrimitiveFace(List<string> BaseFaceImage)
         {
 			_baseFaceImage = BaseFaceImage;
         }
@@ -33,8 +33,8 @@ namespace FaceRecognition.Core
     //Complicated PrimitiveFace class. Can convert textBase image to Image and vice versa.
     public class Face : PrimitiveFace
     {
-        private Image _faceImage;
-        public Image FaceImage
+        private List<Image> _faceImage;
+        public List<Image> FaceImage
         {
             get
             {
@@ -45,7 +45,7 @@ namespace FaceRecognition.Core
                         throw new Exception("FaceImage and BaseFaceImage are nulls");
                     }
 
-                    _faceImage = BaseToImage(BaseFaceImage);
+                    _faceImage = _baseFaceImage.Select(x => BaseToImage(x)).ToList();
                 }
                 return _faceImage;
             }
@@ -54,8 +54,8 @@ namespace FaceRecognition.Core
                 _faceImage = value;
             }
         }
-        private string _baseFaceImage;
-        public string BaseFaceImage
+        private List<string> _baseFaceImage;
+        public List<string> BaseFaceImage
         {
             get
             {
@@ -66,7 +66,7 @@ namespace FaceRecognition.Core
                         throw new Exception("FaceImage and BaseFaceImage are nulls");
                     }
 
-                    _baseFaceImage = ImageToBase(FaceImage);
+                    _baseFaceImage = _faceImage.Select(x => ImageToBase(x)).ToList();
                 }
                 return _baseFaceImage;
             }
@@ -75,18 +75,18 @@ namespace FaceRecognition.Core
                 _baseFaceImage = value;
             }
         }
-        public Face(Image FaceImage) : base()
+        public Face(List<Image> FaceImage) : base()
         {
             this.FaceImage = FaceImage;
             this._id = -1;
-            BaseFaceImage = ImageToBase(FaceImage);
+            BaseFaceImage = FaceImage.Select(x => ImageToBase(x)).ToList();
         }
 
-        public Face(string BaseFaceImage) : base()
+        public Face(List<string> BaseFaceImage) : base()
         {
             this.BaseFaceImage = BaseFaceImage;
             this._id = -1;
-            FaceImage = BaseToImage(BaseFaceImage);
+            FaceImage = BaseFaceImage.Select(x => BaseToImage(x)).ToList();
         }
 
         private static string ImageToBase(Image image)
