@@ -26,6 +26,7 @@ namespace FaceRecognition.Core
 
 		public async Task<List<Person>> ExtractFaces()
 		{
+			if (Path == string.Empty) throw new Exception("Video path is empty");
 			var people = new List<Person>();
 			var extractedFaces = await VideoManager.VManagerInstance.GetFacesFromVideo(Path);
 			foreach (var eface in extractedFaces)
