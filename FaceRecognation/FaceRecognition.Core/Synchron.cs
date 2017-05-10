@@ -34,7 +34,7 @@ namespace FaceRecognition.Core
 			Client = new FirebaseClient(Config);
 			Data = GetData();
 			LastId = GetLastId();
-        }
+		}
 
 		private string AuthSecret;
 		private string BasePath;
@@ -43,7 +43,7 @@ namespace FaceRecognition.Core
 		private int LastId = 0;
 		public List<Person> Data;
 
-        //Downloads all Data from FireBase and saves it to List<Face>
+		//Downloads all Data from FireBase and saves it to List<Face>
 		private List<Person> GetData()
 		{
 			try
@@ -65,7 +65,7 @@ namespace FaceRecognition.Core
 
 		private async Task AddFace(Person person)
 		{
-            //face._id == -1 means that this face is new and should be added to the end of Data Base.
+			//face._id == -1 means that this face is new and should be added to the end of Data Base.
 			if (person.Id == -1)
 			{
 				person.Id = LastId;
@@ -85,26 +85,27 @@ namespace FaceRecognition.Core
 				}
 			}
 		}
-       
+
 		public async Task Test()
 		{
-            //Person Katya = new Person(new List<Image> {
-            //             ImageProcessing.ImageProcessingInstance.LoadImageFromFile("ResultFaces/0.png"),
-            //             ImageProcessing.ImageProcessingInstance.LoadImageFromFile("ResultFaces/1.png") });
-            foreach (var person in Data)
-            {
-                await person.GetMicrosoftData();
-            }
-            Debug.WriteLine("Got MS Data");
+			//Person Katya = new Person(new List<Image> {
+			//             ImageProcessing.ImageProcessingInstance.LoadImageFromFile("ResultFaces/0.png"),
+			//             ImageProcessing.ImageProcessingInstance.LoadImageFromFile("ResultFaces/1.png") });
+			foreach (var person in Data)
+			{
+				await person.GetMicrosoftData();
+			}
+			Debug.WriteLine("Got MS Data");
 
-        }
-        public async Task SendKnownPeople(List<Person> KnownPeople)
-        {
-            foreach(var person in KnownPeople)
-            {
-                await Synchron.Instance.AddFace(person);
-            }
-        }
+		}
+		public async Task SendKnownPeople(List<Person> knownPeople)
+		{
+			Data = knownPeople;
+			foreach (var person in knownPeople)
+			{
+				await Synchron.Instance.AddFace(person);
+			}
+		}
 
 	}
 
