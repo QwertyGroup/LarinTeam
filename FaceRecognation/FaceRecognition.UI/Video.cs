@@ -64,7 +64,10 @@ namespace FaceRecognition.UI
 			ExtractedFaces = await VideoManager.VManagerInstance.GetFacesFromVideo(Path);
 			var curFaceCount = GPeople.Count;
 			foreach (var exFace in ExtractedFaces)
-				GPeople.Add(exFace.Key + curFaceCount, new GPerson { PersonLocalId = exFace.Key });
+			{
+				GPeople.Add((GPeople != null && GPeople.Count != 0) ?
+					GPeople.Keys.Max() : 0 + 1, new GPerson { PersonLocalId = exFace.Key });
+			}
 			_num = 0;
 		}
 
@@ -162,10 +165,9 @@ namespace FaceRecognition.UI
 
 				var unrecognisedGPeople = await AddFacesToMSArchive(personMatchGuid, unrecognisedFacesGuids);
 				foreach (var up in unrecognisedGPeople) // Danger zone
-					GPeople.Add(GPeople.Count, up.Value);
-				FileManager fm = new FileManagerJson();
+					GPeople.Add(GPeople.Keys.Max() + 1, up.Value);
 				new FaceExhibition(unrecognisedGPeople).Show(); // Show new faces
-				// Тут пишет Марк связку с БД и в ГПипл при создании нужно подгружать людей из БД
+																// Тут пишет Марк связку с БД и в ГПипл при создании нужно подгружать людей из БД
 				MessageManager.MsgManagerInstance.WriteMessage("Comparing result recived!");
 			}
 			catch (Exception ex)

@@ -32,22 +32,23 @@ namespace FaceRecognition.UI.Galley
 			DisplayFaces();
 		}
 
+		private float _imgWidth = 200;
+		private float _imgHeight = 200;
 		private void DisplayFaces()
 		{
 			foreach (var face in _person.Faces)
 				spFaceContainer.Children.Add(new Image
 				{
 					Source = ImageProcessing.ImageProcessingInstance.ConvertImageToBitmapImage(face.Img),
-					Width = face.Img.Width,
-					Height = face.Img.Height,
+					Width = _imgWidth,
+					Height = _imgHeight,
 					Stretch = Stretch.Fill
 				});
 		}
 
 		private void DisplayInfo()
 		{
-			var info =
-				$"local id: {_person.PersonLocalId}{Environment.NewLine}Name: Alisa{Environment.NewLine}Face count:{_person.Faces.Count}";
+			var info = $"Face count:{_person.Faces.Count}";
 			tbInfo.Text = info;
 		}
 	}
