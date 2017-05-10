@@ -57,5 +57,31 @@ namespace FaceRecognition.Core
 				Debug.WriteLine("Ex in TrainGroup" + Environment.NewLine + ex.Message);
 			}
 		}
+
+		public async Task SendDetectedPeopleToCompare(List<Person> videoPeople, List<Person> knownPeople)
+		{
+			for (int i = 0; i < videoPeople.Count; i++)
+			{
+				var person = videoPeople[i];
+				await person.GetMicrosoftData();
+				var personFacesIds = person.Faces.Select(x => x.MicrosofId).ToArray();
+				var iresult = await FaceApiManager.FaceApiManagerInstance.Identify(personFacesIds);
+				var isnew = false;
+
+				iresult = iresult.Where(x => x.Candidates.Length != 0).ToList();
+				isnew = iresult.Count == 0;
+
+				if (isnew)
+				{
+					knownPeople.Add(person);
+					continue;
+				}
+				else
+				{
+
+				}
+				//Microsoft.ProjectOxford.Face.Contract.IdentifyResult
+			}
+		}
 	}
 }
