@@ -84,6 +84,7 @@ namespace FaceRecognition.Core
     {
         public List<FaceImage> Faces;
         public int Id = -1;
+        public Guid MicrosoftPersonId;
 
         public Person(List<string> BaseFaces)
         {

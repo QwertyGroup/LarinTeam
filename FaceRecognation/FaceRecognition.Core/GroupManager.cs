@@ -78,6 +78,7 @@ namespace FaceRecognition.Core
 				}
 				else
 				{
+                    var candidate = iresult.First().Candidates.First();
 
 				}
 				//Microsoft.ProjectOxford.Face.Contract.IdentifyResult
