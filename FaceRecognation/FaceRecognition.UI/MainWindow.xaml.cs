@@ -21,15 +21,15 @@ namespace FaceRecognition.UI
 {
 	public partial class MainWindow : Window
 	{
-		private Video _video;
+		private Core.Video _video;
 
 		private MessageManager _msgManager = MessageManager.MsgManagerInstance;
 
 		public MainWindow()
 		{
 			InitializeComponent();
-			_video = new Video(ImageValidatingPanel);
-			//Loaded += (s, e) => DataContext = _video;
+			//_video = new Video(ImageValidatingPanel);
+			////Loaded += (s, e) => DataContext = _video;
 			_msgManager.OnMessageSended += (s, e) =>
 			{
 				spLog.Children.Add(new TextBlock
@@ -55,6 +55,7 @@ namespace FaceRecognition.UI
 				_msgManager.WriteMessage("Video selection aborted");
 				return;
 			}
+
 			_video.Path = fileDialog.FileName;
 
 			(sender as Button).Content = "Video selected";
@@ -63,17 +64,23 @@ namespace FaceRecognition.UI
 
 		private async void DetectFaces_Click(object sender, RoutedEventArgs e)
 		{
+			cmdBrowseVideo.Content = "Browse Video";
 			var bnt = (Button)sender;
 			bnt.Content = "Extracting faces...";
 			_msgManager.WriteMessage("Extracting faces...");
-			await _video.ExtractFaces();
-			bnt.Content = "Extracted";
-			_msgManager.WriteMessage("Faces were successfuly extracted.");
-			await Task.Delay(500);
-			bnt.Content = "Validating faces...";
-			_video.ValidateFaces();
-			ThisIsNotBut.IsEnabled = true;
-			ValidateFaceBut.IsEnabled = true;
+
+			var extractedFaces = await _video.ExtractFaces();
+			var knownPeople = Synchron.Instance.Data;
+			await GroupManager.GroupManagerInstance.SendDetectedPeopleToCompare(extractedFaces, knownPeople);
+			//await _video.ExtractFaces();
+
+			//bnt.Content = "Extracted";
+			//_msgManager.WriteMessage("Faces were successfuly extracted.");
+			//await Task.Delay(500);
+			//bnt.Content = "Validating faces...";
+			//_video.ValidateFaces();
+			//ThisIsNotBut.IsEnabled = true;
+			//ValidateFaceBut.IsEnabled = true;
 		}
 
 		private void ClearCache_Click(object sender, RoutedEventArgs e)
@@ -88,69 +95,53 @@ namespace FaceRecognition.UI
 
 		private async void Validate_Click(object sender, RoutedEventArgs e)
 		{
-			List<System.Drawing.Image> resultFacesOfPerson = new List<System.Drawing.Image>();
-			foreach (var border in ImageValidatingPanel.Children)
-			{
-				var brd = (Border)border;
-				if (brd.BorderThickness.Bottom == 2)
-				{
-					var img = ImageProcessing.ImageProcessingInstance.ConvertBitmapImageToImage((BitmapImage)((Image)brd.Child).Source);
-					resultFacesOfPerson.Add(img);
-				}
-			}
-			_video.ValidFaces[_video.ValidFaces.Count] = resultFacesOfPerson;
-			MessageManager.MsgManagerInstance.WriteMessage($"{resultFacesOfPerson.Count} faces selected");
-			if (_video._num == _video.ExtractedFaces.Count)
-			{
-				ImageValidatingPanel.Children.Clear();
-				cmdDetectFaces.Content = "Adding ppl to g..";
-				_msgManager.WriteMessage("Adding people to group...");
-				await _video.AppendGroup(cmdDetectFaces);
-				ThisIsNotBut.IsEnabled = false;
-				ValidateFaceBut.IsEnabled = false;
-				return;
-			}
-			_video.LoadNextPerson();
+			//List<System.Drawing.Image> resultFacesOfPerson = new List<System.Drawing.Image>();
+			//foreach (var border in ImageValidatingPanel.Children)
+			//{
+			//	var brd = (Border)border;
+			//	if (brd.BorderThickness.Bottom == 2)
+			//	{
+			//		var img = ImageProcessing.ImageProcessingInstance.ConvertBitmapImageToImage((BitmapImage)((Image)brd.Child).Source);
+			//		resultFacesOfPerson.Add(img);
+			//	}
+			//}
+			//_video.ValidFaces[_video.ValidFaces.Count] = resultFacesOfPerson;
+			//MessageManager.MsgManagerInstance.WriteMessage($"{resultFacesOfPerson.Count} faces selected");
+			//if (_video._num == _video.ExtractedFaces.Count)
+			//{
+			//	ImageValidatingPanel.Children.Clear();
+			//	cmdDetectFaces.Content = "Adding ppl to g..";
+			//	_msgManager.WriteMessage("Adding people to group...");
+			//	await _video.AppendGroup(cmdDetectFaces);
+			//	ThisIsNotBut.IsEnabled = false;
+			//	ValidateFaceBut.IsEnabled = false;
+			//	return;
+			//}
+			//_video.LoadNextPerson();
 		}
 
 		private void ExhibitFaceArchive_Click(object sender, RoutedEventArgs e)
 		{
-			new FaceExhibition(_video.GPeople).Show();
+			//new FaceExhibition(_video.GPeople).Show();
 		}
 
 		private FaceApiManager _faceApiManager = FaceApiManager.FaceApiManagerInstance;
 		private async void ClearFaceArchive_Click(object sender, RoutedEventArgs e)
 		{
-			try
-			{
-				await _faceApiManager.DeleteGroup();
-			}
-			catch (Exception ex)
-			{
-				_msgManager.WriteMessage(ex.Message);
-			}
-			await _faceApiManager.CreatePersonGroup();
-			_msgManager.WriteMessage("Group Created");
-			var orsensId = await _faceApiManager.CreatePerson("Orsen");
-			await _faceApiManager.AddPersonFace(orsensId,
-				ImageProcessing.ImageProcessingInstance.ImageToStream(
-					ImageProcessing.ImageProcessingInstance.LoadImageFromFile("Orsen.jpg")));
-			_msgManager.WriteMessage("Face added.");
-			// LOCAL ARCH Clear
-			_video.GPeople = new Dictionary<int, GPerson>();
+			await GroupManager.GroupManagerInstance.Clear();
 		}
 
 		private async void Button_Click(object sender, RoutedEventArgs e)
 		{
-			if (_video._num == _video.ExtractedFaces.Count)
-			{
-				ImageValidatingPanel.Children.Clear();
-				ThisIsNotBut.IsEnabled = false;
-				ValidateFaceBut.IsEnabled = false;
-				await _video.AppendGroup(cmdDetectFaces);
-				return;
-			}
-			_video.LoadNextPerson();
+			//	if (_video._num == _video.ExtractedFaces.Count)
+			//	{
+			//		ImageValidatingPanel.Children.Clear();
+			//		ThisIsNotBut.IsEnabled = false;
+			//		ValidateFaceBut.IsEnabled = false;
+			//		await _video.AppendGroup(cmdDetectFaces);
+			//		return;
+			//	}
+			//	_video.LoadNextPerson();
 		}
 	}
 }

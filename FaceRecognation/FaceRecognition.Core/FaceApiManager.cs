@@ -54,7 +54,7 @@ namespace FaceRecognition.Core
 
 		public async Task<Microsoft.ProjectOxford.Face.Contract.Face[]> DetectFace(Stream imageAsStream)
 		{
-            Debug.WriteLine("Kek");
+			Debug.WriteLine("Kek");
 			try
 			{
 				var faces = await _faceServiceClient.DetectAsync(imageAsStream, true);
@@ -204,14 +204,22 @@ namespace FaceRecognition.Core
 			return await _faceServiceClient.CreatePersonAsync(customGroupId, personName);
 		}
 
+		public async Task<AddPersistedFaceResult> AddPersonFace(Guid personId, Stream faceImg)
+		{
+			return await AddPersonFace(_personGroupId, personId, faceImg);
+		}
 		public async Task<AddPersistedFaceResult> AddPersonFace(CreatePersonResult personId, Stream faceImg)
 		{
 			return await AddPersonFace(_personGroupId, personId, faceImg);
 		}
 		public async Task<AddPersistedFaceResult> AddPersonFace(string customGroupId, CreatePersonResult personId, Stream faceImg)
 		{
+			return await AddPersonFace(customGroupId, personId.PersonId, faceImg);
+		}
+		public async Task<AddPersistedFaceResult> AddPersonFace(string customGroupId, Guid personId, Stream faceImg)
+		{
 			_msgManager.WriteMessage("Adding face to person");
-			return await _faceServiceClient.AddPersonFaceAsync(customGroupId, personId.PersonId, faceImg);
+			return await _faceServiceClient.AddPersonFaceAsync(customGroupId, personId, faceImg);
 		}
 
 		public async Task TrainGroup()

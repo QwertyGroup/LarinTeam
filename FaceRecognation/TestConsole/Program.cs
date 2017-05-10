@@ -20,7 +20,7 @@ namespace TestConsole
 
 		private async static void Test()
 		{
-            await Synchron.Instance.Test();
+			await Synchron.Instance.Test();
 		}
 	}
 }

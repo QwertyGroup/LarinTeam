@@ -9,6 +9,11 @@ namespace FaceRecognition.Core
 {
 	public class GroupManager
 	{
+		// Clear group
+		// Add known people
+		// Train
+		// Compare detected with archive (firebase)
+
 		private GroupManager() { }
 		private static Lazy<GroupManager> _groupManagerInstance = new Lazy<GroupManager>(() => new GroupManager());
 		public static GroupManager GroupManagerInstance { get { return _groupManagerInstance.Value; } }
@@ -60,6 +65,7 @@ namespace FaceRecognition.Core
 
 		public async Task SendDetectedPeopleToCompare(List<Person> videoPeople, List<Person> knownPeople)
 		{
+			knownPeople = await AddKnownPeopleToGroup(knownPeople);
 			for (int i = 0; i < videoPeople.Count; i++)
 			{
 				var person = videoPeople[i];
@@ -73,16 +79,35 @@ namespace FaceRecognition.Core
 
 				if (isnew)
 				{
+					_msgManager.WriteMessage("New person.");
 					knownPeople.Add(person);
-					continue;
 				}
 				else
 				{
-                    var candidate = iresult.First().Candidates.First();
-
+					var candidate = iresult.First().Candidates.First();
+					foreach (var kp in knownPeople)
+						if (kp.MicrosoftPersonId == candidate.PersonId)
+						{
+							//kp.Faces.Add(ca)
+							_msgManager.WriteMessage("Existed person.");
+							continue;
+						}
 				}
-				//Microsoft.ProjectOxford.Face.Contract.IdentifyResult
 			}
+		}
+
+		private async Task<List<Person>> AddKnownPeopleToGroup(List<Person> knownPeople)
+		{
+			await Clear();
+			for (int i = 0; i < knownPeople.Count(); i++)
+			{
+				knownPeople[i].MicrosoftPersonId = (await _faceApiManager.CreatePerson(i.ToString())).PersonId;
+				for (int j = 0; j < knownPeople[i].Faces.Count; j++)
+					knownPeople[i].Faces[j].MicrosofId = (
+						await _faceApiManager.AddPersonFace(knownPeople[i].MicrosoftPersonId, _imgProcessing.ImageToStream(knownPeople[i].Faces[j].Image))).PersistedFaceId;
+			}
+			await Train();
+			return knownPeople;
 		}
 	}
 }

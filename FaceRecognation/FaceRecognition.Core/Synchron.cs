@@ -41,7 +41,7 @@ namespace FaceRecognition.Core
 		private IFirebaseConfig Config;
 		private FirebaseClient Client;
 		private int LastId = 0;
-		private List<Person> Data;
+		public List<Person> Data;
 
         //Downloads all Data from FireBase and saves it to List<Face>
 		private List<Person> GetData()
