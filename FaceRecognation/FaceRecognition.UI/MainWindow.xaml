@@ -93,7 +93,7 @@
 			<StackPanel Background="White">
 				<TextBlock Style="{DynamicResource DefaultTextStyle}" Margin="0,10,0,6" Text="Commands >_" />
 				<Button Style="{DynamicResource DefaultButtonStyle}" Content="Browse Video" Click="BrowseVideo_Click" IsTabStop="False" />
-				<Button x:Name="cmdDetectFaces" Style="{DynamicResource DefaultButtonStyle}" Content="Detect Faces" Click="DetectFaces_Click" IsTabStop="False" IsEnabled="{ Binding VideoSelected}"/>
+				<Button x:Name="cmdDetectFaces" Style="{DynamicResource DefaultButtonStyle}" Content="Detect Faces" Click="DetectFaces_Click" IsTabStop="False"/>
 				<TextBlock/>
 				<Button Style="{DynamicResource DefaultButtonStyle}" Content="Clear Cache" Click="ClearCache_Click" IsTabStop="False"/>
 				<TextBlock/>
@@ -110,8 +110,8 @@
 				<RowDefinition/>
 			</Grid.RowDefinitions>
 			<StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-				<Button x:Name="ValidateFaceBut" Style="{DynamicResource DefaultButtonStyle}" Margin="10,4" Content="Validate this Faces" Foreground="#FF0035B4" Click="Validate_Click" IsEnabled="False" />
-				<Button x:Name="ThisIsNotBut" Style="{DynamicResource DefaultButtonStyle}" Margin="10,4" Content="This is not a Face" Foreground="#FFAF003F" Click="Button_Click" IsEnabled="False" />
+				<Button x:Name="ValidateFaceBut" Style="{DynamicResource DefaultButtonStyle}" Margin="10,4" Content="Validate this Faces" Foreground="#FF0035B4" Click="Validate_Click"/>
+				<Button x:Name="ThisIsNotBut" Style="{DynamicResource DefaultButtonStyle}" Margin="10,4" Content="This is not a Face" Foreground="#FFAF003F" Click="Button_Click"/>
 			</StackPanel>
 			<WrapPanel Grid.Row="1" x:Name="ImageValidatingPanel"/>
 		</Grid>

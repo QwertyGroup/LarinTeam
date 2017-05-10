@@ -29,7 +29,7 @@ namespace FaceRecognition.UI
 		{
 			InitializeComponent();
 			_video = new Video(ImageValidatingPanel);
-			Loaded += (s, e) => DataContext = _video;
+			//Loaded += (s, e) => DataContext = _video;
 			_msgManager.OnMessageSended += (s, e) =>
 			{
 				spLog.Children.Add(new TextBlock
@@ -72,8 +72,8 @@ namespace FaceRecognition.UI
 			await Task.Delay(500);
 			bnt.Content = "Validating faces...";
 			_video.ValidateFaces();
-            ThisIsNotBut.IsEnabled = true;
-            ValidateFaceBut.IsEnabled = true;
+			ThisIsNotBut.IsEnabled = true;
+			ValidateFaceBut.IsEnabled = true;
 		}
 
 		private void ClearCache_Click(object sender, RoutedEventArgs e)
@@ -106,8 +106,8 @@ namespace FaceRecognition.UI
 				cmdDetectFaces.Content = "Adding ppl to g..";
 				_msgManager.WriteMessage("Adding people to group...");
 				await _video.AppendGroup(cmdDetectFaces);
-                ThisIsNotBut.IsEnabled = false;
-                ValidateFaceBut.IsEnabled = false;
+				ThisIsNotBut.IsEnabled = false;
+				ValidateFaceBut.IsEnabled = false;
 				return;
 			}
 			_video.LoadNextPerson();
@@ -145,9 +145,9 @@ namespace FaceRecognition.UI
 			if (_video._num == _video.ExtractedFaces.Count)
 			{
 				ImageValidatingPanel.Children.Clear();
-                ThisIsNotBut.IsEnabled = false;
-                ValidateFaceBut.IsEnabled = false;
-                await _video.AppendGroup(cmdDetectFaces);
+				ThisIsNotBut.IsEnabled = false;
+				ValidateFaceBut.IsEnabled = false;
+				await _video.AppendGroup(cmdDetectFaces);
 				return;
 			}
 			_video.LoadNextPerson();
