@@ -34,7 +34,7 @@ namespace FaceRecognition.Core
 			Client = new FirebaseClient(Config);
 			Data = GetData();
 			LastId = GetLastId();
-		}
+        }
 
 		private string AuthSecret;
 		private string BasePath;
@@ -86,13 +86,18 @@ namespace FaceRecognition.Core
 			}
 		}
        
-		public void Test()
+		public async Task Test()
 		{
-			Person Katya = new Person(new List<Image> {
-                ImageProcessing.ImageProcessingInstance.LoadImageFromFile("ResultFaces/0.png"),
-                ImageProcessing.ImageProcessingInstance.LoadImageFromFile("ResultFaces/1.png") });
-			AddFace(Katya);
-		}
+            //Person Katya = new Person(new List<Image> {
+            //             ImageProcessing.ImageProcessingInstance.LoadImageFromFile("ResultFaces/0.png"),
+            //             ImageProcessing.ImageProcessingInstance.LoadImageFromFile("ResultFaces/1.png") });
+            foreach (var person in Data)
+            {
+                await person.GetMicrosoftData();
+            }
+            Debug.WriteLine("Got MS Data");
+
+        }
 
 	}
 

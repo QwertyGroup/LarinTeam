@@ -83,7 +83,7 @@ namespace FaceRecognition.Core
     public class Person
     {
         public List<FaceImage> Faces;
-        public int Id;
+        public int Id = -1;
 
         public Person(List<string> BaseFaces)
         {
@@ -95,13 +95,14 @@ namespace FaceRecognition.Core
             Faces = ImageFaces.Select(x => new FaceImage(x)).ToList();
         }
 
-        public async void GetMicrosoftData()
+        public async Task GetMicrosoftData()
         {
             foreach(var face in Faces)
             {
                 try
                 {
                     face.MicrosofId = await FaceImage.ImageToMSID(face.Image);
+                    await Task.Delay(5000);
                 }
                 catch
                 {

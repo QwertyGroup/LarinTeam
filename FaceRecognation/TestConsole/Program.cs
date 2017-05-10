@@ -10,7 +10,7 @@ namespace TestConsole
 {
 	class Program
 	{
-		private static GroupManager _gm = GroupManager.GroupManagerInstance;
+		//private static GroupManager _gm = GroupManager.GroupManagerInstance;
 		static void Main(string[] args)
 		{
 			MessageManager.MsgManagerInstance.OnMessageSended += (s, e) => Console.WriteLine("Log >> " + e);
@@ -18,10 +18,9 @@ namespace TestConsole
 			Console.ReadLine();
 		}
 
-		private static async void Test()
+		private async static void Test()
 		{
-			await _gm.Clear();
-			await _gm.Train();
+            await Synchron.Instance.Test();
 		}
 	}
 }
