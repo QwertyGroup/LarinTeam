@@ -115,7 +115,7 @@ namespace FaceRecognition.UI
 
 		private void ExhibitFaceArchive_Click(object sender, RoutedEventArgs e)
 		{
-			new FaceExhibition(_video.GPersons).Show();
+			new FaceExhibition(_video.GPeople).Show();
 		}
 
 		private FaceApiManager _faceApiManager = FaceApiManager.FaceApiManagerInstance;
@@ -137,7 +137,7 @@ namespace FaceRecognition.UI
 					ImageProcessing.ImageProcessingInstance.LoadImageFromFile("Orsen.jpg")));
 			_msgManager.WriteMessage("Face added.");
 			// LOCAL ARCH Clear
-			_video.GPersons = new Dictionary<int, GPerson>();
+			_video.GPeople = new Dictionary<int, GPerson>();
 		}
 
 		private async void Button_Click(object sender, RoutedEventArgs e)
