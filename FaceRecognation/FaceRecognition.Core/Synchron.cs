@@ -41,21 +41,21 @@ namespace FaceRecognition.Core
 		private IFirebaseConfig Config;
 		private FirebaseClient Client;
 		private int LastId = 0;
-		private List<Face> Data;
+		private List<Person> Data;
 
         //Downloads all Data from FireBase and saves it to List<Face>
-		private List<Face> GetData()
+		private List<Person> GetData()
 		{
 			try
 			{
-				FirebaseResponse response = Client.Get("Faces");
-				var PrimitiveData = response.ResultAs<List<PrimitiveFace>>();
-				var Data = PrimitiveData.Select(x => x.GetFaceFromPrimitive()).ToList();
-				return Data == null ? new List<Face>() : Data;
+				FirebaseResponse response = Client.Get("People");
+				var PrimitiveData = response.ResultAs<List<PrimitivePerson>>();
+				var Data = PrimitiveData.Select(x => x.GetPersonFromPrimitive()).ToList();
+				return Data == null ? new List<Person>() : Data;
 			}
 			catch
 			{
-				return new List<Face>();
+				return new List<Person>();
 			}
 		}
 		private int GetLastId()
@@ -63,25 +63,25 @@ namespace FaceRecognition.Core
 			return Data.Count;
 		}
 
-		private void AddFace(Face face)
+		private void AddFace(Person person)
 		{
             //face._id == -1 means that this face is new and should be added to the end of Data Base.
-			if (face._id == -1)
+			if (person.Id == -1)
 			{
-				face._id = LastId;
-				SetResponse response = Client.Set($"Faces/{LastId}", face.GetPrimitiveFace());
+				person.Id = LastId;
+				SetResponse response = Client.Set($"People/{LastId}", person.GetPrimitive());
 				if (response.StatusCode == System.Net.HttpStatusCode.OK)
 				{
 					LastId++;
-					Data.Add(face);
+					Data.Add(person);
 				}
 			}
 			else
 			{
-				FirebaseResponse response = Client.Update($"Faces/{face._id}", face.GetPrimitiveFace());
+				FirebaseResponse response = Client.Update($"People/{person.Id}", person.GetPrimitive());
 				if (response.StatusCode == System.Net.HttpStatusCode.OK)
 				{
-					Data[face._id] = face;
+					Data[person.Id] = person;
 				}
 			}
 		}
@@ -111,7 +111,7 @@ namespace FaceRecognition.Core
         */
 		public void Test()
 		{
-			Face Katya = new Face(new List<Image> {
+			Person Katya = new Person(new List<Image> {
                 ImageProcessing.ImageProcessingInstance.LoadImageFromFile("ResultFaces/0.png"),
                 ImageProcessing.ImageProcessingInstance.LoadImageFromFile("ResultFaces/1.png") });
 			AddFace(Katya);
