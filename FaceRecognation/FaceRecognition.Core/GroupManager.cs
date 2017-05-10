@@ -63,7 +63,7 @@ namespace FaceRecognition.Core
 			}
 		}
 
-		public async Task SendDetectedPeopleToCompare(List<Person> videoPeople, List<Person> knownPeople)
+		public async Task<List<Person>> SendDetectedPeopleToCompare(List<Person> videoPeople, List<Person> knownPeople)
 		{
 			knownPeople = await AddKnownPeopleToGroup(knownPeople);
 			for (int i = 0; i < videoPeople.Count; i++)
@@ -90,10 +90,11 @@ namespace FaceRecognition.Core
 						{
 							//kp.Faces.Add(ca)
 							_msgManager.WriteMessage("Existed person.");
-							continue;
+							break;
 						}
 				}
 			}
+			return knownPeople;
 		}
 
 		private async Task<List<Person>> AddKnownPeopleToGroup(List<Person> knownPeople)
