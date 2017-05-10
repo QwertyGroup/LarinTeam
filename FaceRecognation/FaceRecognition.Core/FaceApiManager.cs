@@ -3,6 +3,7 @@ using Microsoft.ProjectOxford.Face.Contract;
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -53,6 +54,7 @@ namespace FaceRecognition.Core
 
 		public async Task<Microsoft.ProjectOxford.Face.Contract.Face[]> DetectFace(Stream imageAsStream)
 		{
+            Debug.WriteLine("Kek");
 			try
 			{
 				var faces = await _faceServiceClient.DetectAsync(imageAsStream, true);
