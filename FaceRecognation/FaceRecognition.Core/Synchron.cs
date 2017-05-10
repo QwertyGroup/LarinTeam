@@ -63,13 +63,13 @@ namespace FaceRecognition.Core
 			return Data.Count;
 		}
 
-		private void AddFace(Person person)
+		private async Task AddFace(Person person)
 		{
             //face._id == -1 means that this face is new and should be added to the end of Data Base.
 			if (person.Id == -1)
 			{
 				person.Id = LastId;
-				SetResponse response = Client.Set($"People/{LastId}", person.GetPrimitive());
+				SetResponse response = await Client.SetAsync($"People/{LastId}", person.GetPrimitive());
 				if (response.StatusCode == System.Net.HttpStatusCode.OK)
 				{
 					LastId++;
@@ -97,6 +97,13 @@ namespace FaceRecognition.Core
             }
             Debug.WriteLine("Got MS Data");
 
+        }
+        public async Task SendKnownPeople(List<Person> KnownPeople)
+        {
+            foreach(var person in KnownPeople)
+            {
+                await Synchron.Instance.AddFace(person);
+            }
         }
 
 	}
