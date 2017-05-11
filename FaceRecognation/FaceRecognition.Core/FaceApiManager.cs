@@ -54,7 +54,6 @@ namespace FaceRecognition.Core
 
 		public async Task<Microsoft.ProjectOxford.Face.Contract.Face[]> DetectFace(Stream imageAsStream)
 		{
-			Debug.WriteLine("Kek");
 			try
 			{
 				var faces = await _faceServiceClient.DetectAsync(imageAsStream, true);

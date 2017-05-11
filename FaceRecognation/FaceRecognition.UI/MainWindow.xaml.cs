@@ -73,7 +73,7 @@ namespace FaceRecognition.UI
 			var knownPeople = Synchron.Instance.Data;
 			await GroupManager.GroupManagerInstance.SendDetectedPeopleToCompare(extractedFaces, knownPeople);
 			await Synchron.Instance.SendKnownPeople(knownPeople);
-			//await _video.ExtractFaces();
+			//await _video.ExtractFaces();	
 			//bnt.Content = "Extracted";
 			//_msgManager.WriteMessage("Faces were successfuly extracted.");
 			//await Task.Delay(500);

@@ -104,8 +104,11 @@ namespace FaceRecognition.Core
 			{
 				knownPeople[i].MicrosoftPersonId = (await _faceApiManager.CreatePerson(i.ToString())).PersonId;
 				for (int j = 0; j < knownPeople[i].Faces.Count; j++)
+				{
 					knownPeople[i].Faces[j].MicrosofId = (
 						await _faceApiManager.AddPersonFace(knownPeople[i].MicrosoftPersonId, _imgProcessing.ImageToStream(knownPeople[i].Faces[j].Image))).PersistedFaceId;
+					await Task.Delay(TimeSpan.FromSeconds(5));
+				}
 			}
 			await Train();
 			return knownPeople;
