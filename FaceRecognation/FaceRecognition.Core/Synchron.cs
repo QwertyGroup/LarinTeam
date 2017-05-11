@@ -100,9 +100,10 @@ namespace FaceRecognition.Core
         }
         public async Task SendKnownPeople(List<Person> KnownPeople)
         {
-            foreach(var person in KnownPeople)
+            Data = KnownPeople;
+            for (int i = 0; i < KnownPeople.Count; i++)
             {
-                await Synchron.Instance.AddFace(person);
+                await Instance.AddFace(KnownPeople[i]);
             }
         }
 
