@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -97,7 +98,7 @@ namespace FaceRecognition.Core
 			}
 			catch (Exception ex)
 			{
-				MessageManager.MsgManagerInstance.WriteMessage(ex.Message);
+				Debug.WriteLine(ex.Message);
 				return ".unknown";
 			}
 		}
