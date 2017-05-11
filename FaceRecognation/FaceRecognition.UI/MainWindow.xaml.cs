@@ -21,7 +21,7 @@ namespace FaceRecognition.UI
 {
 	public partial class MainWindow : Window
 	{
-		private Core.Video _video;
+		private Core.Video _video = Core.Video.VideoInstance;
 
 		private MessageManager _msgManager = MessageManager.MsgManagerInstance;
 
