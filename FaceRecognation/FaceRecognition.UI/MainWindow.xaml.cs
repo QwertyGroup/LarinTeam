@@ -21,7 +21,7 @@ namespace FaceRecognition.UI
 {
 	public partial class MainWindow : Window
 	{
-		private Core.Video _video;
+		private Core.Video _video = Core.Video.VideoInstance;
 
 		private MessageManager _msgManager = MessageManager.MsgManagerInstance;
 
@@ -72,8 +72,8 @@ namespace FaceRecognition.UI
 			var extractedFaces = await _video.ExtractFaces();
 			var knownPeople = Synchron.Instance.Data;
 			await GroupManager.GroupManagerInstance.SendDetectedPeopleToCompare(extractedFaces, knownPeople);
+			await Synchron.Instance.SendKnownPeople(knownPeople);
 			//await _video.ExtractFaces();
-
 			//bnt.Content = "Extracted";
 			//_msgManager.WriteMessage("Faces were successfuly extracted.");
 			//await Task.Delay(500);
