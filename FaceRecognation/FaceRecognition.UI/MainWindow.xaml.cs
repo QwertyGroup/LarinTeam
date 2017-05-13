@@ -28,22 +28,24 @@ namespace FaceRecognition.UI
 		public MainWindow()
 		{
 			InitializeComponent();
-			//_video = new Video(ImageValidatingPanel);
-			////Loaded += (s, e) => DataContext = _video;
-			_msgManager.OnMessageSended += (s, e) =>
-			{
-				spLog.Children.Add(new TextBlock
-				{
-					Style = FindResource("DefaultTextStyle") as Style,
-					FontSize = 11,
-					Margin = new Thickness(1),
-					TextWrapping = TextWrapping.Wrap,
-					HorizontalAlignment = HorizontalAlignment.Left,
-					Text = ">> " + e + Environment.NewLine
-				});
-				(spLog.Parent as ScrollViewer).ScrollToEnd();
-			};
+            ClearCache();
+            _msgManager.OnMessageSended += onMessageSended;
+				
 		}
+
+        private void onMessageSended (object sender, string e)
+        {
+            spLog.Children.Add(new TextBlock
+            {
+                Style = FindResource("DefaultTextStyle") as Style,
+                FontSize = 11,
+                Margin = new Thickness(1),
+                TextWrapping = TextWrapping.Wrap,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                Text = ">> " + e + Environment.NewLine
+            });
+            (spLog.Parent as ScrollViewer).ScrollToEnd();
+        }
 
 		private void BrowseVideo_Click(object sender, RoutedEventArgs e)
 		{
@@ -66,8 +68,8 @@ namespace FaceRecognition.UI
 		{
 			cmdBrowseVideo.Content = "Browse Video";
 			cmdBrowseVideo.IsEnabled = false;
-			var bnt = (Button)sender;
-			bnt.Content = "Extracting faces...";
+			var btn = (Button)sender;
+			btn.Content = "Extracting faces...";
 			_msgManager.WriteMessage("Extracting faces...");
 
 			var extractedFaces = await _video.ExtractFaces();
@@ -90,17 +92,49 @@ namespace FaceRecognition.UI
 			//ValidateFaceBut.IsEnabled = true;
 		}
 
-		private void ClearCache_Click(object sender, RoutedEventArgs e)
+		private void ClearCache()
 		{
 			ImageProcessing.ImageProcessingInstance.ClearCache();
 			if (Directory.Exists("TempData"))
 			{
 				Directory.Delete("TempData", true);
-			}
-			_msgManager.WriteMessage("Cache cleared");
-		}
+                _msgManager.WriteMessage("Cache cleared");
+            }
+        }
 
-		private async void Validate_Click(object sender, RoutedEventArgs e)
+        private Border CreateImage(System.Drawing.Image img)
+        {
+            Border Border = new Border()
+            {
+                Width = 150,
+                Height = 150,
+                Margin = new Thickness(5),
+                BorderBrush = new SolidColorBrush(Color.FromRgb(0, 255, 0))
+            };
+            Image Image = new Image
+            {
+                Source = ImageProcessing.ImageProcessingInstance.ConvertImageToBitmapImage(img),
+                Width = 146,
+                Height = 146,
+                Stretch = Stretch.Fill
+            };
+            Border.Child = Image;
+            Border.MouseLeftButtonUp += (sender, e) =>
+            {
+                var brd = (Border)sender;
+                if (brd.BorderThickness.Top == 0)
+                {
+                    brd.BorderThickness = new Thickness(2);
+                }
+                else
+                {
+                    brd.BorderThickness = new Thickness(0);
+                }
+            };
+            return Border;
+        }
+
+        private async void Validate_Click(object sender, RoutedEventArgs e)
 		{
 			//List<System.Drawing.Image> resultFacesOfPerson = new List<System.Drawing.Image>();
 			//foreach (var border in ImageValidatingPanel.Children)
@@ -138,17 +172,9 @@ namespace FaceRecognition.UI
 			//await Synchron.Instance.Clear();
 		}
 
-		private async void Button_Click(object sender, RoutedEventArgs e)
-		{
-			//	if (_video._num == _video.ExtractedFaces.Count)
-			//	{
-			//		ImageValidatingPanel.Children.Clear();
-			//		ThisIsNotBut.IsEnabled = false;
-			//		ValidateFaceBut.IsEnabled = false;
-			//		await _video.AppendGroup(cmdDetectFaces);
-			//		return;
-			//	}
-			//	_video.LoadNextPerson();
-		}
-	}
+        private void ThisIsNotBut_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+    }
 }

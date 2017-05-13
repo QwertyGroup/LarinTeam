@@ -95,11 +95,9 @@
 				<Button x:Name="cmdBrowseVideo" Style="{DynamicResource DefaultButtonStyle}" Content="Browse Video" Click="BrowseVideo_Click" IsTabStop="False" />
 				<Button x:Name="cmdDetectFaces" Style="{DynamicResource DefaultButtonStyle}" Content="Detect Faces" Click="DetectFaces_Click" IsTabStop="False"/>
 				<TextBlock/>
-				<Button Style="{DynamicResource DefaultButtonStyle}" Content="Clear Cache" Click="ClearCache_Click" IsTabStop="False"/>
-				<TextBlock/>
+                <TextBlock/>
 				<Button Style="{DynamicResource DefaultButtonStyle}" Content="Exhibit archive" Click="ExhibitFaceArchive_Click" IsTabStop="False" IsEnabled="False"/>
-				<Button Style="{DynamicResource DefaultButtonStyle}" Content="Clear archive" Click="ClearFaceArchive_Click" IsTabStop="False"/>
-			</StackPanel>
+            </StackPanel>
 		</Border>
 		<ScrollViewer Grid.Column="1" Grid.Row="1" Background="White">
 			<StackPanel x:Name="spLog"/>
@@ -111,7 +109,7 @@
 			</Grid.RowDefinitions>
 			<StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
 				<Button x:Name="ValidateFaceBut" Style="{DynamicResource DefaultButtonStyle}" Margin="10,4" Content="Validate this Faces" Foreground="#FF0035B4" Click="Validate_Click" Visibility="Hidden"/>
-				<Button x:Name="ThisIsNotBut" Style="{DynamicResource DefaultButtonStyle}" Margin="10,4" Content="This is not a Face" Foreground="#FFAF003F" Click="Button_Click" Visibility="Hidden"/>
+				<Button x:Name="ThisIsNotBut" Style="{DynamicResource DefaultButtonStyle}" Margin="10,4" Content="This is not a Face" Foreground="#FFAF003F" Visibility="Hidden" Click="ThisIsNotBut_Click"/>
 			</StackPanel>
 			<WrapPanel Grid.Row="1" x:Name="ImageValidatingPanel"/>
 		</Grid>
