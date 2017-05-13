@@ -55,6 +55,16 @@ namespace FaceRecognition.Core.MicrosoftAPIs
 			{
 				await _faceApiManager.DeletePerson(personId);
 			}
+
+            public async Task DeletePerson(Person person)
+            {
+                if (person.MicrosoftPersonId == null)
+                {
+                    throw new Exception("Person has no Microsoft GUID");
+                }
+
+                await DeletePerson(person.MicrosoftPersonId);
+            }
 		}
 
 		public class GroupAPI
