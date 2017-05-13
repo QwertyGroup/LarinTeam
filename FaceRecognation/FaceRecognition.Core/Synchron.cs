@@ -17,99 +17,83 @@ using System.Threading.Tasks;
 
 namespace FaceRecognition.Core
 {
-	public class Synchron
-	{
-		//Singleton
-		private static Lazy<Synchron> _syncInstance = new Lazy<Synchron>(() => new Synchron());
-		public static Synchron Instance { get { return _syncInstance.Value; } }
-		private Synchron()
-		{
-			AuthSecret = KeyManager.Instance.FireBaseKey;
-			BasePath = "https://recognise-faces.firebaseio.com/";
-			Config = new FirebaseConfig
-			{
-				AuthSecret = this.AuthSecret,
-				BasePath = this.BasePath
-			};
-			Client = new FirebaseClient(Config);
-			Data = GetData();
-			LastId = GetLastId();
-		}
+    public class Synchron
+    {
+        //Singleton
+        private static Lazy<Synchron> _syncInstance = new Lazy<Synchron>(() => new Synchron());
+        public static Synchron Instance { get { return _syncInstance.Value; } }
+        private Synchron()
+        {
+            AuthSecret = KeyManager.Instance.FireBaseKey;
+            BasePath = "https://recognise-faces.firebaseio.com/";
+            Config = new FirebaseConfig
+            {
+                AuthSecret = this.AuthSecret,
+                BasePath = this.BasePath
+            };
+            Client = new FirebaseClient(Config);
+            //Data = GetData();
+        }
 
-		private string AuthSecret;
-		private string BasePath;
-		private IFirebaseConfig Config;
-		private FirebaseClient Client;
-		private int LastId = 0;
-		public List<Person> Data;
+        private string AuthSecret;
+        private string BasePath;
+        private IFirebaseConfig Config;
+        private FirebaseClient Client;
+        public Dictionary<Guid, string> Data;
 
-		//Downloads all Data from FireBase and saves it to List<Face>
-		private List<Person> GetData()
-		{
-			try
-			{
-				FirebaseResponse response = Client.Get("People");
-				var PrimitiveData = response.ResultAs<List<PrimitivePerson>>();
-				var Data = PrimitiveData.Select(x => x.GetPersonFromPrimitive()).ToList();
-				return Data == null ? new List<Person>() : Data;
-			}
-			catch
-			{
-				return new List<Person>();
-			}
-		}
-		private int GetLastId()
-		{
-			return Data.Count;
-		}
+        //Downloads all Data from FireBase and saves it to List<Face>
+        public async Task<Dictionary<Guid, string>> GetFaces()
+        {
+            try
+            {
+                FirebaseResponse response = await Client.GetAsync("Faces");
+                var Data = response.ResultAs<Dictionary<Guid, string>>();
+                return Data == null ? new Dictionary<Guid, string>() : Data;
+            }
+            catch
+            {
+                return new Dictionary<Guid, string>();
+            }
+        }
 
-		private async Task AddFace(Person person)
-		{
-			//face._id == -1 means that this face is new and should be added to the end of Data Base.
-			if (person.Id == -1)
-			{
-				person.Id = LastId;
-				SetResponse response = await Client.SetAsync($"People/{LastId}", person.GetPrimitive());
-				if (response.StatusCode == System.Net.HttpStatusCode.OK)
-				{
-					LastId++;
-					Data.Add(person);
-				}
-			}
-			else
-			{
-				FirebaseResponse response = Client.Update($"People/{person.Id}", person.GetPrimitive());
-				if (response.StatusCode == System.Net.HttpStatusCode.OK)
-				{
-					Data[person.Id] = person;
-				}
-			}
-		}
+        public async Task<List<string>> getFacesByList(List<Guid> ids)
+        {
+            List<string> images = new List<string>();
+            foreach (var id in ids)
+            {
+                images.Add(await getFace(id));
+            }
+            return images;
+        }
 
-		public async Task Test()
-		{
-			//Person Katya = new Person(new List<Image> {
-			//             ImageProcessing.ImageProcessingInstance.LoadImageFromFile("ResultFaces/0.png"),
-			//             ImageProcessing.ImageProcessingInstance.LoadImageFromFile("ResultFaces/1.png") });
-			foreach (var person in Data)
-			{
-				await person.GetMicrosoftData();
-			}
-			Debug.WriteLine("Got MS Data");
+        public async Task AddFace(Guid microsoftId, string img)
+        {
+            SetResponse response = await Client.SetAsync($"Faces/{microsoftId}", img);
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                Data.Add(microsoftId, img);
+            }
+        }
 
-		}
-		public async Task SendKnownPeople(List<Person> KnownPeople)
-		{
-			Data = KnownPeople;
-			for (int i = 0; i < KnownPeople.Count; i++)
-			{
-				await Instance.AddFace(KnownPeople[i]);
-			}
-		}
+        public async Task DeleteFace(Guid microsoftId)
+        {
+            if (!Data.Keys.Contains(microsoftId))
+            {
+                throw new Exception("You're tryin' to delete id that doesn't exist");
+            }
+            FirebaseResponse response = await Client.DeleteAsync($"Faces/{microsoftId}");
+            Data.Remove(microsoftId);
+        }
 
-	}
+        public async Task<string> getFace(Guid microsoftId)
+        {
+            FirebaseResponse response = await Client.GetAsync($"Faces/{microsoftId}");
+            return response.ResultAs<string>();
+        }
 
-	public class SyncronResult
-	{
-	}
+        public async Task Test()
+        {
+            await AddFace(new Guid(12, 13, 12, 12, 12, 12, 228, 12, 12, 12, 12), "kek");
+        }
+    }
 }

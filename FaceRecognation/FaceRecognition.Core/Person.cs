@@ -11,22 +11,25 @@ using System.Diagnostics;
 namespace FaceRecognition.Core
 {
 	//Base class of Face. Needed to convert dataBase data to c# objects.
+    public class PrimitiveFaceImage
+    {
+        public string BaseFaceImage;
+        public Guid MicrosoftId;
+
+        public FaceImage getFaceImage()
+        {
+            return new FaceImage(BaseFaceImage, MicrosoftId);
+        }
+    }
+
 	public class PrimitivePerson
 	{
-		public List<string> _baseFaceImage;
-		public int Id;
-
-		public PrimitivePerson(List<string> BaseFaceImage)
-		{
-			_baseFaceImage = BaseFaceImage;
-		}
-
-		public PrimitivePerson() { }
+        public List<PrimitiveFaceImage> Faces;
+        public Guid MicrosoftId;
 
 		public Person GetPersonFromPrimitive()
 		{
-			Person person = new Person(this._baseFaceImage);
-			person.Id = this.Id;
+			Person person = new Person(Faces, MicrosoftId);
 			return person;
 		}
 	}
@@ -35,18 +38,19 @@ namespace FaceRecognition.Core
 	{
 		public string BaseImage;
 		public Image Image;
-		public Guid MicrosofId;
+		public Guid MicrosoftId = new Guid();
 
-		public FaceImage(string BaseImage)
-		{
-			this.BaseImage = BaseImage;
-			this.Image = BaseToImage(BaseImage);
-		}
+        public FaceImage(string BaseImage, Guid MicrosoftId)
+        {
+            this.BaseImage = BaseImage;
+            this.MicrosoftId = MicrosoftId;
+        }
 
 		public FaceImage(Image Image)
 		{
 			this.Image = Image;
 			this.BaseImage = ImageToBase(Image);
+            MicrosoftId = new Guid();
 		}
 
 		private static string ImageToBase(Image image)
@@ -81,8 +85,8 @@ namespace FaceRecognition.Core
 	//Complicated PrimitiveFace class. Can convert textBase image to Image and vice versa.
 	public class Person
 	{
+
 		public List<FaceImage> Faces;
-		public int Id = -1;
 		public Guid MicrosoftPersonId;
 
 		public Person(Guid msId)
@@ -90,9 +94,15 @@ namespace FaceRecognition.Core
 			MicrosoftPersonId = msId;
 		}
 
+        public Person(List<PrimitiveFaceImage> pFaces, Guid MicrosoftId)
+        {
+            this.Faces = pFaces.Select(x => new FaceImage(x.BaseFaceImage, x.MicrosoftId)).ToList();
+            this.MicrosoftPersonId = MicrosoftId;
+        }
+
 		public Person(List<string> BaseFaces)
 		{
-			Faces = BaseFaces.Select(x => new FaceImage(x)).ToList();
+			//Faces = BaseFaces.Select(x => new FaceImage(x)).ToList();
 		}
 
 		public Person(List<Image> ImageFaces)
@@ -106,7 +116,7 @@ namespace FaceRecognition.Core
 			{
 				try
 				{
-					face.MicrosofId = await FaceImage.ImageToMSID(face.Image);
+					face.MicrosoftId = await FaceImage.ImageToMSID(face.Image);
 					await Task.Delay(5000);
 				}
 				catch
@@ -114,13 +124,14 @@ namespace FaceRecognition.Core
 					Debug.WriteLine("Problem with converting FaceImage to Microsoft.");
 				}
 			}
-			Faces.RemoveAll(x => x.MicrosofId == null);
+			Faces.RemoveAll(x => x.MicrosoftId == null);
 		}
 
 		public PrimitivePerson GetPrimitive()
 		{
-			PrimitivePerson primitive = new PrimitivePerson(Faces.Select(x => x.BaseImage).ToList());
-			primitive.Id = this.Id;
+			PrimitivePerson primitive = new PrimitivePerson();
+            primitive.MicrosoftId = this.MicrosoftPersonId;
+            //primitive.Faces = 
 			return primitive;
 		}
 	}

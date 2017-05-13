@@ -32,7 +32,7 @@ namespace FaceRecognition.Core
 			{
 				var person = videoPeople[i];
 				await person.GetMicrosoftData();
-				var personFacesIds = person.Faces.Select(x => x.MicrosofId).ToArray();
+				var personFacesIds = person.Faces.Select(x => x.MicrosoftId).ToArray();
 				var iresult = await MicrosoftAPIs.ComparationAPI.Commands.CommandsInstance.Compare(personFacesIds);
 				var isnew = false;
 

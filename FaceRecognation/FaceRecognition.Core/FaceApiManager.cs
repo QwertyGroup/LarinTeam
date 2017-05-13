@@ -60,7 +60,7 @@ namespace FaceRecognition.Core.MicrosoftAPIs
 				foreach (var face in faces)
 				{
 					var faceImg = new FaceImage(face);
-					faceImg.MicrosofId = (await AddFaceToPerson(msid, face)).PersistedFaceId;
+					faceImg.MicrosoftId = (await AddFaceToPerson(msid, face)).PersistedFaceId;
 					faceImgs.Add(faceImg);
 				}
 				person.Faces = faceImgs;
@@ -91,6 +91,7 @@ namespace FaceRecognition.Core.MicrosoftAPIs
 			{
 				//new Microsoft.ProjectOxford.Face.Contract.Person();
 				var p = await _faceApiManager.GetPersonFromGroup(personId);
+                //Synchron.Instance.Data.Where(x => x.MicrosoftPersonId.)
 				throw new Exception("GetPerson is not finished!!!!!");
 			}
 
@@ -169,7 +170,7 @@ namespace FaceRecognition.Core.MicrosoftAPIs
 					knownPeople[i].MicrosoftPersonId = (await _faceApiManager.CreatePerson(i.ToString())).PersonId;
 					for (int j = 0; j < knownPeople[i].Faces.Count; j++)
 					{
-						knownPeople[i].Faces[j].MicrosofId = (
+						knownPeople[i].Faces[j].MicrosoftId = (
 							await _faceApiManager.AddPersonFace(knownPeople[i].MicrosoftPersonId,
 							_imgProcessing.ImageToStream(knownPeople[i].Faces[j].Image))).PersistedFaceId;
 						await Task.Delay(TimeSpan.FromSeconds(5));
