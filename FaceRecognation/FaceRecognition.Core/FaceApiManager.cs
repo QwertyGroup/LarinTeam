@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -30,9 +31,9 @@ namespace FaceRecognition.Core.MicrosoftAPIs
 				return await _faceApiManager.Identify(faceIds);
 			}
 
-			public async Task<Face[]> DetectFace(Stream ImageAsStream)
+			public async Task<Face[]> DetectFace(Image Image)
 			{
-				return await _faceApiManager.DetectFace(ImageAsStream);
+				return await _faceApiManager.DetectFace(ImageProcessing.ImageProcessingInstance.ImageToStream(Image, ImageFormat.Png));
 			}
 		}
 	}
@@ -48,7 +49,7 @@ namespace FaceRecognition.Core.MicrosoftAPIs
 			FaceApiManager _faceApiManager = FaceApiManager.FaceApiManagerInstance;
 			public async Task<Guid> AddPerson()
 			{
-				var p = new Person();
+				var p = new Person(new List<Image>()); // SDELAT 
 				return (await _faceApiManager.CreatePerson()).PersonId;
 			}
 
@@ -67,9 +68,9 @@ namespace FaceRecognition.Core.MicrosoftAPIs
 				await DeletePerson(person.MicrosoftPersonId);
 			}
 
-			public async Task AddFaceToPerson()
+			public async Task<AddPersistedFaceResult> AddFaceToPerson(Guid personId, Image faceImg)
 			{
-				_faceApiManager.AddPersonFace();
+				return await _faceApiManager.AddPersonFace(personId, ImageProcessing.ImageProcessingInstance.ImageToStream(faceImg));
 			}
 		}
 

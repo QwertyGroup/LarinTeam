@@ -73,8 +73,7 @@ namespace FaceRecognition.Core
 
 		public static async Task<Guid> ImageToMSID(Image img)
 		{
-			var stream = ImageProcessing.ImageProcessingInstance.ImageToStream(img, ImageFormat.Png);
-			var Face = await MicrosoftAPIs.ComparationAPI.Commands.CommandsInstance.DetectFace(stream);
+			var Face = await MicrosoftAPIs.ComparationAPI.Commands.CommandsInstance.DetectFace(img);
 			return Face.First().FaceId;
 		}
 	}
