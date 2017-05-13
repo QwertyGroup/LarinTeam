@@ -164,6 +164,7 @@ namespace FaceRecognition.UI
 
             ThisIsNotBut.Visibility = Visibility.Hidden;
             ValidateFaceBut.Visibility = Visibility.Hidden;
+            CompWithArchive.IsEnabled = true;
             cmdBrowseVideo.IsEnabled = true;
         }
 
