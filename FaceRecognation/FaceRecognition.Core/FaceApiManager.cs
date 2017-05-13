@@ -47,10 +47,24 @@ namespace FaceRecognition.Core.MicrosoftAPIs
 			public static PersonAPI PersonAPIinstance { get { return _personAPIinstance.Value; } }
 
 			FaceApiManager _faceApiManager = FaceApiManager.FaceApiManagerInstance;
-			public async Task<Guid> AddPerson()
+			public async Task<Person> AddPerson()
 			{
-				var p = new Person(new List<Image>()); // SDELAT 
-				return (await _faceApiManager.CreatePerson()).PersonId;
+				var msid = (await _faceApiManager.CreatePerson()).PersonId;
+				return new Person(msid);
+			}
+			public async Task<Person> AddPerson(List<Image> faces)
+			{
+				var msid = (await _faceApiManager.CreatePerson()).PersonId;
+				var person = new Person(msid);
+				var faceImgs = new List<FaceImage>();
+				foreach (var face in faces)
+				{
+					var faceImg = new FaceImage(face);
+					faceImg.MicrosofId = (await AddFaceToPerson(msid, face)).PersistedFaceId;
+					faceImgs.Add(faceImg);
+				}
+				person.Faces = faceImgs;
+				return person;
 			}
 
 			public async Task DeletePerson(Guid personId)
@@ -71,6 +85,19 @@ namespace FaceRecognition.Core.MicrosoftAPIs
 			public async Task<AddPersistedFaceResult> AddFaceToPerson(Guid personId, Image faceImg)
 			{
 				return await _faceApiManager.AddPersonFace(personId, ImageProcessing.ImageProcessingInstance.ImageToStream(faceImg));
+			}
+
+			public async Task<Person> GetPerson(Guid personId) // LOAD faces FROM FIREBASE!!!!!!!!!!!!!
+			{
+				//new Microsoft.ProjectOxford.Face.Contract.Person();
+				var p = await _faceApiManager.GetPersonFromGroup(personId);
+				throw new Exception("GetPerson is not finished!!!!!");
+			}
+
+			public async Task<List<Person>> GetPersonList() // NEED FIRE BASE TO FINISH
+			{
+				var plist = await _faceApiManager.GetPersonsFromGroup();
+				throw new Exception("GetPersonList is not finished!!!!!");
 			}
 		}
 
@@ -150,6 +177,11 @@ namespace FaceRecognition.Core.MicrosoftAPIs
 				}
 				await Train();
 				return knownPeople;
+			}
+
+			public async Task<int> Count()
+			{
+				return await _faceApiManager.GetGroupCount();
 			}
 		}
 	}
@@ -423,6 +455,21 @@ namespace FaceRecognition.Core.MicrosoftAPIs
 		public async Task<List<IdentifyResult>> Identify(string customGroupId, Guid[] faceIds)
 		{
 			return (await _faceServiceClient.IdentifyAsync(customGroupId, faceIds)).ToList();
+		}
+
+		public async Task<Microsoft.ProjectOxford.Face.Contract.Person[]> GetPersonsFromGroup()
+		{
+			return await _faceServiceClient.GetPersonsAsync(_personGroupId);
+		}
+
+		public async Task<Microsoft.ProjectOxford.Face.Contract.Person> GetPersonFromGroup(Guid personId)
+		{
+			return await _faceServiceClient.GetPersonAsync(_personGroupId, personId);
+		}
+
+		public async Task<int> GetGroupCount()
+		{
+			return (await _faceServiceClient.GetPersonsAsync(_personGroupId)).Count();
 		}
 	}
 }
