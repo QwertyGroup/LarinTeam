@@ -21,11 +21,11 @@ namespace FaceRecognition.Core.MicrosoftAPIs
 
 			FaceApiManager _faceApiManager = FaceApiManager.FaceApiManagerInstance;
 
-			public async Task<List<IdentifyResult>> Identify(List<Guid> faceIds)
+			public async Task<List<IdentifyResult>> Compare(List<Guid> faceIds)
 			{
-				return await Identify(faceIds.ToArray());
+				return await Compare(faceIds.ToArray());
 			}
-			public async Task<List<IdentifyResult>> Identify(Guid[] faceIds)
+			public async Task<List<IdentifyResult>> Compare(Guid[] faceIds)
 			{
 				return await _faceApiManager.Identify(faceIds);
 			}
@@ -46,8 +46,9 @@ namespace FaceRecognition.Core.MicrosoftAPIs
 			public static PersonAPI PersonAPIinstance { get { return _personAPIinstance.Value; } }
 
 			FaceApiManager _faceApiManager = FaceApiManager.FaceApiManagerInstance;
-			public async Task<Guid> CreatePerson()
+			public async Task<Guid> AddPerson()
 			{
+				var p = new Person();
 				return (await _faceApiManager.CreatePerson()).PersonId;
 			}
 
@@ -56,15 +57,20 @@ namespace FaceRecognition.Core.MicrosoftAPIs
 				await _faceApiManager.DeletePerson(personId);
 			}
 
-            public async Task DeletePerson(Person person)
-            {
-                if (person.MicrosoftPersonId == null)
-                {
-                    throw new Exception("Person has no Microsoft GUID");
-                }
+			public async Task DeletePerson(Person person)
+			{
+				if (person.MicrosoftPersonId == null)
+				{
+					throw new Exception("Person has no Microsoft GUID");
+				}
 
-                await DeletePerson(person.MicrosoftPersonId);
-            }
+				await DeletePerson(person.MicrosoftPersonId);
+			}
+
+			public async Task AddFaceToPerson()
+			{
+				_faceApiManager.AddPersonFace();
+			}
 		}
 
 		public class GroupAPI

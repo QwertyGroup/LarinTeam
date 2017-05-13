@@ -42,7 +42,7 @@ namespace FaceRecognition.UI
 		public static readonly DependencyProperty VideoSelectedProperty =
 			DependencyProperty.Register("VideoSelected", typeof(bool), typeof(Video));
 
-		public Dictionary<int, GPerson> GPeople { get; set; } = new Dictionary<int, GPerson>();
+		//public Dictionary<int, GPerson> GPeople { get; set; } = new Dictionary<int, GPerson>();
 
 		private Dictionary<int, List<System.Drawing.Image>> _extractedFaces;
 		public Dictionary<int, List<System.Drawing.Image>> ExtractedFaces
@@ -60,17 +60,17 @@ namespace FaceRecognition.UI
 			DependencyProperty.Register("AreFacesExtracted", typeof(bool), typeof(Video));
 
 
-		public async Task ExtractFaces()
-		{
-			ExtractedFaces = await VideoManager.VManagerInstance.GetFacesFromVideo(Path);
-			var curFaceCount = GPeople.Count;
-			foreach (var exFace in ExtractedFaces)
-			{
-				GPeople.Add((GPeople != null && GPeople.Count != 0) ?
-					GPeople.Keys.Max() : 0 + 1, new GPerson { PersonLocalId = exFace.Key });
-			}
-			_num = 0;
-		}
+		//public async Task ExtractFaces()
+		//{
+		//	ExtractedFaces = await VideoManager.VManagerInstance.GetFacesFromVideo(Path);
+		//	var curFaceCount = GPeople.Count;
+		//	foreach (var exFace in ExtractedFaces)
+		//	{
+		//		GPeople.Add((GPeople != null && GPeople.Count != 0) ?
+		//			GPeople.Keys.Max() : 0 + 1, new GPerson { PersonLocalId = exFace.Key });
+		//	}
+		//	_num = 0;
+		//}
 
 		public Dictionary<int, List<System.Drawing.Image>> ValidFaces { get; set; } = new Dictionary<int, List<System.Drawing.Image>>();
 
@@ -164,9 +164,9 @@ namespace FaceRecognition.UI
 					return;
 				}
 
-				var unrecognisedGPeople = await AddFacesToMSArchive(personMatchGuid, unrecognisedFacesGuids);
-				foreach (var up in unrecognisedGPeople) // Danger zone
-					GPeople.Add(GPeople.Keys.Max() + 1, up.Value);
+				//var unrecognisedGPeople = await AddFacesToMSArchive(personMatchGuid, unrecognisedFacesGuids);
+				//foreach (var up in unrecognisedGPeople) // Danger zone
+				//	GPeople.Add(GPeople.Keys.Max() + 1, up.Value);
 				//new FaceExhibition(unrecognisedGPeople).Show(); // Show new faces
 				// Тут пишет Марк связку с БД и в ГПипл при создании нужно подгружать людей из БД
 				MessageManager.MsgManagerInstance.WriteMessage("Comparing result recived!");
@@ -179,45 +179,45 @@ namespace FaceRecognition.UI
 			btn.Content = "Detect Faces";
 		}
 
-		private async Task<Dictionary<int, GPerson>> AddFacesToMSArchive(Dictionary<Guid, int> personMatchGuid, List<IdentifyResult> unrecognisedFacesGuids)
-		{
-			var unrecognisedGPeople = new Dictionary<int, GPerson>();
-			var addedPeopleLinking = new Dictionary<int, CreatePersonResult>();
-			var currentPersonCounter = 0;
-			var currentPerson = personMatchGuid[unrecognisedFacesGuids[0].FaceId]; // Может будет работать?)
-			foreach (var unrecFace in unrecognisedFacesGuids)
-			{
-				try
-				{
-					var personId = personMatchGuid[unrecFace.FaceId];
-					if (!addedPeopleLinking.ContainsKey(personId))
-					{
-						//var res = await _faceApiManager.CreatePerson(personId.ToString());
-						unrecognisedGPeople.Add(personId, new GPerson());
-						MessageManager.MsgManagerInstance.WriteMessage($"Added {personId} to group.");
-						//addedPeopleLinking.Add(personId, res);
-					}
+		//private async Task<Dictionary<int, GPerson>> AddFacesToMSArchive(Dictionary<Guid, int> personMatchGuid, List<IdentifyResult> unrecognisedFacesGuids)
+		//{
+		//	var unrecognisedGPeople = new Dictionary<int, GPerson>();
+		//	var addedPeopleLinking = new Dictionary<int, CreatePersonResult>();
+		//	var currentPersonCounter = 0;
+		//	var currentPerson = personMatchGuid[unrecognisedFacesGuids[0].FaceId]; // Может будет работать?)
+		//	foreach (var unrecFace in unrecognisedFacesGuids)
+		//	{
+		//		try
+		//		{
+		//			var personId = personMatchGuid[unrecFace.FaceId];
+		//			if (!addedPeopleLinking.ContainsKey(personId))
+		//			{
+		//				//var res = await _faceApiManager.CreatePerson(personId.ToString());
+		//				unrecognisedGPeople.Add(personId, new GPerson());
+		//				MessageManager.MsgManagerInstance.WriteMessage($"Added {personId} to group.");
+		//				//addedPeopleLinking.Add(personId, res);
+		//			}
 
-					if (currentPerson == personId) currentPersonCounter++;
-					else
-					{
-						currentPersonCounter = 1;
-						currentPerson = personId;
-					}
-					await Task.Delay(TimeSpan.FromSeconds(5));
-					var img = GPeople[personId].Faces[currentPersonCounter - 1].Img;
-					unrecognisedGPeople[personId].Faces.Add(new GFace { Img = img });
-					//await _faceApiManager.AddPersonFace(addedPeopleLinking[personId],
-					//ImageProcessing.ImageProcessingInstance.ImageToStream(img));
-					MessageManager.MsgManagerInstance.WriteMessage($"{currentPersonCounter}th face added to {personId} person.");
-				}
-				catch (Exception ex)
-				{
-					MessageManager.MsgManagerInstance.WriteMessage("Ex in AddFacesToMSArchive" + Environment.NewLine + ex.Message);
-				}
-			}
-			return unrecognisedGPeople;
-		}
+		//			if (currentPerson == personId) currentPersonCounter++;
+		//			else
+		//			{
+		//				currentPersonCounter = 1;
+		//				currentPerson = personId;
+		//			}
+		//			await Task.Delay(TimeSpan.FromSeconds(5));
+		//			var img = GPeople[personId].Faces[currentPersonCounter - 1].Img;
+		//			unrecognisedGPeople[personId].Faces.Add(new GFace { Img = img });
+		//			//await _faceApiManager.AddPersonFace(addedPeopleLinking[personId],
+		//			//ImageProcessing.ImageProcessingInstance.ImageToStream(img));
+		//			MessageManager.MsgManagerInstance.WriteMessage($"{currentPersonCounter}th face added to {personId} person.");
+		//		}
+		//		catch (Exception ex)
+		//		{
+		//			MessageManager.MsgManagerInstance.WriteMessage("Ex in AddFacesToMSArchive" + Environment.NewLine + ex.Message);
+		//		}
+		//	}
+		//	return unrecognisedGPeople;
+		//}
 
 		private async Task<List<IdentifyResult>> CompareTensWithArch(List<Guid[]> listofGuidsToCompare)
 		{
@@ -260,16 +260,16 @@ namespace FaceRecognition.UI
 		{
 			try
 			{
-				foreach (var person in GPeople)
-				{
-					foreach (var face in person.Value.Faces)
-					{
-						//var id = (await _faceApiManager.DetectFace(
-						//	ImageProcessing.ImageProcessingInstance.ImageToStream(face.Img)))[0].FaceId;
-						//personMatchGuid.Add(id, person.Key);
-						//rowGuidList.Add(id);
-					}
-				}
+				//foreach (var person in GPeople)
+				//{
+				//	foreach (var face in person.Value.Faces)
+				//	{
+				//		//var id = (await _faceApiManager.DetectFace(
+				//		//	ImageProcessing.ImageProcessingInstance.ImageToStream(face.Img)))[0].FaceId;
+				//		//personMatchGuid.Add(id, person.Key);
+				//		//rowGuidList.Add(id);
+				//	}
+				//}
 				for (int i = 0; i < rowGuidList.Count; i += 10)
 				{
 					listofGuidsToCompare.Add(rowGuidList.GetRange(i, Math.Min(10, rowGuidList.Count - i)).ToArray());
@@ -283,19 +283,19 @@ namespace FaceRecognition.UI
 
 		private void FillGP()
 		{
-			try
-			{
-				foreach (var vFace in ValidFaces) // fill GPersons with valid faces
-					GPeople[vFace.Key].Faces = vFace.Value.Select(x => new GFace { Img = x }).ToList();
-				ValidFaces = new Dictionary<int, List<System.Drawing.Image>>();
+			//try
+			//{
+			//	foreach (var vFace in ValidFaces) // fill GPersons with valid faces
+			//		GPeople[vFace.Key].Faces = vFace.Value.Select(x => new GFace { Img = x }).ToList();
+			//	ValidFaces = new Dictionary<int, List<System.Drawing.Image>>();
 
-				for (int i = 0; i < GPeople.Count; i++) // Remove people with unvalid faces
-					if (GPeople[i].Faces.Count == 0) GPeople.Remove(i);
-			}
-			catch (Exception ex)
-			{
-				MessageManager.MsgManagerInstance.WriteMessage("Ex in FillGP" + Environment.NewLine + ex.Message);
-			}
+			//	for (int i = 0; i < GPeople.Count; i++) // Remove people with unvalid faces
+			//		if (GPeople[i].Faces.Count == 0) GPeople.Remove(i);
+			//}
+			//catch (Exception ex)
+			//{
+			//	MessageManager.MsgManagerInstance.WriteMessage("Ex in FillGP" + Environment.NewLine + ex.Message);
+			//}
 		}
 	}
 }

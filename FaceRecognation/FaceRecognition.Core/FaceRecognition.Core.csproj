@@ -91,8 +91,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Person.cs" />
-    <Compile Include="FileManager.cs" />
-    <Compile Include="G.cs" />
     <Compile Include="Comparator.cs" />
     <Compile Include="ImageProcessing.cs" />
     <Compile Include="KeyManager.cs" />
