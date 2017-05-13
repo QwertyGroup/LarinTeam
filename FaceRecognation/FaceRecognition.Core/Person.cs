@@ -10,35 +10,11 @@ using System.Diagnostics;
 
 namespace FaceRecognition.Core
 {
-	//Base class of Face. Needed to convert dataBase data to c# objects.
-    public class PrimitiveFaceImage
-    {
-        public string BaseFaceImage;
-        public Guid MicrosoftId;
-
-        public FaceImage getFaceImage()
-        {
-            return new FaceImage(BaseFaceImage, MicrosoftId);
-        }
-    }
-
-	public class PrimitivePerson
-	{
-        public List<PrimitiveFaceImage> Faces;
-        public Guid MicrosoftId;
-
-		public Person GetPersonFromPrimitive()
-		{
-			Person person = new Person(Faces, MicrosoftId);
-			return person;
-		}
-	}
-
 	public class FaceImage
 	{
 		public string BaseImage;
 		public Image Image;
-		public Guid MicrosoftId = new Guid();
+		public Guid MicrosoftId;
 
         public FaceImage(string BaseImage, Guid MicrosoftId)
         {
@@ -52,6 +28,11 @@ namespace FaceRecognition.Core
 			this.BaseImage = ImageToBase(Image);
             MicrosoftId = new Guid();
 		}
+
+        public FaceImage(string BaseImage)
+        {
+            this.BaseImage = BaseImage;
+        }
 
 		private static string ImageToBase(Image image)
 		{
@@ -94,15 +75,9 @@ namespace FaceRecognition.Core
 			MicrosoftPersonId = msId;
 		}
 
-        public Person(List<PrimitiveFaceImage> pFaces, Guid MicrosoftId)
-        {
-            this.Faces = pFaces.Select(x => new FaceImage(x.BaseFaceImage, x.MicrosoftId)).ToList();
-            this.MicrosoftPersonId = MicrosoftId;
-        }
-
 		public Person(List<string> BaseFaces)
 		{
-			//Faces = BaseFaces.Select(x => new FaceImage(x)).ToList();
+			Faces = BaseFaces.Select(x => new FaceImage(x)).ToList();
 		}
 
 		public Person(List<Image> ImageFaces)
@@ -125,14 +100,6 @@ namespace FaceRecognition.Core
 				}
 			}
 			Faces.RemoveAll(x => x.MicrosoftId == null);
-		}
-
-		public PrimitivePerson GetPrimitive()
-		{
-			PrimitivePerson primitive = new PrimitivePerson();
-            primitive.MicrosoftId = this.MicrosoftPersonId;
-            //primitive.Faces = 
-			return primitive;
 		}
 	}
 }
