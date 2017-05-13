@@ -65,7 +65,8 @@ namespace FaceRecognition.Core
 
 		public async Task<List<Person>> SendDetectedPeopleToCompare(List<Person> videoPeople, List<Person> knownPeople)
 		{
-			knownPeople = await AddKnownPeopleToGroup(knownPeople);
+			var newPeople = new List<Person>();
+			knownPeople = await AddKnownPeopleToGroup(knownPeople); // Зачем сейчас? Мы ее уже не чистим/ Добавлять если пустая
 			for (int i = 0; i < videoPeople.Count; i++)
 			{
 				var person = videoPeople[i];
@@ -80,7 +81,8 @@ namespace FaceRecognition.Core
 				if (isnew)
 				{
 					_msgManager.WriteMessage("New person.");
-					knownPeople.Add(person);
+					knownPeople.Add(person); // Зачем? Хотя пусть будет. Хотя нет. Спросить у Марка
+					newPeople.Add(person);
 				}
 				else
 				{
@@ -94,19 +96,20 @@ namespace FaceRecognition.Core
 						}
 				}
 			}
-			return knownPeople;
+			return newPeople;
 		}
 
-		private async Task<List<Person>> AddKnownPeopleToGroup(List<Person> knownPeople)
+		private async Task<List<Person>> AddKnownPeopleToGroup(List<Person> knownPeople) // Теперь это уже AddNewPeople to Group
 		{
-			await Clear();
+			//await Clear(); // Не нужно чистить MSDB каждый раз
 			for (int i = 0; i < knownPeople.Count(); i++)
 			{
 				knownPeople[i].MicrosoftPersonId = (await _faceApiManager.CreatePerson(i.ToString())).PersonId;
 				for (int j = 0; j < knownPeople[i].Faces.Count; j++)
 				{
 					knownPeople[i].Faces[j].MicrosofId = (
-						await _faceApiManager.AddPersonFace(knownPeople[i].MicrosoftPersonId, _imgProcessing.ImageToStream(knownPeople[i].Faces[j].Image))).PersistedFaceId;
+						await _faceApiManager.AddPersonFace(knownPeople[i].MicrosoftPersonId,
+						_imgProcessing.ImageToStream(knownPeople[i].Faces[j].Image))).PersistedFaceId;
 					await Task.Delay(TimeSpan.FromSeconds(5));
 				}
 			}

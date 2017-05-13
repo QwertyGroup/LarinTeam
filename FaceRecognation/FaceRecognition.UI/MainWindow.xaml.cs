@@ -65,14 +65,18 @@ namespace FaceRecognition.UI
 		private async void DetectFaces_Click(object sender, RoutedEventArgs e)
 		{
 			cmdBrowseVideo.Content = "Browse Video";
+			cmdBrowseVideo.IsEnabled = false;
 			var bnt = (Button)sender;
 			bnt.Content = "Extracting faces...";
 			_msgManager.WriteMessage("Extracting faces...");
 
 			var extractedFaces = await _video.ExtractFaces();
 			var knownPeople = Synchron.Instance.Data;
-			await GroupManager.GroupManagerInstance.SendDetectedPeopleToCompare(extractedFaces, knownPeople);
-			await Synchron.Instance.SendKnownPeople(knownPeople);
+			var newPeople = await GroupManager.GroupManagerInstance.SendDetectedPeopleToCompare(extractedFaces, knownPeople);
+			await Synchron.Instance.SendKnownPeople(newPeople); // knownPeople
+			new FaceExhibition(newPeople).Show();
+
+			cmdBrowseVideo.IsEnabled = true;
 			//await _video.ExtractFaces();	
 			//bnt.Content = "Extracted";
 			//_msgManager.WriteMessage("Faces were successfuly extracted.");
@@ -129,6 +133,7 @@ namespace FaceRecognition.UI
 		private async void ClearFaceArchive_Click(object sender, RoutedEventArgs e)
 		{
 			await GroupManager.GroupManagerInstance.Clear();
+			//await Synchron.Instance.Clear();
 		}
 
 		private async void Button_Click(object sender, RoutedEventArgs e)

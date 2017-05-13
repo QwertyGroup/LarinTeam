@@ -23,21 +23,17 @@ namespace FaceRecognition.UI.Galley
 			InitializeComponent();
 		}
 
-		private Dictionary<int, GPerson> _persons;
-		private double _galleryWidth;
-		private double _galleryHeight;
-		public FaceExhibition(Dictionary<int, GPerson> persons) : this()
+		private List<Person> _people;
+		public FaceExhibition(List<Person> persons) : this()
 		{
-			_persons = persons;
-			_galleryHeight = spGallery.Height;
-			_galleryWidth = spGallery.Width;
+			_people = persons;
 			Exhitbit();
 		}
 
 		private void Exhitbit()
 		{
-			foreach (var person in _persons)
-				spGallery.Children.Add(new Painting(person.Value));
+			foreach (var person in _people)
+				spGallery.Children.Add(new Painting(person));
 		}
 	}
 }

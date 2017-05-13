@@ -24,8 +24,8 @@ namespace FaceRecognition.UI.Galley
 			InitializeComponent();
 		}
 
-		private GPerson _person;
-		public Painting(GPerson person) : this()
+		private Person _person;
+		public Painting(Person person) : this()
 		{
 			_person = person;
 			DisplayInfo();
@@ -39,7 +39,7 @@ namespace FaceRecognition.UI.Galley
 			foreach (var face in _person.Faces)
 				spFaceContainer.Children.Add(new Image
 				{
-					Source = ImageProcessing.ImageProcessingInstance.ConvertImageToBitmapImage(face.Img),
+					Source = ImageProcessing.ImageProcessingInstance.ConvertImageToBitmapImage(face.Image),
 					Width = _imgWidth,
 					Height = _imgHeight,
 					Stretch = Stretch.Fill

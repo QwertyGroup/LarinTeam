@@ -167,7 +167,7 @@ namespace FaceRecognition.UI
 				var unrecognisedGPeople = await AddFacesToMSArchive(personMatchGuid, unrecognisedFacesGuids);
 				foreach (var up in unrecognisedGPeople) // Danger zone
 					GPeople.Add(GPeople.Keys.Max() + 1, up.Value);
-				new FaceExhibition(unrecognisedGPeople).Show(); // Show new faces
+				//new FaceExhibition(unrecognisedGPeople).Show(); // Show new faces
 																// Тут пишет Марк связку с БД и в ГПипл при создании нужно подгружать людей из БД
 				MessageManager.MsgManagerInstance.WriteMessage("Comparing result recived!");
 			}

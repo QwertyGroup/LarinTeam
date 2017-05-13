@@ -107,7 +107,7 @@ namespace FaceRecognition.Core
                 }
                 catch
                 {
-                    Debug.WriteLine("Problem with convertin FaceImage to Microsoft.");
+                    Debug.WriteLine("Problem with converting FaceImage to Microsoft.");
                 }
             }
             Faces.RemoveAll(x => x.MicrosofId == null);
