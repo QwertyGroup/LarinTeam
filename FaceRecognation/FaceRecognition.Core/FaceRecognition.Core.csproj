@@ -102,6 +102,7 @@
     <Compile Include="VideoManager.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="API Diagram.cd" />
     <None Include="app.config" />
     <None Include="CoreDiagram.cd" />
     <None Include="packages.config" />

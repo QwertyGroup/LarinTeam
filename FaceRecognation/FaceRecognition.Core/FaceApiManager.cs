@@ -87,18 +87,38 @@ namespace FaceRecognition.Core.MicrosoftAPIs
 				return await _faceApiManager.AddPersonFace(personId, ImageProcessing.ImageProcessingInstance.ImageToStream(faceImg));
 			}
 
-			public async Task<Person> GetPerson(Guid personId) // LOAD faces FROM FIREBASE!!!!!!!!!!!!!
+			public async Task<Person> GetPerson(Guid personId)
 			{
-				//new Microsoft.ProjectOxford.Face.Contract.Person();
-				var p = await _faceApiManager.GetPersonFromGroup(personId);
-                //Synchron.Instance.Data.Where(x => x.MicrosoftPersonId.)
-				throw new Exception("GetPerson is not finished!!!!!");
+				var groupPerson = await _faceApiManager.GetPersonFromGroup(personId);
+				var person = new Person(groupPerson.PersonId);
+				person.Faces = await DownloadPersonFaces(groupPerson);
+				return person;
 			}
 
-			public async Task<List<Person>> GetPersonList() // NEED FIRE BASE TO FINISH
+			private async Task<List<FaceImage>> DownloadPersonFaces(Microsoft.ProjectOxford.Face.Contract.Person groupPerson)
+			{
+				var imgs = new List<FaceImage>();
+				foreach (var face in groupPerson.PersistedFaceIds.Select(async x =>
+				{
+					var fm = new FaceImage(await Synchron.Instance.GetFace(x));
+					fm.MicrosoftId = x;
+					return fm;
+				}).ToList())
+					imgs.Add(await face);
+				return imgs;
+			}
+
+			public async Task<List<Person>> GetPersonList()
 			{
 				var plist = await _faceApiManager.GetPersonsFromGroup();
-				throw new Exception("GetPersonList is not finished!!!!!");
+				var result = new List<Person>();
+				foreach (var groupPerson in plist)
+				{
+					var person = new Person(groupPerson.PersonId);
+					person.Faces = await DownloadPersonFaces(groupPerson);
+					result.Add(person);
+				}
+				return result;
 			}
 		}
 
