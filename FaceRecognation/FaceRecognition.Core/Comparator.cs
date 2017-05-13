@@ -33,7 +33,7 @@ namespace FaceRecognition.Core
 				var person = videoPeople[i];
 				await person.GetMicrosoftData();
 				var personFacesIds = person.Faces.Select(x => x.MicrosofId).ToArray();
-				var iresult = await MicrosoftAPIs.ComparationAPI.Commands.CommandsInstance.Identify(personFacesIds);
+				var iresult = await MicrosoftAPIs.ComparationAPI.Commands.CommandsInstance.Compare(personFacesIds);
 				var isnew = false;
 
 				iresult = iresult.Where(x => x.Candidates.Length != 0).ToList();

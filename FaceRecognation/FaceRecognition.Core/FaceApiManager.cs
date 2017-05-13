@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -21,18 +22,18 @@ namespace FaceRecognition.Core.MicrosoftAPIs
 
 			FaceApiManager _faceApiManager = FaceApiManager.FaceApiManagerInstance;
 
-			public async Task<List<IdentifyResult>> Identify(List<Guid> faceIds)
+			public async Task<List<IdentifyResult>> Compare(List<Guid> faceIds)
 			{
-				return await Identify(faceIds.ToArray());
+				return await Compare(faceIds.ToArray());
 			}
-			public async Task<List<IdentifyResult>> Identify(Guid[] faceIds)
+			public async Task<List<IdentifyResult>> Compare(Guid[] faceIds)
 			{
 				return await _faceApiManager.Identify(faceIds);
 			}
 
-			public async Task<Face[]> DetectFace(Stream ImageAsStream)
+			public async Task<Face[]> DetectFace(Image Image)
 			{
-				return await _faceApiManager.DetectFace(ImageAsStream);
+				return await _faceApiManager.DetectFace(ImageProcessing.ImageProcessingInstance.ImageToStream(Image, ImageFormat.Png));
 			}
 		}
 	}
@@ -46,8 +47,9 @@ namespace FaceRecognition.Core.MicrosoftAPIs
 			public static PersonAPI PersonAPIinstance { get { return _personAPIinstance.Value; } }
 
 			FaceApiManager _faceApiManager = FaceApiManager.FaceApiManagerInstance;
-			public async Task<Guid> CreatePerson()
+			public async Task<Guid> AddPerson()
 			{
+				var p = new Person(new List<Image>()); // SDELAT 
 				return (await _faceApiManager.CreatePerson()).PersonId;
 			}
 
@@ -56,15 +58,20 @@ namespace FaceRecognition.Core.MicrosoftAPIs
 				await _faceApiManager.DeletePerson(personId);
 			}
 
-            public async Task DeletePerson(Person person)
-            {
-                if (person.MicrosoftPersonId == null)
-                {
-                    throw new Exception("Person has no Microsoft GUID");
-                }
+			public async Task DeletePerson(Person person)
+			{
+				if (person.MicrosoftPersonId == null)
+				{
+					throw new Exception("Person has no Microsoft GUID");
+				}
 
-                await DeletePerson(person.MicrosoftPersonId);
-            }
+				await DeletePerson(person.MicrosoftPersonId);
+			}
+
+			public async Task<AddPersistedFaceResult> AddFaceToPerson(Guid personId, Image faceImg)
+			{
+				return await _faceApiManager.AddPersonFace(personId, ImageProcessing.ImageProcessingInstance.ImageToStream(faceImg));
+			}
 		}
 
 		public class GroupAPI
