@@ -85,6 +85,11 @@ namespace FaceRecognition.Core
 		public int Id = -1;
 		public Guid MicrosoftPersonId;
 
+		public Person(Guid msId)
+		{
+			MicrosoftPersonId = msId;
+		}
+
 		public Person(List<string> BaseFaces)
 		{
 			Faces = BaseFaces.Select(x => new FaceImage(x)).ToList();
