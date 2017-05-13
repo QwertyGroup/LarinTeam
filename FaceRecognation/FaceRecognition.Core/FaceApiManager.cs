@@ -9,9 +9,135 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FaceRecognition.Core
+namespace FaceRecognition.Core.MicrosoftAPIs
 {
-	public class FaceApiManager
+	namespace ComparationAPI
+	{
+		public class Commands
+		{
+			private Commands() { }
+			private static Lazy<Commands> _commandsInstance = new Lazy<Commands>(() => new Commands());
+			public static Commands CommandsInstance { get { return _commandsInstance.Value; } }
+
+			FaceApiManager _faceApiManager = FaceApiManager.FaceApiManagerInstance;
+
+			public async Task<List<IdentifyResult>> Identify(List<Guid> faceIds)
+			{
+				return await Identify(faceIds.ToArray());
+			}
+			public async Task<List<IdentifyResult>> Identify(Guid[] faceIds)
+			{
+				return await _faceApiManager.Identify(faceIds);
+			}
+
+			public async Task<Face[]> DetectFace(Stream ImageAsStream)
+			{
+				return await _faceApiManager.DetectFace(ImageAsStream);
+			}
+		}
+	}
+
+	namespace DataBaseAPI
+	{
+		public class PersonAPI
+		{
+			private PersonAPI() { }
+			private static Lazy<PersonAPI> _personAPIinstance = new Lazy<PersonAPI>(() => new PersonAPI());
+			public static PersonAPI PersonAPIinstance { get { return _personAPIinstance.Value; } }
+
+			FaceApiManager _faceApiManager = FaceApiManager.FaceApiManagerInstance;
+			public async Task<Guid> CreatePerson()
+			{
+				return (await _faceApiManager.CreatePerson()).PersonId;
+			}
+
+			public async Task DeletePerson(Guid personId)
+			{
+				await _faceApiManager.DeletePerson(personId);
+			}
+		}
+
+		public class GroupAPI
+		{
+			private GroupAPI() { }
+			private static Lazy<GroupAPI> _groupAPIinstance = new Lazy<GroupAPI>(() => new GroupAPI());
+			public static GroupAPI GroupAPIinstance { get { return _groupAPIinstance.Value; } }
+
+			FaceApiManager _faceApiManager = FaceApiManager.FaceApiManagerInstance;
+			MessageManager _msgManager = MessageManager.MsgManagerInstance;
+			ImageProcessing _imgProcessing = ImageProcessing.ImageProcessingInstance;
+
+			public async Task CreateGroup()
+			{
+				await _faceApiManager.CreatePersonGroup();
+			}
+
+			public async Task DeleteGroup()
+			{
+				await _faceApiManager.DeleteGroup();
+			}
+
+			public async Task Train()
+			{
+				try
+				{
+					await _faceApiManager.TrainGroup();
+					while (true)
+					{
+						var status = (await FaceApiManager.FaceApiManagerInstance.GetTrainStatus()).Status;
+						if (status == Microsoft.ProjectOxford.Face.Contract.Status.Succeeded)
+						{
+							MessageManager.MsgManagerInstance.WriteMessage("Training finished.");
+							break;
+						}
+						MessageManager.MsgManagerInstance.WriteMessage($"Status of training is {status}. Trying again...");
+						await Task.Delay(15000);
+					}
+				}
+				catch (Exception ex)
+				{
+					Debug.WriteLine("Ex in TrainGroup" + Environment.NewLine + ex.Message);
+				}
+			}
+
+			public async Task Clear()
+			{
+				try
+				{
+					await _faceApiManager.DeleteGroup();
+				}
+				catch (Exception ex)
+				{
+					Debug.WriteLine(ex.Message);
+				}
+				await _faceApiManager.CreatePersonGroup();
+				_msgManager.WriteMessage("Group Created");
+				var orsensId = await _faceApiManager.CreatePerson("Orsen");
+				await _faceApiManager.AddPersonFace(orsensId,
+					_imgProcessing.ImageToStream(_imgProcessing.LoadImageFromFile("Orsen.jpg")));
+				_msgManager.WriteMessage("Face added.");
+			}
+
+			public async Task<List<Person>> AddPeople(List<Person> knownPeople)
+			{
+				for (int i = 0; i < knownPeople.Count(); i++)
+				{
+					knownPeople[i].MicrosoftPersonId = (await _faceApiManager.CreatePerson(i.ToString())).PersonId;
+					for (int j = 0; j < knownPeople[i].Faces.Count; j++)
+					{
+						knownPeople[i].Faces[j].MicrosofId = (
+							await _faceApiManager.AddPersonFace(knownPeople[i].MicrosoftPersonId,
+							_imgProcessing.ImageToStream(knownPeople[i].Faces[j].Image))).PersistedFaceId;
+						await Task.Delay(TimeSpan.FromSeconds(5));
+					}
+				}
+				await Train();
+				return knownPeople;
+			}
+		}
+	}
+
+	internal class FaceApiManager
 	{
 		//Singleton
 		private static Lazy<FaceApiManager> _faceApiManager = new Lazy<FaceApiManager>(() => new FaceApiManager());
@@ -193,6 +319,10 @@ namespace FaceRecognition.Core
 			await _faceServiceClient.CreatePersonGroupAsync(customGroupId, "BFS");
 		}
 
+		public async Task<CreatePersonResult> CreatePerson()
+		{
+			return await CreatePerson("Jackie Chan");
+		}
 		public async Task<CreatePersonResult> CreatePerson(string personName)
 		{
 			return await CreatePerson(_personGroupId, personName);
@@ -201,6 +331,15 @@ namespace FaceRecognition.Core
 		{
 			_msgManager.WriteMessage($"Creating person: {personName}");
 			return await _faceServiceClient.CreatePersonAsync(customGroupId, personName);
+		}
+
+		public async Task DeletePerson(Guid personId)
+		{
+			await DeletePerson(_personGroupId, personId);
+		}
+		public async Task DeletePerson(string customGroupId, Guid personId)
+		{
+			await _faceServiceClient.DeletePersonAsync(customGroupId, personId);
 		}
 
 		public async Task<AddPersistedFaceResult> AddPersonFace(Guid personId, Stream faceImg)
@@ -268,6 +407,5 @@ namespace FaceRecognition.Core
 		{
 			return (await _faceServiceClient.IdentifyAsync(customGroupId, faceIds)).ToList();
 		}
-
 	}
 }

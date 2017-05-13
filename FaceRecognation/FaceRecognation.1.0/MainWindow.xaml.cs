@@ -25,7 +25,6 @@ namespace FaceRecognation._1._0
 			//Synchron.Instance.Test();
 		}
 
-		private FaceApiManager _msapiManager = FaceApiManager.FaceApiManagerInstance;
 		private ImageProcessing _imgProcessing = ImageProcessing.ImageProcessingInstance;
 		private string _videoPath;
 		private Dictionary<int, List<System.Drawing.Image>> unchosenPhotos;

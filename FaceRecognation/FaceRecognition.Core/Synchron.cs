@@ -98,16 +98,16 @@ namespace FaceRecognition.Core
 			Debug.WriteLine("Got MS Data");
 
 		}
-        public async Task SendKnownPeople(List<Person> KnownPeople)
-        {
-            Data = KnownPeople;
-            for (int i = 0; i < KnownPeople.Count; i++)
-            {
-                await Instance.AddFace(KnownPeople[i]);
-            }
-        }
+		public async Task SendKnownPeople(List<Person> KnownPeople)
+		{
+			Data = KnownPeople;
+			for (int i = 0; i < KnownPeople.Count; i++)
+			{
+				await Instance.AddFace(KnownPeople[i]);
+			}
+		}
 
-    }
+	}
 
 	public class SyncronResult
 	{

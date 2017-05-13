@@ -71,9 +71,12 @@ namespace FaceRecognition.UI
 			_msgManager.WriteMessage("Extracting faces...");
 
 			var extractedFaces = await _video.ExtractFaces();
-			var knownPeople = Synchron.Instance.Data;
-			var newPeople = await GroupManager.GroupManagerInstance.SendDetectedPeopleToCompare(extractedFaces, knownPeople);
-			await Synchron.Instance.SendKnownPeople(newPeople); // knownPeople
+			//extractedFaces = SelectValidFaces(extractedFaces);
+
+			var newPeople = await Comparator.ComparatorInstance.SendDetectedPeopleToCompare(extractedFaces);
+
+			//var knownPeople = Synchron.Instance.Data;
+			//await Synchron.Instance.SendKnownPeople(newPeople); // knownPeople
 			new FaceExhibition(newPeople).Show();
 
 			cmdBrowseVideo.IsEnabled = true;
@@ -129,10 +132,9 @@ namespace FaceRecognition.UI
 			//new FaceExhibition(_video.GPeople).Show();
 		}
 
-		private FaceApiManager _faceApiManager = FaceApiManager.FaceApiManagerInstance;
 		private async void ClearFaceArchive_Click(object sender, RoutedEventArgs e)
 		{
-			await GroupManager.GroupManagerInstance.Clear();
+			await FaceRecognition.Core.MicrosoftAPIs.DataBaseAPI.GroupAPI.GroupAPIinstance.Clear();
 			//await Synchron.Instance.Clear();
 		}
 

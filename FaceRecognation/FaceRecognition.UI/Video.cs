@@ -136,7 +136,7 @@ namespace FaceRecognition.UI
 			LoadNextPerson();
 		}
 
-		private FaceApiManager _faceApiManager = FaceApiManager.FaceApiManagerInstance;
+		//private FaceApiManager _faceApiManager = FaceApiManager.FaceApiManagerInstance;
 		public async Task AppendGroup(Button btn)
 		{
 			try
@@ -168,7 +168,7 @@ namespace FaceRecognition.UI
 				foreach (var up in unrecognisedGPeople) // Danger zone
 					GPeople.Add(GPeople.Keys.Max() + 1, up.Value);
 				//new FaceExhibition(unrecognisedGPeople).Show(); // Show new faces
-																// Тут пишет Марк связку с БД и в ГПипл при создании нужно подгружать людей из БД
+				// Тут пишет Марк связку с БД и в ГПипл при создании нужно подгружать людей из БД
 				MessageManager.MsgManagerInstance.WriteMessage("Comparing result recived!");
 			}
 			catch (Exception ex)
@@ -192,10 +192,10 @@ namespace FaceRecognition.UI
 					var personId = personMatchGuid[unrecFace.FaceId];
 					if (!addedPeopleLinking.ContainsKey(personId))
 					{
-						var res = await _faceApiManager.CreatePerson(personId.ToString());
+						//var res = await _faceApiManager.CreatePerson(personId.ToString());
 						unrecognisedGPeople.Add(personId, new GPerson());
 						MessageManager.MsgManagerInstance.WriteMessage($"Added {personId} to group.");
-						addedPeopleLinking.Add(personId, res);
+						//addedPeopleLinking.Add(personId, res);
 					}
 
 					if (currentPerson == personId) currentPersonCounter++;
@@ -207,8 +207,8 @@ namespace FaceRecognition.UI
 					await Task.Delay(TimeSpan.FromSeconds(5));
 					var img = GPeople[personId].Faces[currentPersonCounter - 1].Img;
 					unrecognisedGPeople[personId].Faces.Add(new GFace { Img = img });
-					await _faceApiManager.AddPersonFace(addedPeopleLinking[personId],
-						ImageProcessing.ImageProcessingInstance.ImageToStream(img));
+					//await _faceApiManager.AddPersonFace(addedPeopleLinking[personId],
+					//ImageProcessing.ImageProcessingInstance.ImageToStream(img));
 					MessageManager.MsgManagerInstance.WriteMessage($"{currentPersonCounter}th face added to {personId} person.");
 				}
 				catch (Exception ex)
@@ -224,8 +224,8 @@ namespace FaceRecognition.UI
 			var result = new List<IdentifyResult>();
 			try
 			{
-				foreach (var tens in listofGuidsToCompare)
-					result.AddRange(await _faceApiManager.Identify(tens));
+				//foreach (var tens in listofGuidsToCompare)
+				//result.AddRange(await _faceApiManager.Identify(tens));
 			}
 			catch (Exception ex)
 			{
@@ -238,17 +238,17 @@ namespace FaceRecognition.UI
 		{
 			try
 			{
-				await _faceApiManager.TrainGroup();
-				while (true)
-				{
-					var status = (await FaceApiManager.FaceApiManagerInstance.GetTrainStatus()).Status;
-					if (status == Status.Succeeded)
-					{
-						break;
-					}
-					MessageManager.MsgManagerInstance.WriteMessage($"Status of training is {status}. Trying again...");
-					await Task.Delay(15000);
-				}
+				//await _faceApiManager.TrainGroup();
+				//while (true)
+				//{
+				//	var status = (await FaceApiManager.FaceApiManagerInstance.GetTrainStatus()).Status;
+				//	if (status == Status.Succeeded)
+				//	{
+				//		break;
+				//	}
+				//	MessageManager.MsgManagerInstance.WriteMessage($"Status of training is {status}. Trying again...");
+				//	await Task.Delay(15000);
+				//}
 			}
 			catch (Exception ex)
 			{
@@ -264,10 +264,10 @@ namespace FaceRecognition.UI
 				{
 					foreach (var face in person.Value.Faces)
 					{
-						var id = (await _faceApiManager.DetectFace(
-							ImageProcessing.ImageProcessingInstance.ImageToStream(face.Img)))[0].FaceId;
-						personMatchGuid.Add(id, person.Key);
-						rowGuidList.Add(id);
+						//var id = (await _faceApiManager.DetectFace(
+						//	ImageProcessing.ImageProcessingInstance.ImageToStream(face.Img)))[0].FaceId;
+						//personMatchGuid.Add(id, person.Key);
+						//rowGuidList.Add(id);
 					}
 				}
 				for (int i = 0; i < rowGuidList.Count; i += 10)
