@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using System.Drawing;
 namespace FaceRecognition.Core
 {
 	public class Video
@@ -24,7 +24,18 @@ namespace FaceRecognition.Core
 			}
 		}
 
-		public async Task<List<Person>> ExtractFaces()
+        public async Task<List<List<Image>>> ExtractFaces()
+        {
+            if (Path == string.Empty) throw new Exception("Video path is empty");
+            var people = new List<List<Image>>();
+
+            var extractedFaces = await VideoManager.VManagerInstance.GetFacesFromVideo(Path);
+            foreach (var eface in extractedFaces)
+                people.Add(eface.Value);
+            return people;
+        }
+
+        public async Task<List<Person>> ExtractFacesA()
 		{
 			if (Path == string.Empty) throw new Exception("Video path is empty");
 			var people = new List<Person>();
