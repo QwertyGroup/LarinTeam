@@ -19,21 +19,22 @@ using System.Windows.Shapes;
 
 namespace FaceRecognition.UI
 {
-	public partial class MainWindow : Window
-	{
-		private Core.Video _video = Core.Video.VideoInstance;
+    public partial class MainWindow : Window
+    {
+        private Core.Video _video = Core.Video.VideoInstance;
+        private List<List<System.Drawing.Image>> _extractedUnchosenPeoplesFaces;
+        private List<Person> _extractedUnchosenPeople;
+        private MessageManager _msgManager = MessageManager.MsgManagerInstance;
 
-		private MessageManager _msgManager = MessageManager.MsgManagerInstance;
-
-		public MainWindow()
-		{
-			InitializeComponent();
+        public MainWindow()
+        {
+            InitializeComponent();
             ClearCache();
             _msgManager.OnMessageSended += onMessageSended;
-				
-		}
 
-        private void onMessageSended (object sender, string e)
+        }
+
+        private void onMessageSended(object sender, string e)
         {
             spLog.Children.Add(new TextBlock
             {
@@ -47,57 +48,60 @@ namespace FaceRecognition.UI
             (spLog.Parent as ScrollViewer).ScrollToEnd();
         }
 
-		private void BrowseVideo_Click(object sender, RoutedEventArgs e)
-		{
-			var fileDialog = new Microsoft.Win32.OpenFileDialog();
-			fileDialog.Filter = "MP4 Video(*.mp4) | *.mp4";
-			bool? result = fileDialog.ShowDialog(this);
-			if (!(bool)result)
-			{
-				_msgManager.WriteMessage("Video selection aborted");
-				return;
-			}
+        private void BrowseVideo_Click(object sender, RoutedEventArgs e)
+        {
+            var fileDialog = new Microsoft.Win32.OpenFileDialog();
+            fileDialog.Filter = "MP4 Video(*.mp4) | *.mp4";
+            bool? result = fileDialog.ShowDialog(this);
+            if (!(bool)result)
+            {
+                _msgManager.WriteMessage("Video selection aborted");
+                return;
+            }
 
-			_video.Path = fileDialog.FileName;
+            _video.Path = fileDialog.FileName;
 
-			(sender as Button).Content = "Video selected";
-			_msgManager.WriteMessage("Video selected" + Environment.NewLine + _video.Path);
-		}
+            (sender as Button).Content = "Video selected";
+            _msgManager.WriteMessage("Video selected" + Environment.NewLine + _video.Path);
+        }
 
-		private async void DetectFaces_Click(object sender, RoutedEventArgs e)
-		{
-			cmdBrowseVideo.Content = "Browse Video";
-			cmdBrowseVideo.IsEnabled = false;
-			var btn = (Button)sender;
-			btn.Content = "Extracting faces...";
-			_msgManager.WriteMessage("Extracting faces...");
+        private int numberOfPeopleToLoad;
 
-			var extractedFaces = await _video.ExtractFaces();
-			//extractedFaces = SelectValidFaces(extractedFaces);
+        private void LoadNextPersonForSelection()
+        {
+            ImageValidatingPanel.Children.Clear();
+            ThisIsNotBut.Visibility = Visibility.Visible;
+            ValidateFaceBut.Visibility = Visibility.Visible;
+            var person = _extractedUnchosenPeoplesFaces[numberOfPeopleToLoad - 1];
+            foreach (var face in person)
+            {
+                ImageValidatingPanel.Children.Add(CreateImage(face));
+            }
+            numberOfPeopleToLoad--;
+        }
 
-			var newPeople = await Comparator.ComparatorInstance.SendDetectedPeopleToCompare(extractedFaces);
 
-			//var knownPeople = Synchron.Instance.Data;
-			//await Synchron.Instance.SendKnownPeople(newPeople); // knownPeople
-			new FaceExhibition(newPeople).Show();
+        private async void DetectFaces_Click(object sender, RoutedEventArgs e)
+        {
+            cmdBrowseVideo.Content = "Browse Video";
+            cmdBrowseVideo.IsEnabled = false;
+            var btn = (Button)sender;
+            btn.Content = "Extracting faces...";
+            _msgManager.WriteMessage("Extracting faces...");
 
-			cmdBrowseVideo.IsEnabled = true;
-			//await _video.ExtractFaces();	
-			//bnt.Content = "Extracted";
-			//_msgManager.WriteMessage("Faces were successfuly extracted.");
-			//await Task.Delay(500);
-			//bnt.Content = "Validating faces...";
-			//_video.ValidateFaces();
-			//ThisIsNotBut.IsEnabled = true;
-			//ValidateFaceBut.IsEnabled = true;
-		}
+            _extractedUnchosenPeoplesFaces = await _video.ExtractFaces();
+            numberOfPeopleToLoad = _extractedUnchosenPeoplesFaces.Count;
 
-		private void ClearCache()
-		{
-			ImageProcessing.ImageProcessingInstance.ClearCache();
-			if (Directory.Exists("TempData"))
-			{
-				Directory.Delete("TempData", true);
+            LoadNextPersonForSelection();
+
+        }
+
+        private void ClearCache()
+        {
+            ImageProcessing.ImageProcessingInstance.ClearCache();
+            if (Directory.Exists("TempData"))
+            {
+                Directory.Delete("TempData", true);
                 _msgManager.WriteMessage("Cache cleared");
             }
         }
@@ -134,47 +138,48 @@ namespace FaceRecognition.UI
             return Border;
         }
 
-        private async void Validate_Click(object sender, RoutedEventArgs e)
-		{
-			//List<System.Drawing.Image> resultFacesOfPerson = new List<System.Drawing.Image>();
-			//foreach (var border in ImageValidatingPanel.Children)
-			//{
-			//	var brd = (Border)border;
-			//	if (brd.BorderThickness.Bottom == 2)
-			//	{
-			//		var img = ImageProcessing.ImageProcessingInstance.ConvertBitmapImageToImage((BitmapImage)((Image)brd.Child).Source);
-			//		resultFacesOfPerson.Add(img);
-			//	}
-			//}
-			//_video.ValidFaces[_video.ValidFaces.Count] = resultFacesOfPerson;
-			//MessageManager.MsgManagerInstance.WriteMessage($"{resultFacesOfPerson.Count} faces selected");
-			//if (_video._num == _video.ExtractedFaces.Count)
-			//{
-			//	ImageValidatingPanel.Children.Clear();
-			//	cmdDetectFaces.Content = "Adding ppl to g..";
-			//	_msgManager.WriteMessage("Adding people to group...");
-			//	await _video.AppendGroup(cmdDetectFaces);
-			//	ThisIsNotBut.IsEnabled = false;
-			//	ValidateFaceBut.IsEnabled = false;
-			//	return;
-			//}
-			//_video.LoadNextPerson();
-		}
+        private void Validate_Click(object sender, RoutedEventArgs e)
+        {
+            List<System.Drawing.Image> resultFacesOfPeople = new List<System.Drawing.Image>();
+            foreach (var border in ImageValidatingPanel.Children)
+            {
+                var brd = (Border)border;
+                if (brd.BorderThickness.Bottom == 2)
+                {
+                    var img = ImageProcessing.ImageProcessingInstance.ConvertBitmapImageToImage((BitmapImage)((Image)brd.Child).Source);
+                    resultFacesOfPeople.Add(img);
+                }
+            }
+            if (numberOfPeopleToLoad == 0)
+            {
+                EndValidating();
+                return;
+            }
+            LoadNextPersonForSelection();
+        }
 
-		private void ExhibitFaceArchive_Click(object sender, RoutedEventArgs e)
-		{
-			//new FaceExhibition(_video.GPeople).Show();
-		}
+        private void EndValidating()
+        {
+            ImageValidatingPanel.Children.Clear();
 
-		private async void ClearFaceArchive_Click(object sender, RoutedEventArgs e)
-		{
-			await FaceRecognition.Core.MicrosoftAPIs.DataBaseAPI.GroupAPI.GroupAPIinstance.Clear();
-			//await Synchron.Instance.Clear();
-		}
+            ThisIsNotBut.Visibility = Visibility.Hidden;
+            ValidateFaceBut.Visibility = Visibility.Hidden;
+            cmdBrowseVideo.IsEnabled = true;
+        }
+
+        private void ExhibitFaceArchive_Click(object sender, RoutedEventArgs e)
+        {
+            //new FaceExhibition(_video.GPeople).Show();
+        }
 
         private void ThisIsNotBut_Click(object sender, RoutedEventArgs e)
         {
-
+            if (numberOfPeopleToLoad == 0)
+            {
+                EndValidating();
+                return;
+            }
+            LoadNextPersonForSelection();
         }
     }
 }
