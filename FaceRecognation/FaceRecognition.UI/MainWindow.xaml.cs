@@ -151,7 +151,7 @@ namespace FaceRecognition.UI
 					resultFacesOfPeople.Add(img);
 				}
 			}
-            _extractedPeople.Add(new Person(resultFacesOfPeople));
+			_extractedPeople.Add(new Person(resultFacesOfPeople));
 			if (numberOfPeopleToLoad == 0)
 			{
 				EndValidating();
@@ -172,7 +172,7 @@ namespace FaceRecognition.UI
 
 		private void ExhibitFaceArchive_Click(object sender, RoutedEventArgs e)
 		{
-            
+
 		}
 
 		private void ThisIsNotBut_Click(object sender, RoutedEventArgs e)
@@ -185,11 +185,11 @@ namespace FaceRecognition.UI
 			LoadNextPersonForSelection();
 		}
 
-        private async void CompWithArchive_Click(object sender, RoutedEventArgs e)
-        {
-            await Comparator.ComparatorInstance.SendDetectedPeopleToCompare(_extractedPeople);
-
-
-        }
-    }
+		private async void CompWithArchive_Click(object sender, RoutedEventArgs e)
+		{
+			var tuple = await Comparator.ComparatorInstance.SendDetectedPeopleToCompare(_extractedPeople);
+			var existedPeople = tuple.Item1;
+			var newPeople = tuple.Item2;
+		}
+	}
 }
