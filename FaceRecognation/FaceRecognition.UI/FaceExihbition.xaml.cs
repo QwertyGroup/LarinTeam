@@ -18,21 +18,17 @@ namespace FaceRecognition.UI.Galley
 {
 	public partial class FaceExhibition : Window
 	{
-		public FaceExhibition()
+        private List<Person> Data;
+        public FaceExhibition()
 		{
 			InitializeComponent();
-		}
-
-		private List<Person> _people;
-		public FaceExhibition(List<Person> persons) : this()
-		{
-			_people = persons;
-			Exhitbit();
+            getData();
+            Exhitbit();
 		}
 
 		private void Exhitbit()
 		{
-			foreach (var person in _people)
+			foreach (var person in Data)
 				spGallery.Children.Add(new Painting(person));
 		}
 

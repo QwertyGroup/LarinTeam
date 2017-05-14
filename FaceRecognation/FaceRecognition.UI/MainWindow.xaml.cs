@@ -87,6 +87,7 @@ namespace FaceRecognition.UI
 			cmdBrowseVideo.IsEnabled = false;
 			var btn = (Button)sender;
 			btn.Content = "Extracting faces...";
+            btn.IsEnabled = false;
 			_msgManager.WriteMessage("Extracting faces...");
 
 			_extractedUnchosenPeoplesFaces = await _video.ExtractFaces();
@@ -165,14 +166,16 @@ namespace FaceRecognition.UI
 			ImageValidatingPanel.Children.Clear();
 
 			ThisIsNotBut.Visibility = Visibility.Hidden;
-			ValidateFaceBut.Visibility = Visibility.Hidden;
+            cmdBrowseVideo.Content = "Browse Video";
+            exhbtButton.IsEnabled = true;
+            ValidateFaceBut.Visibility = Visibility.Hidden;
 			CompWithArchive.IsEnabled = true;
 			cmdBrowseVideo.IsEnabled = true;
 		}
 
 		private void ExhibitFaceArchive_Click(object sender, RoutedEventArgs e)
 		{
-
+            var faceExhibition = new FaceExhibition();
 		}
 
 		private void ThisIsNotBut_Click(object sender, RoutedEventArgs e)
@@ -187,8 +190,6 @@ namespace FaceRecognition.UI
 
 		private async void CompWithArchive_Click(object sender, RoutedEventArgs e)
 		{
-            await Core.MicrosoftAPIs.DataBaseAPI.GroupAPI.GroupAPIinstance.Clear();
-            await Core.MicrosoftAPIs.DataBaseAPI.GroupAPI.GroupAPIinstance.Train();
 			var tuple = await Comparator.ComparatorInstance.SendDetectedPeopleToCompare(_extractedPeople);
 			var existedPeople = tuple.Item1;
 			var newPeople = tuple.Item2;

@@ -97,7 +97,7 @@
                 <Button x:Name="CompWithArchive" Style="{DynamicResource DefaultButtonStyle}" Content="Compare with Archive" IsTabStop="False" IsEnabled="False" Click="CompWithArchive_Click" />
                 <TextBlock/>
                 <TextBlock/>
-				<Button Style="{DynamicResource DefaultButtonStyle}" Content="Exhibit archive" Click="ExhibitFaceArchive_Click" IsTabStop="False" IsEnabled="False"/>
+				<Button x:Name="exhbtButton" Style="{DynamicResource DefaultButtonStyle}" Content="Exhibit archive" Click="ExhibitFaceArchive_Click" IsTabStop="False" IsEnabled="True"/>
             </StackPanel>
 		</Border>
 		<ScrollViewer Grid.Column="1" Grid.Row="1" Background="White">
