@@ -59,9 +59,9 @@ namespace FaceRecognition.Core.MicrosoftAPIs
 				var faceImgs = new List<FaceImage>();
 				foreach (var face in faces)
 				{
-					var faceImg = new FaceImage(face);
-					faceImg.MicrosoftId = (await AddFaceToPerson(msid, face)).PersistedFaceId;
-					faceImgs.Add(faceImg);
+                        var faceImg = new FaceImage(face);
+                        faceImg.MicrosoftId = (await AddFaceToPerson(msid, face)).PersistedFaceId;
+                        faceImgs.Add(faceImg);
 				}
 				person.Faces = faceImgs;
 				return person;
@@ -98,13 +98,22 @@ namespace FaceRecognition.Core.MicrosoftAPIs
 			private async Task<List<FaceImage>> DownloadPersonFaces(Microsoft.ProjectOxford.Face.Contract.Person groupPerson)
 			{
 				var imgs = new List<FaceImage>();
-				foreach (var face in groupPerson.PersistedFaceIds.Select(async x =>
-				{
-					var fm = new FaceImage(await Synchron.Instance.GetFace(x));
-					fm.MicrosoftId = x;
-					return fm;
-				}).ToList())
-					imgs.Add(await face);
+                var fimages = new List<FaceImage>();
+
+                foreach(var faceId in groupPerson.PersistedFaceIds)
+                {
+                    var fm = new FaceImage(await Synchron.Instance.GetFace(faceId));
+                    fm.MicrosoftId = faceId;
+                    imgs.Add(fm);
+                }
+
+				//foreach (var face in groupPerson.PersistedFaceIds.Select(async x =>
+				//{
+				//	var fm = new FaceImage(await Synchron.Instance.GetFace(x));
+				//	fm.MicrosoftId = x;
+				//	return fm;
+				//}).ToList())
+				//	imgs.Add(await face);
 				return imgs;
 			}
 
@@ -114,9 +123,13 @@ namespace FaceRecognition.Core.MicrosoftAPIs
 				var result = new List<Person>();
 				foreach (var groupPerson in plist)
 				{
-					var person = new Person(groupPerson.PersonId);
-					person.Faces = await DownloadPersonFaces(groupPerson);
-					result.Add(person);
+                    try
+                    {
+                        var person = new Person(groupPerson.PersonId);
+                        person.Faces = await DownloadPersonFaces(groupPerson);
+                        result.Add(person);
+                    }
+                    catch { }
 				}
 				return result;
 			}

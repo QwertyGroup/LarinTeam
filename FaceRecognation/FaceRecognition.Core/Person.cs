@@ -32,6 +32,8 @@ namespace FaceRecognition.Core
         public FaceImage(string BaseImage)
         {
             this.BaseImage = BaseImage;
+            this.Image = BaseToImage(BaseImage);
+            MicrosoftId = new Guid();
         }
 
 		private static string ImageToBase(Image image)

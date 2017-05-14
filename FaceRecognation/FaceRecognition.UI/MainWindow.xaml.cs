@@ -84,6 +84,7 @@ namespace FaceRecognition.UI
 		private async void DetectFaces_Click(object sender, RoutedEventArgs e)
 		{
 			cmdBrowseVideo.Content = "Browse Video";
+            exhbtButton.IsEnabled = false;
 			cmdBrowseVideo.IsEnabled = false;
 			var btn = (Button)sender;
 			btn.Content = "Extracting faces...";
