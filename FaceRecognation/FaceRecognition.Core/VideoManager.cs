@@ -82,8 +82,7 @@ namespace FaceRecognition.Core
 		{
 			if (!Directory.Exists("TempData"))
 				Directory.CreateDirectory("TempData");
-
-			var inputFile = new MediaFile() { Filename = path };
+            var inputFile = new MediaFile() { Filename = path };
 			var outputFile = new MediaFile() { Filename = $@"TempData/{id}.{(long)startTime}.png" };
 
 			using (var engine = new Engine())

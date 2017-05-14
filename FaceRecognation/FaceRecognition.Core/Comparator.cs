@@ -27,12 +27,16 @@ namespace FaceRecognition.Core
 		public async Task<List<Person>> SendDetectedPeopleToCompare(List<Person> videoPeople)
 		{
 			var newPeople = new List<Person>();
+            var existedPeople = new List<Person>();
 			//knownPeople = await AddKnownPeopleToGroup(knownPeople); // Зачем сейчас? Мы ее уже не чистим/ Добавлять если пустая
 			for (int i = 0; i < videoPeople.Count; i++)
 			{
 				var person = videoPeople[i];
+                //Sending photos to Microsoft and getting Id of each one
 				await person.GetMicrosoftData();
+                //Getting list of this faces
 				var personFacesIds = person.Faces.Select(x => x.MicrosoftId).ToArray();
+                //Sening list of faces and getting the result
 				var iresult = await MicrosoftAPIs.ComparationAPI.Commands.CommandsInstance.Compare(personFacesIds);
 				var isnew = false;
 
@@ -42,19 +46,12 @@ namespace FaceRecognition.Core
 				if (isnew)
 				{
 					_msgManager.WriteMessage("New person.");
-					//knownPeople.Add(person); // Зачем? Хотя пусть будет. Хотя нет. Спросить у Марка
 					newPeople.Add(person);
 				}
 				else
 				{
-					//var candidate = iresult.First().Candidates.First();
-					//foreach (var kp in knownPeople)
-					//	if (kp.MicrosoftPersonId == candidate.PersonId)
-					//	{
-					//		//kp.Faces.Add(ca)
-					//		_msgManager.WriteMessage("Existed person.");
-					//		break;
-					//	}
+                    _msgManager.WriteMessage("Existed person.");
+                    existedPeople.Add(person);
 				}
 			}
 			return newPeople;
