@@ -32,7 +32,7 @@ namespace FaceRecognition.Core
 				BasePath = this.BasePath
 			};
 			Client = new FirebaseClient(Config);
-			//Data = GetData();
+            Data = GetData();
 		}
 
 		private string AuthSecret;
@@ -42,6 +42,20 @@ namespace FaceRecognition.Core
 		public Dictionary<Guid, string> Data;
 
 		//Downloads all Data from FireBase and saves it to List<Face>
+        public Dictionary<Guid, string> GetData()
+        {
+            try
+            {
+                FirebaseResponse response = Client.Get("Faces");
+                var Data = response.ResultAs<Dictionary<Guid, string>>();
+                return Data == null ? new Dictionary<Guid, string>() : Data;
+            }
+            catch
+            {
+                return new Dictionary<Guid, string>();
+            }
+        }
+
 		public async Task<Dictionary<Guid, string>> GetFaces()
 		{
 			try
