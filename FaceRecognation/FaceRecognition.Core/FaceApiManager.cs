@@ -120,6 +120,11 @@ namespace FaceRecognition.Core.MicrosoftAPIs
 				}
 				return result;
 			}
+
+			public async Task DeleteFace(Guid personId, Guid faceId)
+			{
+				await _faceApiManager.DeleteFace(personId, faceId);
+			}
 		}
 
 		public class GroupAPI
@@ -491,6 +496,11 @@ namespace FaceRecognition.Core.MicrosoftAPIs
 		public async Task<int> GetGroupCount()
 		{
 			return (await _faceServiceClient.GetPersonsAsync(_personGroupId)).Count();
+		}
+
+		public async Task DeleteFace(Guid personId, Guid faceId)
+		{
+			await _faceServiceClient.DeletePersonFaceAsync(_personGroupId, personId, faceId);
 		}
 	}
 }
