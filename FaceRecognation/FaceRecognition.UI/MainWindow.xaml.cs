@@ -190,6 +190,8 @@ namespace FaceRecognition.UI
 			var tuple = await Comparator.ComparatorInstance.SendDetectedPeopleToCompare(_extractedPeople);
 			var existedPeople = tuple.Item1;
 			var newPeople = tuple.Item2;
+            newPeople = await Core.MicrosoftAPIs.DataBaseAPI.GroupAPI.GroupAPIinstance.AddPeople(newPeople);
+            await Synchron.Instance.AddPeople(newPeople);
 		}
 	}
 }

@@ -188,21 +188,21 @@ namespace FaceRecognition.Core.MicrosoftAPIs
 				_msgManager.WriteMessage("Face added.");
 			}
 
-			public async Task<List<Person>> AddPeople(List<Person> knownPeople)
+			public async Task<List<Person>> AddPeople(List<Person> newPeople)
 			{
-				for (int i = 0; i < knownPeople.Count(); i++)
+				for (int i = 0; i < newPeople.Count(); i++)
 				{
-					knownPeople[i].MicrosoftPersonId = (await _faceApiManager.CreatePerson(i.ToString())).PersonId;
-					for (int j = 0; j < knownPeople[i].Faces.Count; j++)
+					newPeople[i].MicrosoftPersonId = (await _faceApiManager.CreatePerson(i.ToString())).PersonId;
+					for (int j = 0; j < newPeople[i].Faces.Count; j++)
 					{
-						knownPeople[i].Faces[j].MicrosoftId = (
-							await _faceApiManager.AddPersonFace(knownPeople[i].MicrosoftPersonId,
-							_imgProcessing.ImageToStream(knownPeople[i].Faces[j].Image))).PersistedFaceId;
+						newPeople[i].Faces[j].MicrosoftId = (
+							await _faceApiManager.AddPersonFace(newPeople[i].MicrosoftPersonId,
+							_imgProcessing.ImageToStream(newPeople[i].Faces[j].Image))).PersistedFaceId;
 						await Task.Delay(TimeSpan.FromSeconds(5));
 					}
 				}
 				await Train();
-				return knownPeople;
+				return newPeople;
 			}
 
 			public async Task<int> Count()

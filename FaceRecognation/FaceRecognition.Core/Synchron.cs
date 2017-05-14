@@ -66,6 +66,17 @@ namespace FaceRecognition.Core
 			return images;
 		}
 
+        public async Task AddPeople(List<Person> newPeople)
+        {
+            foreach(var person in newPeople)
+            {
+                foreach(var face in person.Faces)
+                {
+                    await AddFace(face.MicrosoftId, face.BaseImage);
+                }
+            }
+        }
+
 		public async Task AddFace(Guid microsoftId, string img)
 		{
 			SetResponse response = await Client.SetAsync($"Faces/{microsoftId}", img);
