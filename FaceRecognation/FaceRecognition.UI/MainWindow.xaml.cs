@@ -23,7 +23,7 @@ namespace FaceRecognition.UI
 	{
 		private Core.Video _video = Core.Video.VideoInstance;
 		private List<List<System.Drawing.Image>> _extractedUnchosenPeoplesFaces;
-		private List<Person> _extractedPeople;
+		private List<Person> _extractedPeople = new List<Person>();
 		private MessageManager _msgManager = MessageManager.MsgManagerInstance;
 
 		public MainWindow()
