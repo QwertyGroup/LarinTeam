@@ -187,6 +187,7 @@ namespace FaceRecognition.UI
 
 		private async void CompWithArchive_Click(object sender, RoutedEventArgs e)
 		{
+            await Core.MicrosoftAPIs.DataBaseAPI.GroupAPI.GroupAPIinstance.Clear();
 			var tuple = await Comparator.ComparatorInstance.SendDetectedPeopleToCompare(_extractedPeople);
 			var existedPeople = tuple.Item1;
 			var newPeople = tuple.Item2;
