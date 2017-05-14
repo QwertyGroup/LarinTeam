@@ -19,23 +19,27 @@ namespace FaceRecognition.UI.Galley
 	public partial class FaceExhibition : Window
 	{
         private List<Person> Data;
+
         public FaceExhibition()
 		{
 			InitializeComponent();
-            getData();
-            Exhitbit();
 		}
 
-		private void Exhitbit()
+		private async Task Exhibit()
 		{
-			foreach (var person in Data)
+            await getData();
+            foreach (var person in Data)
 				spGallery.Children.Add(new Painting(person));
 		}
 
-        private async void getData()
+        private async Task getData()
         {
-            List<Person> Data = await Core.MicrosoftAPIs.DataBaseAPI.PersonAPI.PersonAPIinstance.GetPersonList();
-
+            Data = await Core.MicrosoftAPIs.DataBaseAPI.PersonAPI.PersonAPIinstance.GetPersonList();
         }
-	}
+
+        private async void Button_Click(object sender, RoutedEventArgs e)
+        {
+            await Exhibit();
+        }
+    }
 }

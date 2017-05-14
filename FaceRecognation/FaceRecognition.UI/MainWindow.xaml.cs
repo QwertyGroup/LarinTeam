@@ -175,7 +175,7 @@ namespace FaceRecognition.UI
 
 		private void ExhibitFaceArchive_Click(object sender, RoutedEventArgs e)
 		{
-            var faceExhibition = new FaceExhibition();
+            new FaceExhibition().Show();
 		}
 
 		private void ThisIsNotBut_Click(object sender, RoutedEventArgs e)
