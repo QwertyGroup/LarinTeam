@@ -23,7 +23,7 @@ namespace FaceRecognition.UI
 	{
 		private Core.Video _video = Core.Video.VideoInstance;
 		private List<List<System.Drawing.Image>> _extractedUnchosenPeoplesFaces;
-		private List<Person> _extractedUnchosenPeople;
+		private List<Person> _extractedPeople;
 		private MessageManager _msgManager = MessageManager.MsgManagerInstance;
 
 		public MainWindow()
@@ -151,6 +151,7 @@ namespace FaceRecognition.UI
 					resultFacesOfPeople.Add(img);
 				}
 			}
+            _extractedPeople.Add(new Person(resultFacesOfPeople));
 			if (numberOfPeopleToLoad == 0)
 			{
 				EndValidating();
@@ -171,7 +172,7 @@ namespace FaceRecognition.UI
 
 		private void ExhibitFaceArchive_Click(object sender, RoutedEventArgs e)
 		{
-			//new FaceExhibition().Show();
+            
 		}
 
 		private void ThisIsNotBut_Click(object sender, RoutedEventArgs e)

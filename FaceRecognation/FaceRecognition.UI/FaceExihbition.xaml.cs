@@ -18,7 +18,7 @@ namespace FaceRecognition.UI.Galley
 {
 	public partial class FaceExhibition : Window
 	{
-		private FaceExhibition()
+		public FaceExhibition()
 		{
 			InitializeComponent();
 		}
@@ -35,5 +35,11 @@ namespace FaceRecognition.UI.Galley
 			foreach (var person in _people)
 				spGallery.Children.Add(new Painting(person));
 		}
+
+        private async void getData()
+        {
+            List<Person> Data = await Core.MicrosoftAPIs.DataBaseAPI.PersonAPI.PersonAPIinstance.GetPersonList();
+
+        }
 	}
 }
