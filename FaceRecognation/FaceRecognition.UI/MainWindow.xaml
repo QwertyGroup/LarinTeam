@@ -94,7 +94,7 @@
 				<TextBlock Style="{DynamicResource DefaultTextStyle}" Margin="0,10,0,6" Text="Commands >_" />
 				<Button x:Name="cmdBrowseVideo" Style="{DynamicResource DefaultButtonStyle}" Content="Browse Video" Click="BrowseVideo_Click" IsTabStop="False" />
 				<Button x:Name="cmdDetectFaces" Style="{DynamicResource DefaultButtonStyle}" Content="Detect Faces" Click="DetectFaces_Click" IsTabStop="False"/>
-                <Button x:Name="CompWithArchive" Style="{DynamicResource DefaultButtonStyle}" Content="Compare with Archive" IsTabStop="False" IsEnabled="False" />
+                <Button x:Name="CompWithArchive" Style="{DynamicResource DefaultButtonStyle}" Content="Compare with Archive" IsTabStop="False" IsEnabled="False" Click="CompWithArchive_Click" />
                 <TextBlock/>
                 <TextBlock/>
 				<Button Style="{DynamicResource DefaultButtonStyle}" Content="Exhibit archive" Click="ExhibitFaceArchive_Click" IsTabStop="False" IsEnabled="False"/>

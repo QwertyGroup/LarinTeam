@@ -184,5 +184,12 @@ namespace FaceRecognition.UI
 			}
 			LoadNextPersonForSelection();
 		}
-	}
+
+        private async void CompWithArchive_Click(object sender, RoutedEventArgs e)
+        {
+            await Comparator.ComparatorInstance.SendDetectedPeopleToCompare(_extractedPeople);
+
+
+        }
+    }
 }
