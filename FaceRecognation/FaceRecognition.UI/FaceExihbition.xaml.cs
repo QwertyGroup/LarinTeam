@@ -57,6 +57,7 @@ namespace FaceRecognition.UI.Galley
 
         public void UpdateInfo()
         {
+            FaceCount = 0;
             foreach (var person in Data)
                 FaceCount += person.Faces.Count;
             infoLabel.Content = $"Total People: {Data.Count}. Total Faces: {FaceCount}";
