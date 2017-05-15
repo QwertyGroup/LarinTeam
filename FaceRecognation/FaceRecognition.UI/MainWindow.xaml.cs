@@ -95,8 +95,9 @@ namespace FaceRecognition.UI
 			_extractedUnchosenPeoplesFaces = await _video.ExtractFaces();
 			numberOfPeopleToLoad = _extractedUnchosenPeoplesFaces.Count;
 
-			LoadNextPersonForSelection();
+			OnValidatingEnded += async (s, a) => await CompWithArchive();
 
+			LoadNextPersonForSelection();
 		}
 
 		private void ClearCache()
@@ -158,11 +159,13 @@ namespace FaceRecognition.UI
 			if (numberOfPeopleToLoad == 0)
 			{
 				EndValidating();
+				OnValidatingEnded?.Invoke(this, new EventArgs());
 				return;
 			}
 			LoadNextPersonForSelection();
 		}
 
+		private event EventHandler OnValidatingEnded;
 		private void EndValidating()
 		{
 			ImageValidatingPanel.Children.Clear();
@@ -171,8 +174,6 @@ namespace FaceRecognition.UI
 			cmdBrowseVideo.Content = "Browse Video";
 			exhbtButton.IsEnabled = true;
 			ValidateFaceBut.Visibility = Visibility.Hidden;
-			CompWithArchive.IsEnabled = true;
-			cmdBrowseVideo.IsEnabled = true;
 		}
 
 		private void ExhibitFaceArchive_Click(object sender, RoutedEventArgs e)
@@ -190,13 +191,23 @@ namespace FaceRecognition.UI
 			LoadNextPersonForSelection();
 		}
 
-		private async void CompWithArchive_Click(object sender, RoutedEventArgs e)
+		private async Task CompWithArchive()
 		{
+			cmdDetectFaces.Content = "Comparing...";
+			_msgManager.WriteMessage("Comparing started.");
+
 			var tuple = await Comparator.ComparatorInstance.SendDetectedPeopleToCompare(_extractedPeople);
 			var existedPeople = tuple.Item1;
 			var newPeople = tuple.Item2;
 			newPeople = await Core.MicrosoftAPIs.DataBaseAPI.GroupAPI.GroupAPIinstance.AddPeople(newPeople);
 			await Synchron.Instance.AddPeople(newPeople);
+
+			cmdDetectFaces.Content = "Detect Faces";
+			cmdDetectFaces.IsEnabled = true;
+			cmdBrowseVideo.IsEnabled = true;
+			_msgManager.WriteMessage("Aggrigating comparation report.");
+
+			new ReportGallery(newPeople, existedPeople).Show();
 		}
 	}
 }
