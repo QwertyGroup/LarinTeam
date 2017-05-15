@@ -23,10 +23,13 @@ namespace FaceRecognition.UI.Galley
 
 		public void Exhibit()
 		{
+			spNew.Children.Clear();
+			spExisted.Children.Clear();
+
 			foreach (var person in _newPeople)
-				spNew.Children.Add(new Painting(person) { IsDeleteButtonVisible = false });
+				spNew.Children.Add(new Painting(person, false));
 			foreach (var person in _existedPeople)
-				spExisted.Children.Add(new Painting(person) { IsDeleteButtonVisible = false });
+				spExisted.Children.Add(new Painting(person, false));
 		}
 	}
 }

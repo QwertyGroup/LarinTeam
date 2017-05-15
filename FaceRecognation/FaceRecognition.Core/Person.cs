@@ -16,25 +16,25 @@ namespace FaceRecognition.Core
 		public Image Image;
 		public Guid MicrosoftId;
 
-        public FaceImage(string BaseImage, Guid MicrosoftId)
-        {
-            this.BaseImage = BaseImage;
-            this.MicrosoftId = MicrosoftId;
-        }
+		public FaceImage(string BaseImage, Guid MicrosoftId)
+		{
+			this.BaseImage = BaseImage;
+			this.MicrosoftId = MicrosoftId;
+		}
 
 		public FaceImage(Image Image)
 		{
 			this.Image = Image;
 			this.BaseImage = ImageToBase(Image);
-            MicrosoftId = new Guid();
+			MicrosoftId = new Guid();
 		}
 
-        public FaceImage(string BaseImage)
-        {
-            this.BaseImage = BaseImage;
-            this.Image = BaseToImage(BaseImage);
-            MicrosoftId = new Guid();
-        }
+		public FaceImage(string BaseImage)
+		{
+			this.BaseImage = BaseImage;
+			this.Image = BaseToImage(BaseImage);
+			MicrosoftId = new Guid();
+		}
 
 		private static string ImageToBase(Image image)
 		{
@@ -94,14 +94,16 @@ namespace FaceRecognition.Core
 				try
 				{
 					face.MicrosoftId = await FaceImage.ImageToMSID(face.Image);
-					await Task.Delay(5000);
+					if (face.MicrosoftId == Guid.Empty)
+						throw new Exception("Guid is empty.");
+					await Task.Delay(6000);
 				}
 				catch
 				{
 					Debug.WriteLine("Problem with converting FaceImage to Microsoft.");
 				}
 			}
-			Faces.RemoveAll(x => x.MicrosoftId == null);
+			Faces.RemoveAll(x => x.MicrosoftId == null || x.MicrosoftId == Guid.Empty);
 		}
 	}
 }

@@ -34,6 +34,7 @@ namespace FaceRecognition.Core
 				var person = videoPeople[i];
 				//Sending photos to Microsoft and getting Id of each one
 				await person.GetMicrosoftData();
+				//person.Faces = person.Faces.Where(x => x.MicrosoftId != Guid.Empty).ToList();
 				//Getting list of this faces
 				var personFacesIds = person.Faces.Select(x => x.MicrosoftId).ToArray();
 				//Sening list of faces and getting the result

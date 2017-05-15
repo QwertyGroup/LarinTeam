@@ -9,10 +9,14 @@
 	<Grid>
 		<TabControl x:Name="tabControl" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 			<TabItem Header="New people">
-				<StackPanel x:Name="spNew" Background="#FFE5E5E5"/>
+				<ScrollViewer>
+					<StackPanel x:Name="spNew" Background="#FFE5E5E5"/>
+				</ScrollViewer>
 			</TabItem>
 			<TabItem Header="Already existed">
-				<StackPanel x:Name="spExisted" Background="#FFE5E5E5"/>
+				<ScrollViewer>
+					<StackPanel x:Name="spExisted" Background="#FFE5E5E5"/>
+				</ScrollViewer>
 			</TabItem>
 		</TabControl>
 

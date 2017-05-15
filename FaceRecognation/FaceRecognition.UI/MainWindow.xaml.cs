@@ -30,6 +30,7 @@ namespace FaceRecognition.UI
 		{
 			InitializeComponent();
 			ClearCache();
+			OnValidatingEnded += async (s, a) => await CompWithArchive();
 			_msgManager.OnMessageSended += onMessageSended;
 
 		}
@@ -84,7 +85,6 @@ namespace FaceRecognition.UI
 		private async void DetectFaces_Click(object sender, RoutedEventArgs e)
 		{
 			cmdBrowseVideo.Content = "Browse Video";
-			exhbtButton.IsEnabled = false;
 			cmdBrowseVideo.IsEnabled = false;
 			var btn = (Button)sender;
 			btn.Content = "Extracting faces...";
@@ -95,8 +95,10 @@ namespace FaceRecognition.UI
 			_extractedUnchosenPeoplesFaces = await _video.ExtractFaces();
 			numberOfPeopleToLoad = _extractedUnchosenPeoplesFaces.Count;
 
-			OnValidatingEnded += async (s, a) => await CompWithArchive();
+			cmdDetectFaces.Content = "Validating...";
+			_msgManager.WriteMessage("Validating started.");
 
+			_extractedPeople = new List<Person>();
 			LoadNextPersonForSelection();
 		}
 
@@ -172,7 +174,6 @@ namespace FaceRecognition.UI
 
 			ThisIsNotBut.Visibility = Visibility.Hidden;
 			cmdBrowseVideo.Content = "Browse Video";
-			exhbtButton.IsEnabled = true;
 			ValidateFaceBut.Visibility = Visibility.Hidden;
 		}
 
