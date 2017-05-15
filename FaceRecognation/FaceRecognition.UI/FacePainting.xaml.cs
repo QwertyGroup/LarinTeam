@@ -15,9 +15,6 @@ using System.Windows.Shapes;
 
 namespace FaceRecognition.UI
 {
-    /// <summary>
-    /// Interaction logic for FacePainting.xaml
-    /// </summary>
     public partial class FacePainting : UserControl
     {
         public FacePainting()
