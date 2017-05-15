@@ -207,7 +207,7 @@ namespace FaceRecognition.UI
 			cmdDetectFaces.Content = "Detect Faces";
 			cmdDetectFaces.IsEnabled = true;
 			cmdBrowseVideo.IsEnabled = true;
-			_msgManager.WriteMessage("Aggrigating comparation report.");
+			_msgManager.WriteMessage("Aggregating comparation report.");
 
 			new ReportGallery(newPeople, existedPeople).Show();
 		}
