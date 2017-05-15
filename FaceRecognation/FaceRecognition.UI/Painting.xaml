@@ -17,5 +17,6 @@
         </Grid.ColumnDefinitions>
         <TextBlock Grid.Row="0" Grid.Column="0" x:Name="tbInfo" Text="Persons Id" FontSize="16" Foreground="#FF040404"/>
         <TextBlock Grid.Row="0" Grid.Column="1" x:Name="deleteFaceButt" Text="X" FontSize="18" FontFamily="Arial Black" Foreground="#FFBD0000" VerticalAlignment="Center" HorizontalAlignment="Center" MouseLeftButtonDown="deleteFaceButt_MouseLeftButtonDown" MouseLeftButtonUp="deleteFaceButt_MouseLeftButtonUp"/>
+        <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" x:Name="FacePanel" Orientation="Horizontal"></StackPanel>
     </Grid>
 </UserControl>

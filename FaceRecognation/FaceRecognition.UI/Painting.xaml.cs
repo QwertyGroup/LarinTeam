@@ -32,17 +32,25 @@ namespace FaceRecognition.UI.Galley
 			DisplayFaces();
 		}
 
-		private float _imgWidth = 200;
-		private float _imgHeight = 200;
+		//private float _imgWidth = 200;
+		//private float _imgHeight = 200;
 		private void DisplayFaces()
 		{
-			//foreach (var face in _person.Faces)
+			foreach (var face in _person.Faces)
+            {
+                FacePanel.Children.Add(new FacePainting(face.Image)
+                {
+                    Width = 120,
+                    Height = 120,
+                    Margin = new Thickness(5)
+                });
+            }
 				
 		}
 
 		private void DisplayInfo()
 		{
-			var info = $"Person Id:{_person.MicrosoftPersonId}";
+			var info = $"Person Id: {_person.MicrosoftPersonId}";
 			tbInfo.Text = info;
 		}
 

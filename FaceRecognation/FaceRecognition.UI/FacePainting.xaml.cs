@@ -24,5 +24,23 @@ namespace FaceRecognition.UI
         {
             InitializeComponent();
         }
+
+        public FacePainting(System.Drawing.Image Face)
+        {
+            InitializeComponent();
+            canvas.Background = new ImageBrush(Core.ImageProcessing.ImageProcessingInstance.ConvertImageToBitmapImage(Face));
+        }
+
+        private void deleteFaceButt_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            var tb = (TextBlock)sender;
+            tb.Foreground = new SolidColorBrush(Color.FromRgb(170, 0, 0));
+        }
+
+        private void deleteFaceButt_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            var tb = (TextBlock)sender;
+            tb.Foreground = new SolidColorBrush(Color.FromRgb(189, 0, 0));
+        }
     }
 }

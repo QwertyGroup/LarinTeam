@@ -23,10 +23,11 @@ namespace FaceRecognition.UI.Galley
         public FaceExhibition()
 		{
 			InitializeComponent();
-		}
+        }
 
 		private async Task Exhibit()
 		{
+            spGallery.Children.Clear();
             await GetData();
             foreach (var person in Data)
 				spGallery.Children.Add(new Painting(person));
@@ -50,6 +51,18 @@ namespace FaceRecognition.UI.Galley
             ProgressBar.Visibility = Visibility.Hidden;
             btn.IsEnabled = true;
 
+            infoLabel.Content = $"Total People: {Data.Count}. Total Faces: {FaceCount}";
+        }
+
+        private async void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            FaceCount = 0;
+            updatebut.IsEnabled = false;
+            ProgressBar.Visibility = Visibility.Visible;
+            await Exhibit();
+            ProgressBar.Value = 0;
+            ProgressBar.Visibility = Visibility.Hidden;
+            updatebut.IsEnabled = true;
             infoLabel.Content = $"Total People: {Data.Count}. Total Faces: {FaceCount}";
         }
     }
