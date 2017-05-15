@@ -28,13 +28,14 @@ namespace FaceRecognition.UI.Galley
 		public Painting(Person person) : this()
 		{
 			_person = person;
+			deleteFaceButt.Visibility = (IsDeleteButtonVisible) ? Visibility.Visible : Visibility.Hidden;
 			DisplayInfo();
 			DisplayFaces();
 		}
 
 		//private float _imgWidth = 200;
 		//private float _imgHeight = 200;
-		public bool IsDeleteButtonVisible { get; set; }
+		public bool IsDeleteButtonVisible { get; set; } = true;
 		private void DisplayFaces()
 		{
 			foreach (var face in _person.Faces)
