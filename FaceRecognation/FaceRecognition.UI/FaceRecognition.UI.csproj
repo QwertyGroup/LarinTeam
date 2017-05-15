@@ -76,11 +76,18 @@
     <Compile Include="FaceExihbition.xaml.cs">
       <DependentUpon>FaceExihbition.xaml</DependentUpon>
     </Compile>
+    <Compile Include="FacePainting.xaml.cs">
+      <DependentUpon>FacePainting.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Painting.xaml.cs">
       <DependentUpon>Painting.xaml</DependentUpon>
     </Compile>
     <Compile Include="Video.cs" />
     <Page Include="FaceExihbition.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="FacePainting.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
