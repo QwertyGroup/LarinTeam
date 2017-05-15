@@ -89,15 +89,14 @@
 			<ColumnDefinition Width="2*"/>
 			<ColumnDefinition Width="5*"/>
 		</Grid.ColumnDefinitions>
-		<Border Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" BorderBrush="Black" BorderThickness="0, 0, 1, 0">
+		<Border Grid.Column="0" Grid.Row="0"  BorderBrush="Black" BorderThickness="0, 0, 1, 0">
 			<StackPanel Background="White">
 				<TextBlock Style="{DynamicResource DefaultTextStyle}" Margin="0,10,0,6" Text="Commands >_" />
 				<Button x:Name="cmdBrowseVideo" Style="{DynamicResource DefaultButtonStyle}" Content="Browse Video" Click="BrowseVideo_Click" IsTabStop="False" />
 				<Button x:Name="cmdDetectFaces" Style="{DynamicResource DefaultButtonStyle}" Content="Detect Faces" Click="DetectFaces_Click" IsTabStop="False"/>
 				<TextBlock/>
-                <TextBlock/>
 				<Button x:Name="exhbtButton" Style="{DynamicResource DefaultButtonStyle}" Content="Exhibit archive" Click="ExhibitFaceArchive_Click" IsTabStop="False" IsEnabled="True"/>
-            </StackPanel>
+			</StackPanel>
 		</Border>
 		<ScrollViewer Grid.Column="1" Grid.Row="1" Background="White">
 			<StackPanel x:Name="spLog"/>
@@ -113,5 +112,8 @@
 			</StackPanel>
 			<WrapPanel Grid.Row="1" x:Name="ImageValidatingPanel"/>
 		</Grid>
+		<Border Grid.Row="1" BorderBrush="Black" BorderThickness="0, 0, 1, 0">
+			<local:RecognitionProgress VerticalAlignment="Bottom" Height="50" HorizontalAlignment="Stretch"/>
+		</Border>
 	</Grid>
 </Window>
