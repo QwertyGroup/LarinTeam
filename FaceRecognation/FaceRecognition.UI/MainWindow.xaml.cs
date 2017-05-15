@@ -187,6 +187,7 @@ namespace FaceRecognition.UI
 			if (numberOfPeopleToLoad == 0)
 			{
 				EndValidating();
+				OnValidatingEnded?.Invoke(this, new EventArgs());
 				return;
 			}
 			LoadNextPersonForSelection();
