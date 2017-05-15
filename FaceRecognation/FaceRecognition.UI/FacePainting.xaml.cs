@@ -13,31 +13,40 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace FaceRecognition.UI
+namespace FaceRecognition.UI.Gallery
 {
-    public partial class FacePainting : UserControl
-    {
-        public FacePainting()
-        {
-            InitializeComponent();
-        }
+	public partial class FacePainting : UserControl
+	{
+		public bool IsDeleteButtonVisible
+		{
+			set
+			{
+				if (value) deleteFaceButt.Visibility = Visibility.Visible;
+				else deleteFaceButt.Visibility = Visibility.Hidden;
+			}
+		}
 
-        public FacePainting(System.Drawing.Image Face)
-        {
-            InitializeComponent();
-            canvas.Background = new ImageBrush(Core.ImageProcessing.ImageProcessingInstance.ConvertImageToBitmapImage(Face));
-        }
+		public FacePainting()
+		{
+			InitializeComponent();
+		}
 
-        private void deleteFaceButt_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            var tb = (TextBlock)sender;
-            tb.Foreground = new SolidColorBrush(Color.FromRgb(170, 0, 0));
-        }
+		public FacePainting(System.Drawing.Image Face)
+		{
+			InitializeComponent();
+			canvas.Background = new ImageBrush(Core.ImageProcessing.ImageProcessingInstance.ConvertImageToBitmapImage(Face));
+		}
 
-        private void deleteFaceButt_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            var tb = (TextBlock)sender;
-            tb.Foreground = new SolidColorBrush(Color.FromRgb(189, 0, 0));
-        }
-    }
+		private void deleteFaceButt_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+		{
+			var tb = (TextBlock)sender;
+			tb.Foreground = new SolidColorBrush(Color.FromRgb(170, 0, 0));
+		}
+
+		private void deleteFaceButt_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+		{
+			var tb = (TextBlock)sender;
+			tb.Foreground = new SolidColorBrush(Color.FromRgb(189, 0, 0));
+		}
+	}
 }

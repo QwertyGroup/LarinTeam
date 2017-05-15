@@ -24,9 +24,9 @@ namespace FaceRecognition.UI.Galley
 		public void Exhibit()
 		{
 			foreach (var person in _newPeople)
-				spNew.Children.Add(new Painting(person));
+				spNew.Children.Add(new Painting(person) { IsDeleteButtonVisible = false });
 			foreach (var person in _existedPeople)
-				spExisted.Children.Add(new Painting(person));
+				spExisted.Children.Add(new Painting(person) { IsDeleteButtonVisible = false });
 		}
 	}
 }
