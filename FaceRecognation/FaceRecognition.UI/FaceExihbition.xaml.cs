@@ -19,7 +19,7 @@ namespace FaceRecognition.UI.Galley
 	public partial class FaceExhibition : Window
 	{
         private List<Person> Data;
-
+        private int FaceCount;
         public FaceExhibition()
 		{
 			InitializeComponent();
@@ -34,12 +34,23 @@ namespace FaceRecognition.UI.Galley
 
         private async Task getData()
         {
-            Data = await Core.MicrosoftAPIs.DataBaseAPI.PersonAPI.PersonAPIinstance.GetPersonList();
+            Data = await Core.MicrosoftAPIs.DataBaseAPI.PersonAPI.PersonAPIinstance.GetPersonList(ProgressBar);
+            foreach (var person in Data)
+                FaceCount += person.Faces.Count;
         }
 
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
+            FaceCount = 0;
+            var btn = (Button)sender;
+            btn.IsEnabled = false;
+            ProgressBar.Visibility = Visibility.Visible;
             await Exhibit();
+            ProgressBar.Value = 0;
+            ProgressBar.Visibility = Visibility.Hidden;
+            btn.IsEnabled = true;
+
+            infoLabel.Content = $"Total People: {Data.Count}. Total Faces: {FaceCount}";
         }
     }
 }

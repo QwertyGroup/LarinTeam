@@ -5,15 +5,23 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FaceRecognition.UI.Galley"
         mc:Ignorable="d"
-        Title="Face Gallery" Height="550" Width="700" Background="#FFF1F1F1">
+        Title="Face Gallery" Height="550" Width="700" Background="#FFF1F1F1" ResizeMode="NoResize">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <Button Content="Update" Width="100" Height="30" Margin="10" Click="Button_Click"/>
-        <ScrollViewer Grid.Row="1">
-            <StackPanel x:Name="spGallery"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <Button Grid.Column="2" Grid.Row="0" Content="Update" Width="100" Height="30" Margin="5" Click="Button_Click"/>
+        <Label x:Name="infoLabel" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Content="Total People: ?. Total Faces: ?" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="24"/>
+        <ProgressBar Width="120" IsEnabled="False" x:Name="ProgressBar" Visibility="Hidden" Grid.Column="1" Grid.Row="1" Margin="0, 5, 0, 5" Height="10"></ProgressBar>
+        <ScrollViewer Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2">
+            <StackPanel x:Name="spGallery">
+            </StackPanel>
         </ScrollViewer>
     </Grid>
 </Window>

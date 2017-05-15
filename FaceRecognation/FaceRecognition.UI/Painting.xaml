@@ -5,15 +5,17 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:FaceRecognition.UI.Galley"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
-	<Grid>
-		<Grid.RowDefinitions>
-			<RowDefinition Height="auto"></RowDefinition>
-			<RowDefinition></RowDefinition>
-		</Grid.RowDefinitions>
-		<TextBlock x:Name="tbInfo" Text="Persons Id"/>
-		<ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Disabled" >
-			<StackPanel x:Name="spFaceContainer" Orientation="Horizontal"/>
-		</ScrollViewer>
-	</Grid>
+             d:DesignHeight="300" d:DesignWidth="900">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <TextBlock Grid.Row="0" Grid.Column="0" x:Name="tbInfo" Text="Persons Id" FontSize="16" Foreground="#FF040404"/>
+        <TextBlock Grid.Row="0" Grid.Column="1" x:Name="deleteFaceButt" Text="X" FontSize="18" FontFamily="Arial Black" Foreground="#FFBD0000" VerticalAlignment="Center" HorizontalAlignment="Center" MouseLeftButtonDown="deleteFaceButt_MouseLeftButtonDown" MouseLeftButtonUp="deleteFaceButt_MouseLeftButtonUp"/>
+    </Grid>
 </UserControl>

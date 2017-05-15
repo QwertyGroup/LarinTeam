@@ -36,20 +36,26 @@ namespace FaceRecognition.UI.Galley
 		private float _imgHeight = 200;
 		private void DisplayFaces()
 		{
-			foreach (var face in _person.Faces)
-				spFaceContainer.Children.Add(new Image
-				{
-					Source = ImageProcessing.ImageProcessingInstance.ConvertImageToBitmapImage(face.Image),
-					Width = _imgWidth,
-					Height = _imgHeight,
-					Stretch = Stretch.Fill
-				});
+			//foreach (var face in _person.Faces)
+				
 		}
 
 		private void DisplayInfo()
 		{
-			var info = $"Face count:{_person.Faces.Count}";
+			var info = $"Person Id:{_person.MicrosoftPersonId}";
 			tbInfo.Text = info;
 		}
-	}
+
+        private void deleteFaceButt_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            var tb = (TextBlock)sender;
+            tb.Foreground = new SolidColorBrush(Color.FromRgb(170, 0, 0));
+        }
+
+        private void deleteFaceButt_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            var tb = (TextBlock)sender;
+            tb.Foreground = new SolidColorBrush(Color.FromRgb(189, 0, 0));
+        }
+    }
 }

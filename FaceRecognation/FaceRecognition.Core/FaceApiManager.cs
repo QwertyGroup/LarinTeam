@@ -117,6 +117,29 @@ namespace FaceRecognition.Core.MicrosoftAPIs
 				return imgs;
 			}
 
+            public async Task<List<Person>> GetPersonList(System.Windows.Controls.ProgressBar progressBar)
+            {
+                var plist = await _faceApiManager.GetPersonsFromGroup();
+                var result = new List<Person>();
+                foreach (var groupPerson in plist)
+                {
+                    try
+                    {
+                        var person = new Person(groupPerson.PersonId);
+                        person.Faces = await DownloadPersonFaces(groupPerson);
+                        result.Add(person);
+                    }
+                    catch { }
+                    progressBar.Value += 100 / plist.Count();
+                }
+                return result;
+            }
+
+            public async Task DeleteFace(Guid personId, Guid faceId)
+            {
+                await _faceApiManager.DeleteFace(personId, faceId);
+            }
+
 			public async Task<List<Person>> GetPersonList()
 			{
 				var plist = await _faceApiManager.GetPersonsFromGroup();
@@ -132,11 +155,6 @@ namespace FaceRecognition.Core.MicrosoftAPIs
                     catch { }
 				}
 				return result;
-			}
-
-			public async Task DeleteFace(Guid personId, Guid faceId)
-			{
-				await _faceApiManager.DeleteFace(personId, faceId);
 			}
 		}
 
