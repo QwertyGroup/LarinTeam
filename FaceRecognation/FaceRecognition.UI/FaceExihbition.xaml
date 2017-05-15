@@ -20,8 +20,8 @@
         <Label x:Name="infoLabel" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Content="Total People: ?. Total Faces: ?" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="24"/>
         <ProgressBar Width="120" IsEnabled="False" x:Name="ProgressBar" Visibility="Hidden" Grid.Column="1" Grid.Row="1" Margin="0, 5, 0, 5" Height="10"></ProgressBar>
         <ScrollViewer Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2">
-            <StackPanel x:Name="spGallery">
-            </StackPanel>
+            <StackPanel x:Name="spGallery"/>
         </ScrollViewer>
+        <Button x:Name="button" Content="Button" HorizontalAlignment="Left" Margin="473,14,0,0" VerticalAlignment="Top" Width="75" Click="button_Click_1"/>
     </Grid>
 </Window>

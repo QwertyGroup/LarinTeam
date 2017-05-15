@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,7 +19,7 @@ namespace FaceRecognition.UI.Galley
 {
 	public partial class FaceExhibition : Window
 	{
-        private List<Person> Data;
+        public List<Person> Data;
         private int FaceCount;
         public FaceExhibition()
 		{
@@ -54,6 +55,13 @@ namespace FaceRecognition.UI.Galley
             infoLabel.Content = $"Total People: {Data.Count}. Total Faces: {FaceCount}";
         }
 
+        public void UpdateInfo()
+        {
+            foreach (var person in Data)
+                FaceCount += person.Faces.Count;
+            infoLabel.Content = $"Total People: {Data.Count}. Total Faces: {FaceCount}";
+        }
+
         private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
             FaceCount = 0;
@@ -64,6 +72,11 @@ namespace FaceRecognition.UI.Galley
             ProgressBar.Visibility = Visibility.Hidden;
             updatebut.IsEnabled = true;
             infoLabel.Content = $"Total People: {Data.Count}. Total Faces: {FaceCount}";
+        }
+
+        private void button_Click_1(object sender, RoutedEventArgs e)
+        {
+            Debug.WriteLine($"{Data.Count}");
         }
     }
 }

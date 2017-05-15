@@ -17,6 +17,7 @@ namespace FaceRecognition.UI.Gallery
 {
 	public partial class FacePainting : UserControl
 	{
+        private Core.FaceImage faceImage;
 		public bool IsDeleteButtonVisible
 		{
 			set
@@ -31,10 +32,11 @@ namespace FaceRecognition.UI.Gallery
 			InitializeComponent();
 		}
 
-		public FacePainting(System.Drawing.Image Face)
+		public FacePainting(Core.FaceImage fm)
 		{
 			InitializeComponent();
-			canvas.Background = new ImageBrush(Core.ImageProcessing.ImageProcessingInstance.ConvertImageToBitmapImage(Face));
+            faceImage = fm;
+			canvas.Background = new ImageBrush(Core.ImageProcessing.ImageProcessingInstance.ConvertImageToBitmapImage(fm.Image));
 		}
 
 		private void deleteFaceButt_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
