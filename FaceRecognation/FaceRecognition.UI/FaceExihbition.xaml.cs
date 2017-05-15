@@ -27,12 +27,12 @@ namespace FaceRecognition.UI.Galley
 
 		private async Task Exhibit()
 		{
-            await getData();
+            await GetData();
             foreach (var person in Data)
 				spGallery.Children.Add(new Painting(person));
 		}
 
-        private async Task getData()
+        private async Task GetData()
         {
             Data = await Core.MicrosoftAPIs.DataBaseAPI.PersonAPI.PersonAPIinstance.GetPersonList(ProgressBar);
             foreach (var person in Data)
