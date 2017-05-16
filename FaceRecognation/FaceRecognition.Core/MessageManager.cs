@@ -18,5 +18,21 @@ namespace FaceRecognition.Core
 		{
 			OnMessageSended?.Invoke(this, msg);
 		}
+
+		public event EventHandler<string> OnProgressMade;
+		public void ReportProgress()
+		{
+			ReportProgress(string.Empty);
+		}
+		public void ReportProgress(string status)
+		{
+			OnProgressMade?.Invoke(this, status);
+		}
+
+		public event EventHandler<string> OnNewProgressStatus;
+		public void SetNewProgressStatus(string newStatus)
+		{
+			OnNewProgressStatus?.Invoke(this, newStatus);
+		}
 	}
 }

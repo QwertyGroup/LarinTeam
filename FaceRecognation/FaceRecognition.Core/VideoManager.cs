@@ -175,6 +175,7 @@ namespace FaceRecognition.Core
 		{
 			SetVideoResol(path);
 			FaceDetectionResult faceDetectionResult = await GetFaceDetectionAsync(path);
+			MessageManager.MsgManagerInstance.ReportProgress();
 			MessageManager.MsgManagerInstance.WriteMessage("Got Face Detection Result!!!!)))");
 			Dictionary<int, List<CoolEvent>> FaceIds = GetCoolEvents(faceDetectionResult);
 			Dictionary<int, List<Image>> resultImages = new Dictionary<int, List<Image>>();
@@ -204,6 +205,7 @@ namespace FaceRecognition.Core
 					}
 				}
 			}
+			MessageManager.MsgManagerInstance.ReportProgress();
 			return resultImages;
 		}
 

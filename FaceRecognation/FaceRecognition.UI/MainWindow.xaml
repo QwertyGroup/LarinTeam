@@ -113,7 +113,7 @@
 			<WrapPanel Grid.Row="1" x:Name="ImageValidatingPanel"/>
 		</Grid>
 		<Border Grid.Row="1" BorderBrush="Black" BorderThickness="0, 0, 1, 0">
-			<local:RecognitionProgress VerticalAlignment="Bottom" Height="50" HorizontalAlignment="Stretch"/>
+			<local:RecognitionProgress x:Name="pbProgress" VerticalAlignment="Bottom" Height="50" HorizontalAlignment="Stretch"/>
 		</Border>
 	</Grid>
 </Window>

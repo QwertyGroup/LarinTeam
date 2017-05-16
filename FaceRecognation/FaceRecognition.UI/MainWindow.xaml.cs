@@ -30,9 +30,9 @@ namespace FaceRecognition.UI
 		{
 			InitializeComponent();
 			ClearCache();
+			SetProgressBarParameters();
 			OnValidatingEnded += async (s, a) => await CompWithArchive();
 			_msgManager.OnMessageSended += onMessageSended;
-
 		}
 
 		private void onMessageSended(object sender, string e)
@@ -81,7 +81,7 @@ namespace FaceRecognition.UI
 			numberOfPeopleToLoad--;
 		}
 
-
+		private IRecognitionProgress _progressBar;
 		private async void DetectFaces_Click(object sender, RoutedEventArgs e)
 		{
 			cmdBrowseVideo.Content = "Browse Video";
@@ -90,11 +90,15 @@ namespace FaceRecognition.UI
 			btn.Content = "Extracting faces...";
 			btn.IsEnabled = false;
 			_msgManager.WriteMessage("Extracting faces...");
-
+			_progressBar.IsPBVisible = true;
+			_msgManager.SetNewProgressStatus("Extracting...");
 			await Core.MicrosoftAPIs.DataBaseAPI.GroupAPI.GroupAPIinstance.Train();
+			_msgManager.ReportProgress();
 			_extractedUnchosenPeoplesFaces = await _video.ExtractFaces();
+			_msgManager.ReportProgress();
 			numberOfPeopleToLoad = _extractedUnchosenPeoplesFaces.Count;
 
+			_msgManager.SetNewProgressStatus("Validating...");
 			cmdDetectFaces.Content = "Validating...";
 			_msgManager.WriteMessage("Validating started.");
 
@@ -195,21 +199,46 @@ namespace FaceRecognition.UI
 
 		private async Task CompWithArchive()
 		{
+			_msgManager.ReportProgress();
 			cmdDetectFaces.Content = "Comparing...";
 			_msgManager.WriteMessage("Comparing started.");
+			_msgManager.SetNewProgressStatus("Comparing...");
 
 			var tuple = await Comparator.ComparatorInstance.SendDetectedPeopleToCompare(_extractedPeople);
 			var existedPeople = tuple.Item1;
 			var newPeople = tuple.Item2;
+			_msgManager.ReportProgress();
 			newPeople = await Core.MicrosoftAPIs.DataBaseAPI.GroupAPI.GroupAPIinstance.AddPeople(newPeople);
+			_msgManager.ReportProgress();
 			await Synchron.Instance.AddPeople(newPeople);
+			_msgManager.ReportProgress();
 
 			cmdDetectFaces.Content = "Detect Faces";
 			cmdDetectFaces.IsEnabled = true;
 			cmdBrowseVideo.IsEnabled = true;
 			_msgManager.WriteMessage("Aggregating comparation report.");
+			_msgManager.SetNewProgressStatus("Aggregating report.");
 
 			new ReportGallery(newPeople, existedPeople).Show();
+
+			_msgManager.ReportProgress();
+			_msgManager.SetNewProgressStatus("Face recognition");
+		}
+
+		private void SetProgressBarParameters()
+		{
+			_progressBar = pbProgress;
+			_progressBar.MaxProgress = 8;
+			_progressBar.Progress = 0;
+			_progressBar.IsPBVisible = false;
+			_progressBar.TStatus = "Face recognition";
+			_msgManager.OnProgressMade += (s, e) =>
+			{
+				_progressBar.IncBy1();
+				if (e != string.Empty)
+					_progressBar.TStatus = e;
+			};
+			_msgManager.OnNewProgressStatus += (s, e) => _progressBar.TStatus = e;
 		}
 	}
 }

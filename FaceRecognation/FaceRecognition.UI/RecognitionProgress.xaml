@@ -8,26 +8,34 @@
              d:DesignHeight="60" d:DesignWidth="300">
 	<Grid>
 		<Border>
-			<ProgressBar x:Name="pbProgressBar" Foreground="#FF444444" BorderBrush="{x:Null}" Background="{x:Null}" BorderThickness="2,1" Value="50"/>
+			<ProgressBar x:Name="pbProgressBar" Foreground="#FF444444" BorderBrush="{x:Null}" Background="#00000000" BorderThickness="2,1"/>
 		</Border>
-		<TextBlock x:Name="tbStatusWhite" Text="FaceRecognition" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Square721 BT" FontSize="16" Foreground="White"/>
-		<TextBlock x:Name="tbStatusBlack" Text="FaceRecognition" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Square721 BT" FontSize="16">
-			<TextBlock.OpacityMask>
-				<LinearGradientBrush>
-					<LinearGradientBrush.RelativeTransform>
-						<TransformGroup>
-							<ScaleTransform CenterY="0.5" CenterX="0.5"/>
-							<SkewTransform CenterY="0.5" CenterX="0.5"/>
-							<RotateTransform Angle="-1" CenterY="0.5" CenterX="0.5"/>
-							<TranslateTransform/>
-						</TransformGroup>
-					</LinearGradientBrush.RelativeTransform>
-					<GradientStop Color="Black" Offset="1"/>
-					<GradientStop/>
-					<GradientStop Offset="0.5029"/>
-					<GradientStop Color="Black" Offset="0.503"/>
-				</LinearGradientBrush>
-			</TextBlock.OpacityMask>
-		</TextBlock>
+		<Grid>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="1*"></RowDefinition>
+				<RowDefinition Height="1.4*"></RowDefinition>
+				<RowDefinition Height="1*"></RowDefinition>
+			</Grid.RowDefinitions>
+			<TextBlock x:Name="tbStatusWhite" Grid.Row="1" Text="FaceRecognition" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Square721 BT" FontSize="16" Foreground="White"/>
+			<TextBlock x:Name="tbStatusBlack" Grid.Row="1" Text="FaceRecognition" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Square721 BT" FontSize="16">
+				<TextBlock.OpacityMask>
+					<LinearGradientBrush>
+						<LinearGradientBrush.RelativeTransform>
+							<TransformGroup>
+								<ScaleTransform CenterY="0.5" CenterX="0.5"/>
+								<SkewTransform CenterY="0.5" CenterX="0.5"/>
+								<RotateTransform Angle="-1" CenterY="0.5" CenterX="0.5"/>
+								<TranslateTransform/>
+							</TransformGroup>
+						</LinearGradientBrush.RelativeTransform>
+						<GradientStop/>
+						<GradientStop Color="Black" Offset="1"/>
+						<GradientStop x:Name="blackPointer" Color="Black"/>
+						<GradientStop x:Name="transparentPointer" Offset="1"/>
+					</LinearGradientBrush>
+				</TextBlock.OpacityMask>
+			</TextBlock>
+			<TextBlock x:Name="tbCounter" Grid.Row="2" Text="( 25 / 122 )"  HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Square721 BT" FontSize="12" Visibility="Hidden"></TextBlock>
+		</Grid>
 	</Grid>
 </UserControl>

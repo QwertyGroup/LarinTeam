@@ -24,18 +24,19 @@ namespace FaceRecognition.Core
 			}
 		}
 
-        public async Task<List<List<Image>>> ExtractFaces()
-        {
-            if (Path == string.Empty) throw new Exception("Video path is empty");
-            var people = new List<List<Image>>();
+		public async Task<List<List<Image>>> ExtractFaces()
+		{
+			if (Path == string.Empty) throw new Exception("Video path is empty");
+			var people = new List<List<Image>>();
 
-            var extractedFaces = await VideoManager.VManagerInstance.GetFacesFromVideo(Path);
-            foreach (var eface in extractedFaces)
-                people.Add(eface.Value);
-            return people;
-        }
+			var extractedFaces = await VideoManager.VManagerInstance.GetFacesFromVideo(Path);
+			MessageManager.MsgManagerInstance.ReportProgress();
+			foreach (var eface in extractedFaces)
+				people.Add(eface.Value);
+			return people;
+		}
 
-        public async Task<List<Person>> ExtractFacesA()
+		public async Task<List<Person>> ExtractFacesA()
 		{
 			if (Path == string.Empty) throw new Exception("Video path is empty");
 			var people = new List<Person>();
