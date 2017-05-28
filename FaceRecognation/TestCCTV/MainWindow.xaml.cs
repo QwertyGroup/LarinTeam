@@ -26,8 +26,11 @@ namespace TestCCTV
         public MainWindow()
         {
             InitializeComponent();
-            _dt.Tick += (s, e) => Timer_Tick();
-            _dt.Interval = TimeSpan.FromSeconds(5);
+            Loaded += (s, e) =>
+            {
+                _dt.Tick += (o, a) => Timer_Tick();
+                _dt.Interval = TimeSpan.FromMilliseconds(slDelay.Value);
+            };
         }
 
         private async void Timer_Tick()
@@ -43,11 +46,22 @@ namespace TestCCTV
         private void Start_Click(object sender, RoutedEventArgs e)
         {
             _dt.Start();
+            cmdStart.IsEnabled = false;
+            cmdStop.IsEnabled = true;
+            slDelay.IsEnabled = false;
         }
 
         private void Stop_Click(object sender, RoutedEventArgs e)
         {
             _dt.Stop();
+            cmdStart.IsEnabled = true;
+            cmdStop.IsEnabled = false;
+            slDelay.IsEnabled = true;
+        }
+
+        private void SlDelay_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            _dt.Interval = TimeSpan.FromMilliseconds(e.NewValue);
         }
     }
 }
