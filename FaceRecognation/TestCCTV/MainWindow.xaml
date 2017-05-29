@@ -5,31 +5,46 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TestCCTV"
         mc:Ignorable="d"
-        Title="MainWindow" Height="500" Width="650">
+        Title="CCTVs array" Height="520" Width="670">
+    <Window.DataContext>
+        <local:UILinking/>
+    </Window.DataContext>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1*"/>
-            <ColumnDefinition Width="1*"/>
-            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="161*"/>
+            <ColumnDefinition Width="161*"/>
+            <ColumnDefinition Width="219*"/>
+            <ColumnDefinition Width="104*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="38*"/>
-            <RowDefinition Height="5*"/>
+            <RowDefinition Height="420*"/>
+            <RowDefinition Height="36*"/>
+            <RowDefinition Height="36*"/>
         </Grid.RowDefinitions>
         <Image x:Name="imgCameraStream"
                Height="400" 
                Width="600" 
-               Margin="25,10,0,0"
+               Margin="35,10,0,0"
                VerticalAlignment="Top" 
-               HorizontalAlignment="Left" Grid.ColumnSpan="3"/>
+               HorizontalAlignment="Left" Grid.ColumnSpan="4"/>
 
         <Button x:Name="cmdStart" Content="Start" HorizontalAlignment="Center" Height="45" 
                 Grid.Row="1" VerticalAlignment="Center" Width="135" 
-                Click="Start_Click" FontSize="24" FontFamily="Square721 BT"/>
+                Click="Start_Click" FontSize="24" FontFamily="Square721 BT" Grid.RowSpan="2" Margin="13,5.111,13.333,5.889"/>
 
         <Button x:Name="cmdStop" Content="Stop" HorizontalAlignment="Center" Height="45" 
                 Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" Width="136"
-                Click="Stop_Click" IsEnabled="False" FontSize="24" FontFamily="Square721 BT"/>
-        <Slider x:Name="slDelay" Grid.Column="2" HorizontalAlignment="Stretch"  Grid.Row="1" VerticalAlignment="Center" Margin="10,0" ValueChanged="SlDelay_ValueChanged" Minimum="1000" Maximum="10000" ToolTip="Delay in ms" Value="4000" AutoToolTipPlacement="TopLeft"/>
+                Click="Stop_Click" IsEnabled="False" FontSize="24" FontFamily="Square721 BT" Grid.RowSpan="2" Margin="12.667,5.111,12.667,5.889"/>
+
+        <Slider x:Name="slDelay" Grid.Column="2" HorizontalAlignment="Stretch"  Grid.Row="1" VerticalAlignment="Center" 
+                ValueChanged="SlDelay_ValueChanged" Minimum="1000" Maximum="10000"
+                ToolTip="Delay" Value="4000"/>
+
+        <ComboBox x:Name="cbIp" Grid.Column="2" HorizontalAlignment="Stretch"
+                  Grid.Row="2" VerticalAlignment="Center" Margin="10.333,3.111,10.334,2.889" 
+                  ItemsSource="{Binding Ips}" SelectedIndex="0" SelectionChanged="CbIp_SelectionChanged" Grid.ColumnSpan="2"/>
+
+        <TextBlock x:Name="tbDelay" Text="Delay" Grid.Column="3" Grid.Row="1"
+                   VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="12"/>
     </Grid>
 </Window>
