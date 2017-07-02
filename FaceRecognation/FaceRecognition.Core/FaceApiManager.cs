@@ -31,9 +31,14 @@ namespace FaceRecognition.Core.MicrosoftAPIs
                 return await _faceApiManager.Identify(faceIds);
             }
 
-            public async Task<Face[]> DetectFace(Image Image)
+            public async Task<Face[]> DetectFace(Image image)
             {
-                return await _faceApiManager.DetectFace(ImageProcessing.ImageProcessingInstance.ImageToStream(Image, ImageFormat.Png));
+                return await _faceApiManager.DetectFace(ImageProcessing.ImageProcessingInstance.ImageToStream(image, ImageFormat.Png));
+            }
+
+            public async Task<List<Face>> DetectFaceWithLandmarks(Image image)
+            {
+                return (await _faceApiManager.DetectFace(ImageProcessing.ImageProcessingInstance.ImageToStream(image, ImageFormat.Png), true)).ToList();
             }
         }
     }
@@ -294,11 +299,11 @@ namespace FaceRecognition.Core.MicrosoftAPIs
             }
         }
 
-        public async Task<Microsoft.ProjectOxford.Face.Contract.Face[]> DetectFace(Stream imageAsStream)
+        public async Task<Microsoft.ProjectOxford.Face.Contract.Face[]> DetectFace(Stream imageAsStream, bool landmarks = false)
         {
             try
             {
-                var faces = await _faceServiceClient.DetectAsync(imageAsStream, true);
+                var faces = await _faceServiceClient.DetectAsync(imageAsStream, returnFaceId: true, returnFaceLandmarks: landmarks);
                 if (faces.Length == 0) throw new Exception("FaceList is empty");
                 return faces;
             }

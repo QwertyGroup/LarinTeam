@@ -62,7 +62,7 @@ namespace FaceRecognition.Core
             {
                 FirebaseResponse response = await Client.GetAsync("Faces");
                 var Data = response.ResultAs<Dictionary<Guid, string>>();
-                return Data == null ? new Dictionary<Guid, string>() : Data;
+                return Data ?? new Dictionary<Guid, string>();
             }
             catch
             {
